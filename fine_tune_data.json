@@ -1,0 +1,1942 @@
+[
+    {
+        "prompt": "Find enzymes with endogenous substrates that have no pharmacology to speak of?",
+        "completion": "SELECT e.* FROM enzyme e WHERE e.enzyme_id NOT IN (SELECT p.enzyme_id FROM pharmacology p);"
+    },
+    {
+        "prompt": "List all ligands relevant for immunopharmacology.",
+        "completion": "SELECT l.* FROM ligand l WHERE l.in_gtip = TRUE;"
+    },
+    {
+        "prompt": "Get ligands that are antimalarial.",
+        "completion": "SELECT l.* FROM ligand l WHERE l.in_gtmp = TRUE;"
+    },
+    {
+        "prompt": "Retrieve clinical trials linked to a specific ligand.",
+        "completion": "SELECT ct.* FROM clinical_trial ct JOIN ligand2clinical_trials lct ON ct.clinical_trial_id = lct.clinical_trial_id WHERE lct.ligand_id = ?;"
+    },
+    {
+        "prompt": "Find peptides linked to a ligand and their precursors.",
+        "completion": "SELECT p.*, prec.* FROM peptide p JOIN precursor2peptide pp ON p.peptide_id = pp.peptide_id JOIN precursor prec ON pp.precursor_id = prec.precursor_id WHERE pp.ligand_id = ?;"
+    },
+    {
+        "prompt": "Get the reference details for interactions.",
+        "completion": "SELECT r.* FROM reference r JOIN interaction_affinity_refs iar ON r.reference_id = iar.reference_id WHERE iar.interaction_id = ?;"
+    },
+    {
+        "prompt": "List the structure and physico-chemical properties for a ligand.",
+        "completion": "SELECT ls.*, lp.* FROM ligand_structure ls JOIN ligand_physchem lp ON ls.ligand_id = lp.ligand_id WHERE ls.ligand_id = ?;"
+    },
+    {
+        "prompt": "Retrieve information about ligand families linked to a specific ligand.",
+        "completion": "SELECT f.* FROM family f JOIN ligand2family lf ON f.family_id = lf.family_id WHERE lf.ligand_id = ?;"
+    },
+    {
+        "prompt": "Find objects related to a specific receptor family.",
+        "completion": "SELECT o.* FROM object o JOIN receptor2family rf ON o.object_id = rf.object_id WHERE rf.family_id = ?;"
+    },
+    {
+        "prompt": "Get all families and their hierarchies.",
+        "completion": "WITH RECURSIVE family_hierarchy AS ( SELECT g.group_id, f.family_id, f.family_name FROM grouping g JOIN family f ON g.family_id = f.family_id UNION ALL SELECT g.group_id, f.family_id, f.family_name FROM family_hierarchy fh JOIN grouping g ON fh.family_id = g.family_id JOIN family f ON g.group_id = f.family_id ) SELECT * FROM family_hierarchy;"
+    },
+    {
+        "prompt": "What are the columns in the accessory_protein table?",
+        "completion": "The accessory_protein table contains the following columns: object_id, full_name."
+    },
+    {
+        "prompt": "Describe the accessory_protein table.",
+        "completion": "The accessory_protein table includes data related to object_id, full_name."
+    },
+    {
+        "prompt": "What are the columns in the adb_compound table?",
+        "completion": "The adb_compound table contains the following columns: adb_id, drug_name, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, combination_therapy_comment, prop_select_res_mutants, prop_select_res_mutants_comment, additional_info, source_hp, ligand_id, patents, drug_name_vector, drug_class_vector, moa_target_pathogen_vector, institute_vector, combination_therapy_comment_vector, prop_select_res_mutants_comment_vector."
+    },
+    {
+        "prompt": "Describe the adb_compound table.",
+        "completion": "The adb_compound table includes data related to adb_id, drug_name, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, combination_therapy_comment, prop_select_res_mutants, prop_select_res_mutants_comment, additional_info, source_hp, ligand_id, patents, drug_name_vector, drug_class_vector, moa_target_pathogen_vector, institute_vector, combination_therapy_comment_vector, prop_select_res_mutants_comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the adb_to_add table?",
+        "completion": "The adb_to_add table contains the following columns: drug_name, synonyms, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, combination_therapy_comment, prop_select_res_mutants, prop_select_res_mutants_comment, additional_info, source_hp, ligand_id, papers, patents, structures, can_smiles, iso_smiles, inchikey."
+    },
+    {
+        "prompt": "Describe the adb_to_add table.",
+        "completion": "The adb_to_add table includes data related to drug_name, synonyms, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, combination_therapy_comment, prop_select_res_mutants, prop_select_res_mutants_comment, additional_info, source_hp, ligand_id, papers, patents, structures, can_smiles, iso_smiles, inchikey."
+    },
+    {
+        "prompt": "What are the columns in the adb_version table?",
+        "completion": "The adb_version table contains the following columns: version_number, publish_date, current_version, from_file."
+    },
+    {
+        "prompt": "Describe the adb_version table.",
+        "completion": "The adb_version table includes data related to version_number, publish_date, current_version, from_file."
+    },
+    {
+        "prompt": "What are the columns in the allele table?",
+        "completion": "The allele table contains the following columns: allele_id, accessions, species_id, pubmed_ids, ontology_id, term_id, allelic_composition, allele_symbol, genetic_background."
+    },
+    {
+        "prompt": "Describe the allele table.",
+        "completion": "The allele table includes data related to allele_id, accessions, species_id, pubmed_ids, ontology_id, term_id, allelic_composition, allele_symbol, genetic_background."
+    },
+    {
+        "prompt": "What are the columns in the altered_expression table?",
+        "completion": "The altered_expression table contains the following columns: altered_expression_id, object_id, description, species_id, tissue, technique, description_vector, tissue_vector, technique_vector."
+    },
+    {
+        "prompt": "Describe the altered_expression table.",
+        "completion": "The altered_expression table includes data related to altered_expression_id, object_id, description, species_id, tissue, technique, description_vector, tissue_vector, technique_vector."
+    },
+    {
+        "prompt": "What are the columns in the altered_expression_refs table?",
+        "completion": "The altered_expression_refs table contains the following columns: altered_expression_id, reference_id."
+    },
+    {
+        "prompt": "Describe the altered_expression_refs table.",
+        "completion": "The altered_expression_refs table includes data related to altered_expression_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the analogue_cluster table?",
+        "completion": "The analogue_cluster table contains the following columns: ligand_id, cluster."
+    },
+    {
+        "prompt": "Describe the analogue_cluster table.",
+        "completion": "The analogue_cluster table includes data related to ligand_id, cluster."
+    },
+    {
+        "prompt": "What are the columns in the antibiotic_db table?",
+        "completion": "The antibiotic_db table contains the following columns: adb_id, drug_name, drug_class, high_dev_phase, institute, ligand_id."
+    },
+    {
+        "prompt": "Describe the antibiotic_db table.",
+        "completion": "The antibiotic_db table includes data related to adb_id, drug_name, drug_class, high_dev_phase, institute, ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the antibiotic_db_full table?",
+        "completion": "The antibiotic_db_full table contains the following columns: adb_id, drug_name, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, prop_select_res_mutants, additional_info, source_hp, ligand_id, papers_cited_1, papers_cited_2, papers_cited_3, patents, link_to_structure_1, link_to_structure_2."
+    },
+    {
+        "prompt": "Describe the antibiotic_db_full table.",
+        "completion": "The antibiotic_db_full table includes data related to adb_id, drug_name, drug_class, year_fm, institute, current_status, high_dev_phase, reason_dropped, moa_target_pathogen, gram_neg_effect, gram_pos_effect, combination_therapy, prop_select_res_mutants, additional_info, source_hp, ligand_id, papers_cited_1, papers_cited_2, papers_cited_3, patents, link_to_structure_1, link_to_structure_2."
+    },
+    {
+        "prompt": "What are the columns in the associated_protein table?",
+        "completion": "The associated_protein table contains the following columns: associated_protein_id, object_id, name, type, associated_object_id, effect, name_vector."
+    },
+    {
+        "prompt": "Describe the associated_protein table.",
+        "completion": "The associated_protein table includes data related to associated_protein_id, object_id, name, type, associated_object_id, effect, name_vector."
+    },
+    {
+        "prompt": "What are the columns in the associated_protein_refs table?",
+        "completion": "The associated_protein_refs table contains the following columns: associated_protein_id, reference_id."
+    },
+    {
+        "prompt": "Describe the associated_protein_refs table.",
+        "completion": "The associated_protein_refs table includes data related to associated_protein_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the binding_partner table?",
+        "completion": "The binding_partner table contains the following columns: binding_partner_id, object_id, name, interaction, effect, partner_object_id, name_vector, effect_vector, interaction_vector."
+    },
+    {
+        "prompt": "Describe the binding_partner table.",
+        "completion": "The binding_partner table includes data related to binding_partner_id, object_id, name, interaction, effect, partner_object_id, name_vector, effect_vector, interaction_vector."
+    },
+    {
+        "prompt": "What are the columns in the binding_partner_refs table?",
+        "completion": "The binding_partner_refs table contains the following columns: binding_partner_id, reference_id."
+    },
+    {
+        "prompt": "Describe the binding_partner_refs table.",
+        "completion": "The binding_partner_refs table includes data related to binding_partner_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the catalytic_receptor table?",
+        "completion": "The catalytic_receptor table contains the following columns: object_id, rtk_class."
+    },
+    {
+        "prompt": "Describe the catalytic_receptor table.",
+        "completion": "The catalytic_receptor table includes data related to object_id, rtk_class."
+    },
+    {
+        "prompt": "What are the columns in the celltype_assoc table?",
+        "completion": "The celltype_assoc table contains the following columns: celltype_assoc_id, object_id, immuno_celltype_id, comment, comment_vector."
+    },
+    {
+        "prompt": "Describe the celltype_assoc table.",
+        "completion": "The celltype_assoc table includes data related to celltype_assoc_id, object_id, immuno_celltype_id, comment, comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the celltype_assoc_colist table?",
+        "completion": "The celltype_assoc_colist table contains the following columns: celltype_assoc_id, co_celltype_id, cellonto_id."
+    },
+    {
+        "prompt": "Describe the celltype_assoc_colist table.",
+        "completion": "The celltype_assoc_colist table includes data related to celltype_assoc_id, co_celltype_id, cellonto_id."
+    },
+    {
+        "prompt": "What are the columns in the celltype_assoc_refs table?",
+        "completion": "The celltype_assoc_refs table contains the following columns: celltype_assoc_id, reference_id."
+    },
+    {
+        "prompt": "Describe the celltype_assoc_refs table.",
+        "completion": "The celltype_assoc_refs table includes data related to celltype_assoc_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the cellular_location table?",
+        "completion": "The cellular_location table contains the following columns: cellular_location_id, object_id, location, technique, comments."
+    },
+    {
+        "prompt": "Describe the cellular_location table.",
+        "completion": "The cellular_location table includes data related to cellular_location_id, object_id, location, technique, comments."
+    },
+    {
+        "prompt": "What are the columns in the cellular_location_refs table?",
+        "completion": "The cellular_location_refs table contains the following columns: cellular_location_id, reference_id."
+    },
+    {
+        "prompt": "Describe the cellular_location_refs table.",
+        "completion": "The cellular_location_refs table includes data related to cellular_location_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the chembl_cluster table?",
+        "completion": "The chembl_cluster table contains the following columns: object_id, chembl_id, cluster, cluster_family."
+    },
+    {
+        "prompt": "Describe the chembl_cluster table.",
+        "completion": "The chembl_cluster table includes data related to object_id, chembl_id, cluster, cluster_family."
+    },
+    {
+        "prompt": "What are the columns in the cite table?",
+        "completion": "The cite table contains the following columns: cite_id, doi, issue_volume, issue_number, edition, year, month."
+    },
+    {
+        "prompt": "Describe the cite table.",
+        "completion": "The cite table includes data related to cite_id, doi, issue_volume, issue_number, edition, year, month."
+    },
+    {
+        "prompt": "What are the columns in the clinical_trial table?",
+        "completion": "The clinical_trial table contains the following columns: clinical_trial_id, accession, title, url, type, description, source."
+    },
+    {
+        "prompt": "Describe the clinical_trial table.",
+        "completion": "The clinical_trial table includes data related to clinical_trial_id, accession, title, url, type, description, source."
+    },
+    {
+        "prompt": "What are the columns in the clinical_trial_refs table?",
+        "completion": "The clinical_trial_refs table contains the following columns: clinical_trial_id, reference_id."
+    },
+    {
+        "prompt": "Describe the clinical_trial_refs table.",
+        "completion": "The clinical_trial_refs table includes data related to clinical_trial_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the co_celltype table?",
+        "completion": "The co_celltype table contains the following columns: co_celltype_id, name, definition, last_modified, type, cellonto_id, name_vector, definition_vector, cellonto_id_vector."
+    },
+    {
+        "prompt": "Describe the co_celltype table.",
+        "completion": "The co_celltype table includes data related to co_celltype_id, name, definition, last_modified, type, cellonto_id, name_vector, definition_vector, cellonto_id_vector."
+    },
+    {
+        "prompt": "What are the columns in the co_celltype_isa table?",
+        "completion": "The co_celltype_isa table contains the following columns: parent_id, child_id."
+    },
+    {
+        "prompt": "Describe the co_celltype_isa table.",
+        "completion": "The co_celltype_isa table includes data related to parent_id, child_id."
+    },
+    {
+        "prompt": "What are the columns in the co_celltype_relationship table?",
+        "completion": "The co_celltype_relationship table contains the following columns: co_celltype_rel_id, co_celltype_id, relationship_id, type."
+    },
+    {
+        "prompt": "Describe the co_celltype_relationship table.",
+        "completion": "The co_celltype_relationship table includes data related to co_celltype_rel_id, co_celltype_id, relationship_id, type."
+    },
+    {
+        "prompt": "What are the columns in the cofactor table?",
+        "completion": "The cofactor table contains the following columns: cofactor_id, object_id, species_id, ligand_id, name, comments, in_iuphar, in_grac, name_vector."
+    },
+    {
+        "prompt": "Describe the cofactor table.",
+        "completion": "The cofactor table includes data related to cofactor_id, object_id, species_id, ligand_id, name, comments, in_iuphar, in_grac, name_vector."
+    },
+    {
+        "prompt": "What are the columns in the cofactor_refs table?",
+        "completion": "The cofactor_refs table contains the following columns: cofactor_id, reference_id."
+    },
+    {
+        "prompt": "Describe the cofactor_refs table.",
+        "completion": "The cofactor_refs table includes data related to cofactor_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the committee table?",
+        "completion": "The committee table contains the following columns: committee_id, name, description, family_id."
+    },
+    {
+        "prompt": "Describe the committee table.",
+        "completion": "The committee table includes data related to committee_id, name, description, family_id."
+    },
+    {
+        "prompt": "What are the columns in the conductance table?",
+        "completion": "The conductance table contains the following columns: conductance_id, object_id, overall_channel_conductance, macroscopic_current_rectification, single_channel_current_rectification, species_id."
+    },
+    {
+        "prompt": "Describe the conductance table.",
+        "completion": "The conductance table includes data related to conductance_id, object_id, overall_channel_conductance, macroscopic_current_rectification, single_channel_current_rectification, species_id."
+    },
+    {
+        "prompt": "What are the columns in the conductance_refs table?",
+        "completion": "The conductance_refs table contains the following columns: conductance_id, reference_id."
+    },
+    {
+        "prompt": "Describe the conductance_refs table.",
+        "completion": "The conductance_refs table includes data related to conductance_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the conductance_states table?",
+        "completion": "The conductance_states table contains the following columns: conductance_states_id, object_id, receptor, state1_high, state1_low, state2_high, state2_low, state3_high, state3_low, state4_high, state4_low, state5_high, state5_low, state6_high, state6_low, most_frequent_state."
+    },
+    {
+        "prompt": "Describe the conductance_states table.",
+        "completion": "The conductance_states table includes data related to conductance_states_id, object_id, receptor, state1_high, state1_low, state2_high, state2_low, state3_high, state3_low, state4_high, state4_low, state5_high, state5_low, state6_high, state6_low, most_frequent_state."
+    },
+    {
+        "prompt": "What are the columns in the conductance_states_refs table?",
+        "completion": "The conductance_states_refs table contains the following columns: conductance_states_id, reference_id."
+    },
+    {
+        "prompt": "Describe the conductance_states_refs table.",
+        "completion": "The conductance_states_refs table includes data related to conductance_states_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the contributor table?",
+        "completion": "The contributor table contains the following columns: contributor_id, address, email, first_names, surname, suffix, note, orcid, country, description, institution, name_vector."
+    },
+    {
+        "prompt": "Describe the contributor table.",
+        "completion": "The contributor table includes data related to contributor_id, address, email, first_names, surname, suffix, note, orcid, country, description, institution, name_vector."
+    },
+    {
+        "prompt": "What are the columns in the contributor2committee table?",
+        "completion": "The contributor2committee table contains the following columns: contributor_id, committee_id, role, display_order."
+    },
+    {
+        "prompt": "Describe the contributor2committee table.",
+        "completion": "The contributor2committee table includes data related to contributor_id, committee_id, role, display_order."
+    },
+    {
+        "prompt": "What are the columns in the contributor2family table?",
+        "completion": "The contributor2family table contains the following columns: contributor_id, family_id, role, display_order, old_display_order."
+    },
+    {
+        "prompt": "Describe the contributor2family table.",
+        "completion": "The contributor2family table includes data related to contributor_id, family_id, role, display_order, old_display_order."
+    },
+    {
+        "prompt": "What are the columns in the contributor2intro table?",
+        "completion": "The contributor2intro table contains the following columns: contributor_id, family_id, display_order."
+    },
+    {
+        "prompt": "Describe the contributor2intro table.",
+        "completion": "The contributor2intro table includes data related to contributor_id, family_id, display_order."
+    },
+    {
+        "prompt": "What are the columns in the contributor2object table?",
+        "completion": "The contributor2object table contains the following columns: contributor_id, object_id, display_order, role."
+    },
+    {
+        "prompt": "Describe the contributor2object table.",
+        "completion": "The contributor2object table includes data related to contributor_id, object_id, display_order, role."
+    },
+    {
+        "prompt": "What are the columns in the contributor_copy table?",
+        "completion": "The contributor_copy table contains the following columns: contributor_id, address, email, first_names, surname, suffix, note, orcid, country, description, institution."
+    },
+    {
+        "prompt": "Describe the contributor_copy table.",
+        "completion": "The contributor_copy table includes data related to contributor_id, address, email, first_names, surname, suffix, note, orcid, country, description, institution."
+    },
+    {
+        "prompt": "What are the columns in the contributor_link table?",
+        "completion": "The contributor_link table contains the following columns: contributor_id, url."
+    },
+    {
+        "prompt": "Describe the contributor_link table.",
+        "completion": "The contributor_link table includes data related to contributor_id, url."
+    },
+    {
+        "prompt": "What are the columns in the coregulator table?",
+        "completion": "The coregulator table contains the following columns: coregulator_id, object_id, activity, specific, ligand_dependent, af2_dependent, comments, coregulator_gene_id, activity_vector, comments_vector."
+    },
+    {
+        "prompt": "Describe the coregulator table.",
+        "completion": "The coregulator table includes data related to coregulator_id, object_id, activity, specific, ligand_dependent, af2_dependent, comments, coregulator_gene_id, activity_vector, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the coregulator_gene table?",
+        "completion": "The coregulator_gene table contains the following columns: coregulator_gene_id, primary_name, official_gene_id, other_names, species_id, nursa_id, comments, gene_long_name, primary_name_vector, other_names_vector, comments_vector, gene_long_name_vector."
+    },
+    {
+        "prompt": "Describe the coregulator_gene table.",
+        "completion": "The coregulator_gene table includes data related to coregulator_gene_id, primary_name, official_gene_id, other_names, species_id, nursa_id, comments, gene_long_name, primary_name_vector, other_names_vector, comments_vector, gene_long_name_vector."
+    },
+    {
+        "prompt": "What are the columns in the coregulator_refs table?",
+        "completion": "The coregulator_refs table contains the following columns: coregulator_id, reference_id."
+    },
+    {
+        "prompt": "Describe the coregulator_refs table.",
+        "completion": "The coregulator_refs table includes data related to coregulator_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the covid_ligand table?",
+        "completion": "The covid_ligand table contains the following columns: covid_ligand_id, ligand_id, name, url, comment, curated, secondary_ligand_id, secondary_name, secondary_url, secondary_curated, priority."
+    },
+    {
+        "prompt": "Describe the covid_ligand table.",
+        "completion": "The covid_ligand table includes data related to covid_ligand_id, ligand_id, name, url, comment, curated, secondary_ligand_id, secondary_name, secondary_url, secondary_curated, priority."
+    },
+    {
+        "prompt": "What are the columns in the covid_target table?",
+        "completion": "The covid_target table contains the following columns: covid_target_id, object_id, name, url, comment, curated, target_ligand_id."
+    },
+    {
+        "prompt": "Describe the covid_target table.",
+        "completion": "The covid_target table includes data related to covid_target_id, object_id, name, url, comment, curated, target_ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the database table?",
+        "completion": "The database table contains the following columns: database_id, name, url, specialist, prefix."
+    },
+    {
+        "prompt": "Describe the database table.",
+        "completion": "The database table includes data related to database_id, name, url, specialist, prefix."
+    },
+    {
+        "prompt": "What are the columns in the database_link table?",
+        "completion": "The database_link table contains the following columns: database_link_id, object_id, species_id, database_id, placeholder."
+    },
+    {
+        "prompt": "Describe the database_link table.",
+        "completion": "The database_link table includes data related to database_link_id, object_id, species_id, database_id, placeholder."
+    },
+    {
+        "prompt": "What are the columns in the deleted_family table?",
+        "completion": "The deleted_family table contains the following columns: family_id, name, previous_names, type, old_family_id, new_family_id."
+    },
+    {
+        "prompt": "Describe the deleted_family table.",
+        "completion": "The deleted_family table includes data related to family_id, name, previous_names, type, old_family_id, new_family_id."
+    },
+    {
+        "prompt": "What are the columns in the discoverx table?",
+        "completion": "The discoverx table contains the following columns: cat_no, url, name, description, species_id."
+    },
+    {
+        "prompt": "Describe the discoverx table.",
+        "completion": "The discoverx table includes data related to cat_no, url, name, description, species_id."
+    },
+    {
+        "prompt": "What are the columns in the disease table?",
+        "completion": "The disease table contains the following columns: disease_id, name, description, type, name_vector, description_vector."
+    },
+    {
+        "prompt": "Describe the disease table.",
+        "completion": "The disease table includes data related to disease_id, name, description, type, name_vector, description_vector."
+    },
+    {
+        "prompt": "What are the columns in the disease2category table?",
+        "completion": "The disease2category table contains the following columns: disease_id, disease_category_id, comment."
+    },
+    {
+        "prompt": "Describe the disease2category table.",
+        "completion": "The disease2category table includes data related to disease_id, disease_category_id, comment."
+    },
+    {
+        "prompt": "What are the columns in the disease2synonym table?",
+        "completion": "The disease2synonym table contains the following columns: disease2synonym_id, disease_id, synonym, synonym_vector."
+    },
+    {
+        "prompt": "Describe the disease2synonym table.",
+        "completion": "The disease2synonym table includes data related to disease2synonym_id, disease_id, synonym, synonym_vector."
+    },
+    {
+        "prompt": "What are the columns in the disease_category table?",
+        "completion": "The disease_category table contains the following columns: disease_category_id, name, description."
+    },
+    {
+        "prompt": "Describe the disease_category table.",
+        "completion": "The disease_category table includes data related to disease_category_id, name, description."
+    },
+    {
+        "prompt": "What are the columns in the disease_database_link table?",
+        "completion": "The disease_database_link table contains the following columns: disease_database_link_id, disease_id, database_id, placeholder."
+    },
+    {
+        "prompt": "Describe the disease_database_link table.",
+        "completion": "The disease_database_link table includes data related to disease_database_link_id, disease_id, database_id, placeholder."
+    },
+    {
+        "prompt": "What are the columns in the disease_synonym2database_link table?",
+        "completion": "The disease_synonym2database_link table contains the following columns: disease2synonym_id, disease_database_link_id."
+    },
+    {
+        "prompt": "Describe the disease_synonym2database_link table.",
+        "completion": "The disease_synonym2database_link table includes data related to disease2synonym_id, disease_database_link_id."
+    },
+    {
+        "prompt": "What are the columns in the dna_binding table?",
+        "completion": "The dna_binding table contains the following columns: dna_binding_id, object_id, structure, sequence, response_element, structure_vector, sequence_vector, response_element_vector."
+    },
+    {
+        "prompt": "Describe the dna_binding table.",
+        "completion": "The dna_binding table includes data related to dna_binding_id, object_id, structure, sequence, response_element, structure_vector, sequence_vector, response_element_vector."
+    },
+    {
+        "prompt": "What are the columns in the dna_binding_refs table?",
+        "completion": "The dna_binding_refs table contains the following columns: dna_binding_id, reference_id."
+    },
+    {
+        "prompt": "Describe the dna_binding_refs table.",
+        "completion": "The dna_binding_refs table includes data related to dna_binding_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the do_disease table?",
+        "completion": "The do_disease table contains the following columns: do_disease_id, term, definition, last_modified, do_id."
+    },
+    {
+        "prompt": "Describe the do_disease table.",
+        "completion": "The do_disease table includes data related to do_disease_id, term, definition, last_modified, do_id."
+    },
+    {
+        "prompt": "What are the columns in the do_disease_isa table?",
+        "completion": "The do_disease_isa table contains the following columns: parent_id, child_id."
+    },
+    {
+        "prompt": "Describe the do_disease_isa table.",
+        "completion": "The do_disease_isa table includes data related to parent_id, child_id."
+    },
+    {
+        "prompt": "What are the columns in the drug2disease table?",
+        "completion": "The drug2disease table contains the following columns: ligand_id, disease_id."
+    },
+    {
+        "prompt": "Describe the drug2disease table.",
+        "completion": "The drug2disease table includes data related to ligand_id, disease_id."
+    },
+    {
+        "prompt": "What are the columns in the endo_ligand_pairings table?",
+        "completion": "The endo_ligand_pairings table contains the following columns: endo_ligand_pairings_id, ligand_id, lig_species_id, object_id, tar_species_id, source."
+    },
+    {
+        "prompt": "Describe the endo_ligand_pairings table.",
+        "completion": "The endo_ligand_pairings table includes data related to endo_ligand_pairings_id, ligand_id, lig_species_id, object_id, tar_species_id, source."
+    },
+    {
+        "prompt": "What are the columns in the endo_ligand_pairings_nomatch table?",
+        "completion": "The endo_ligand_pairings_nomatch table contains the following columns: endo_ligand_pairings_nomatch_id, ligand_id, lig_species_id, object_id, tar_species_id, source."
+    },
+    {
+        "prompt": "Describe the endo_ligand_pairings_nomatch table.",
+        "completion": "The endo_ligand_pairings_nomatch table includes data related to endo_ligand_pairings_nomatch_id, ligand_id, lig_species_id, object_id, tar_species_id, source."
+    },
+    {
+        "prompt": "What are the columns in the ens_ncbi_ids table?",
+        "completion": "The ens_ncbi_ids table contains the following columns: ens_id, ncbi_id."
+    },
+    {
+        "prompt": "Describe the ens_ncbi_ids table.",
+        "completion": "The ens_ncbi_ids table includes data related to ens_id, ncbi_id."
+    },
+    {
+        "prompt": "What are the columns in the enzyme table?",
+        "completion": "The enzyme table contains the following columns: object_id."
+    },
+    {
+        "prompt": "Describe the enzyme table.",
+        "completion": "The enzyme table includes data related to object_id."
+    },
+    {
+        "prompt": "What are the columns in the export_refs table?",
+        "completion": "The export_refs table contains the following columns: reference_id, type, title, article_title, year, issue, volume, pages, publisher, publisher_address, editors, pubmed_id, isbn, pub_status, topics, comments, read, useful, website, url, doi, accessed, modified, patent_number, priority, publication, authors, assignee, pmc_id."
+    },
+    {
+        "prompt": "Describe the export_refs table.",
+        "completion": "The export_refs table includes data related to reference_id, type, title, article_title, year, issue, volume, pages, publisher, publisher_address, editors, pubmed_id, isbn, pub_status, topics, comments, read, useful, website, url, doi, accessed, modified, patent_number, priority, publication, authors, assignee, pmc_id."
+    },
+    {
+        "prompt": "What are the columns in the expression_experiment table?",
+        "completion": "The expression_experiment table contains the following columns: expression_experiment_id, description, technique, species_id, baseline."
+    },
+    {
+        "prompt": "Describe the expression_experiment table.",
+        "completion": "The expression_experiment table includes data related to expression_experiment_id, description, technique, species_id, baseline."
+    },
+    {
+        "prompt": "What are the columns in the expression_level table?",
+        "completion": "The expression_level table contains the following columns: structural_info_id, tissue_id, expression_experiment_id, value."
+    },
+    {
+        "prompt": "Describe the expression_level table.",
+        "completion": "The expression_level table includes data related to structural_info_id, tissue_id, expression_experiment_id, value."
+    },
+    {
+        "prompt": "What are the columns in the expression_pathophysiology table?",
+        "completion": "The expression_pathophysiology table contains the following columns: expression_pathophysiology_id, object_id, change, pathophysiology, species_id, tissue, technique, change_vector, tissue_vector, pathophysiology_vector, technique_vector."
+    },
+    {
+        "prompt": "Describe the expression_pathophysiology table.",
+        "completion": "The expression_pathophysiology table includes data related to expression_pathophysiology_id, object_id, change, pathophysiology, species_id, tissue, technique, change_vector, tissue_vector, pathophysiology_vector, technique_vector."
+    },
+    {
+        "prompt": "What are the columns in the expression_pathophysiology_refs table?",
+        "completion": "The expression_pathophysiology_refs table contains the following columns: expression_pathophysiology_id, reference_id."
+    },
+    {
+        "prompt": "Describe the expression_pathophysiology_refs table.",
+        "completion": "The expression_pathophysiology_refs table includes data related to expression_pathophysiology_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the family table?",
+        "completion": "The family table contains the following columns: family_id, name, last_modified, old_family_id, type, display_order, annotation_status, previous_names, only_grac, only_iuphar, in_cgtp, cite_id, name_vector, previous_names_vector."
+    },
+    {
+        "prompt": "Describe the family table.",
+        "completion": "The family table includes data related to family_id, name, last_modified, old_family_id, type, display_order, annotation_status, previous_names, only_grac, only_iuphar, in_cgtp, cite_id, name_vector, previous_names_vector."
+    },
+    {
+        "prompt": "What are the columns in the functional_assay table?",
+        "completion": "The functional_assay table contains the following columns: functional_assay_id, object_id, description, response_measured, species_id, tissue, description_vector, tissue_vector, response_vector."
+    },
+    {
+        "prompt": "Describe the functional_assay table.",
+        "completion": "The functional_assay table includes data related to functional_assay_id, object_id, description, response_measured, species_id, tissue, description_vector, tissue_vector, response_vector."
+    },
+    {
+        "prompt": "What are the columns in the functional_assay_refs table?",
+        "completion": "The functional_assay_refs table contains the following columns: functional_assay_id, reference_id."
+    },
+    {
+        "prompt": "Describe the functional_assay_refs table.",
+        "completion": "The functional_assay_refs table includes data related to functional_assay_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the further_reading table?",
+        "completion": "The further_reading table contains the following columns: object_id, reference_id."
+    },
+    {
+        "prompt": "Describe the further_reading table.",
+        "completion": "The further_reading table includes data related to object_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the go_process table?",
+        "completion": "The go_process table contains the following columns: go_process_id, term, definition, last_modified, annotation, go_id, term_vector, definition_vector, go_id_vector."
+    },
+    {
+        "prompt": "Describe the go_process table.",
+        "completion": "The go_process table includes data related to go_process_id, term, definition, last_modified, annotation, go_id, term_vector, definition_vector, go_id_vector."
+    },
+    {
+        "prompt": "What are the columns in the go_process_rel table?",
+        "completion": "The go_process_rel table contains the following columns: parent_id, child_id."
+    },
+    {
+        "prompt": "Describe the go_process_rel table.",
+        "completion": "The go_process_rel table includes data related to parent_id, child_id."
+    },
+    {
+        "prompt": "What are the columns in the gpcr table?",
+        "completion": "The gpcr table contains the following columns: object_id, class, ligand."
+    },
+    {
+        "prompt": "Describe the gpcr table.",
+        "completion": "The gpcr table includes data related to object_id, class, ligand."
+    },
+    {
+        "prompt": "What are the columns in the grac_family_text table?",
+        "completion": "The grac_family_text table contains the following columns: family_id, overview, comments, last_modified, overview_vector, comments_vector."
+    },
+    {
+        "prompt": "Describe the grac_family_text table.",
+        "completion": "The grac_family_text table includes data related to family_id, overview, comments, last_modified, overview_vector, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the grac_functional_characteristics table?",
+        "completion": "The grac_functional_characteristics table contains the following columns: object_id, functional_characteristics, functional_characteristics_vector."
+    },
+    {
+        "prompt": "Describe the grac_functional_characteristics table.",
+        "completion": "The grac_functional_characteristics table includes data related to object_id, functional_characteristics, functional_characteristics_vector."
+    },
+    {
+        "prompt": "What are the columns in the grac_further_reading table?",
+        "completion": "The grac_further_reading table contains the following columns: family_id, reference_id, key_ref."
+    },
+    {
+        "prompt": "Describe the grac_further_reading table.",
+        "completion": "The grac_further_reading table includes data related to family_id, reference_id, key_ref."
+    },
+    {
+        "prompt": "What are the columns in the grac_ligand_rank_potency table?",
+        "completion": "The grac_ligand_rank_potency table contains the following columns: grac_ligand_rank_potency_id, object_id, description, rank_potency, species_id, in_iuphar, rank_potency_vector."
+    },
+    {
+        "prompt": "Describe the grac_ligand_rank_potency table.",
+        "completion": "The grac_ligand_rank_potency table includes data related to grac_ligand_rank_potency_id, object_id, description, rank_potency, species_id, in_iuphar, rank_potency_vector."
+    },
+    {
+        "prompt": "What are the columns in the grac_ligand_rank_potency_refs table?",
+        "completion": "The grac_ligand_rank_potency_refs table contains the following columns: grac_ligand_rank_potency_id, reference_id."
+    },
+    {
+        "prompt": "Describe the grac_ligand_rank_potency_refs table.",
+        "completion": "The grac_ligand_rank_potency_refs table includes data related to grac_ligand_rank_potency_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the grac_transduction table?",
+        "completion": "The grac_transduction table contains the following columns: object_id, transduction."
+    },
+    {
+        "prompt": "Describe the grac_transduction table.",
+        "completion": "The grac_transduction table includes data related to object_id, transduction."
+    },
+    {
+        "prompt": "What are the columns in the grouping table?",
+        "completion": "The grouping table contains the following columns: group_id, family_id, display_order."
+    },
+    {
+        "prompt": "Describe the grouping table.",
+        "completion": "The grouping table includes data related to group_id, family_id, display_order."
+    },
+    {
+        "prompt": "What are the columns in the gtip2go_process table?",
+        "completion": "The gtip2go_process table contains the following columns: gtip_process_id, go_process_id, comment, go_id, go_term."
+    },
+    {
+        "prompt": "Describe the gtip2go_process table.",
+        "completion": "The gtip2go_process table includes data related to gtip_process_id, go_process_id, comment, go_id, go_term."
+    },
+    {
+        "prompt": "What are the columns in the gtip_process table?",
+        "completion": "The gtip_process table contains the following columns: gtip_process_id, term, definition, last_modified, short_term, anchor, term_vector, definition_vector."
+    },
+    {
+        "prompt": "Describe the gtip_process table.",
+        "completion": "The gtip_process table includes data related to gtip_process_id, term, definition, last_modified, short_term, anchor, term_vector, definition_vector."
+    },
+    {
+        "prompt": "What are the columns in the gtopdb_cidmap table?",
+        "completion": "The gtopdb_cidmap table contains the following columns: ligand_id, name, pubchem_sid, placeholder."
+    },
+    {
+        "prompt": "Describe the gtopdb_cidmap table.",
+        "completion": "The gtopdb_cidmap table includes data related to ligand_id, name, pubchem_sid, placeholder."
+    },
+    {
+        "prompt": "What are the columns in the hot_topics table?",
+        "completion": "The hot_topics table contains the following columns: hot_topics_id, date, blog_url, blog_summary, has_blog, author_name, author_affiliation, author_link, author_twitter, authorship, title, title_vector, blog_summary_vector, authorship_vector."
+    },
+    {
+        "prompt": "Describe the hot_topics table.",
+        "completion": "The hot_topics table includes data related to hot_topics_id, date, blog_url, blog_summary, has_blog, author_name, author_affiliation, author_link, author_twitter, authorship, title, title_vector, blog_summary_vector, authorship_vector."
+    },
+    {
+        "prompt": "What are the columns in the hot_topics2family table?",
+        "completion": "The hot_topics2family table contains the following columns: hot_topics_id, family_id."
+    },
+    {
+        "prompt": "Describe the hot_topics2family table.",
+        "completion": "The hot_topics2family table includes data related to hot_topics_id, family_id."
+    },
+    {
+        "prompt": "What are the columns in the hot_topics2object table?",
+        "completion": "The hot_topics2object table contains the following columns: hot_topics_id, object_id."
+    },
+    {
+        "prompt": "Describe the hot_topics2object table.",
+        "completion": "The hot_topics2object table includes data related to hot_topics_id, object_id."
+    },
+    {
+        "prompt": "What are the columns in the hot_topics_refs table?",
+        "completion": "The hot_topics_refs table contains the following columns: hot_topics_id, reference_id, is_primary."
+    },
+    {
+        "prompt": "Describe the hot_topics_refs table.",
+        "completion": "The hot_topics_refs table includes data related to hot_topics_id, reference_id, is_primary."
+    },
+    {
+        "prompt": "What are the columns in the hottopic_refs table?",
+        "completion": "The hottopic_refs table contains the following columns: reference_id, date, blog_url, blog_summary, has_blog, author_name, author_affiliation, author_link, author_twitter."
+    },
+    {
+        "prompt": "Describe the hottopic_refs table.",
+        "completion": "The hottopic_refs table includes data related to reference_id, date, blog_url, blog_summary, has_blog, author_name, author_affiliation, author_link, author_twitter."
+    },
+    {
+        "prompt": "What are the columns in the immuno2co_celltype table?",
+        "completion": "The immuno2co_celltype table contains the following columns: immuno_celltype_id, cellonto_id, comment."
+    },
+    {
+        "prompt": "Describe the immuno2co_celltype table.",
+        "completion": "The immuno2co_celltype table includes data related to immuno_celltype_id, cellonto_id, comment."
+    },
+    {
+        "prompt": "What are the columns in the immuno_celltype table?",
+        "completion": "The immuno_celltype table contains the following columns: immuno_celltype_id, term, definition, last_modified, short_term, term_vector, definition_vector."
+    },
+    {
+        "prompt": "Describe the immuno_celltype table.",
+        "completion": "The immuno_celltype table includes data related to immuno_celltype_id, term, definition, last_modified, short_term, term_vector, definition_vector."
+    },
+    {
+        "prompt": "What are the columns in the immuno_disease2ligand table?",
+        "completion": "The immuno_disease2ligand table contains the following columns: immuno_disease2ligand_id, ligand_id, disease_id, comment, immuno, comment_vector."
+    },
+    {
+        "prompt": "Describe the immuno_disease2ligand table.",
+        "completion": "The immuno_disease2ligand table includes data related to immuno_disease2ligand_id, ligand_id, disease_id, comment, immuno, comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the immuno_disease2ligand_refs table?",
+        "completion": "The immuno_disease2ligand_refs table contains the following columns: immuno_disease2ligand_id, reference_id."
+    },
+    {
+        "prompt": "Describe the immuno_disease2ligand_refs table.",
+        "completion": "The immuno_disease2ligand_refs table includes data related to immuno_disease2ligand_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the immuno_disease2object table?",
+        "completion": "The immuno_disease2object table contains the following columns: immuno_disease2object_id, object_id, disease_id, comment, immuno, comment_vector."
+    },
+    {
+        "prompt": "Describe the immuno_disease2object table.",
+        "completion": "The immuno_disease2object table includes data related to immuno_disease2object_id, object_id, disease_id, comment, immuno, comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the immuno_disease2object_refs table?",
+        "completion": "The immuno_disease2object_refs table contains the following columns: immuno_disease2object_id, reference_id."
+    },
+    {
+        "prompt": "Describe the immuno_disease2object_refs table.",
+        "completion": "The immuno_disease2object_refs table includes data related to immuno_disease2object_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the immunopaedia2family table?",
+        "completion": "The immunopaedia2family table contains the following columns: immunopaedia_case_id, family_id, section, url, comment."
+    },
+    {
+        "prompt": "Describe the immunopaedia2family table.",
+        "completion": "The immunopaedia2family table includes data related to immunopaedia_case_id, family_id, section, url, comment."
+    },
+    {
+        "prompt": "What are the columns in the immunopaedia2ligand table?",
+        "completion": "The immunopaedia2ligand table contains the following columns: immunopaedia_case_id, ligand_id, section, url, comment, placeholder."
+    },
+    {
+        "prompt": "Describe the immunopaedia2ligand table.",
+        "completion": "The immunopaedia2ligand table includes data related to immunopaedia_case_id, ligand_id, section, url, comment, placeholder."
+    },
+    {
+        "prompt": "What are the columns in the immunopaedia2object table?",
+        "completion": "The immunopaedia2object table contains the following columns: immunopaedia_case_id, object_id, section, url, comment."
+    },
+    {
+        "prompt": "Describe the immunopaedia2object table.",
+        "completion": "The immunopaedia2object table includes data related to immunopaedia_case_id, object_id, section, url, comment."
+    },
+    {
+        "prompt": "What are the columns in the immunopaedia_cases table?",
+        "completion": "The immunopaedia_cases table contains the following columns: immunopaedia_case_id, title, url, last_modified, short_title."
+    },
+    {
+        "prompt": "Describe the immunopaedia_cases table.",
+        "completion": "The immunopaedia_cases table includes data related to immunopaedia_case_id, title, url, last_modified, short_title."
+    },
+    {
+        "prompt": "What are the columns in the inn table?",
+        "completion": "The inn table contains the following columns: inn_number, inn, cas, smiles, smiles_salts_stripped, inchi_key_salts_stripped, nonisomeric_smiles_salts_stripped, nonisomeric_inchi_key_salts_stripped, neutralised_smiles, neutralised_inchi_key, neutralised_nonisomeric_smiles, neutralised_nonisomeric_inchi_key, inn_vector."
+    },
+    {
+        "prompt": "Describe the inn table.",
+        "completion": "The inn table includes data related to inn_number, inn, cas, smiles, smiles_salts_stripped, inchi_key_salts_stripped, nonisomeric_smiles_salts_stripped, nonisomeric_inchi_key_salts_stripped, neutralised_smiles, neutralised_inchi_key, neutralised_nonisomeric_smiles, neutralised_nonisomeric_inchi_key, inn_vector."
+    },
+    {
+        "prompt": "What are the columns in the interaction table?",
+        "completion": "The interaction table contains the following columns: interaction_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, selective, use_dependent, voltage_dependent, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, affinity_voltage_high, affinity_voltage_median, affinity_voltage_low, affinity_physiological_voltage, rank, selectivity, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, assay_conditions, from_grac, only_grac, receptor_site, ligand_context, percent_activity, assay_url, primary_target, target_ligand_id, whole_organism_assay, hide, type_vector."
+    },
+    {
+        "prompt": "Describe the interaction table.",
+        "completion": "The interaction table includes data related to interaction_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, selective, use_dependent, voltage_dependent, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, affinity_voltage_high, affinity_voltage_median, affinity_voltage_low, affinity_physiological_voltage, rank, selectivity, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, assay_conditions, from_grac, only_grac, receptor_site, ligand_context, percent_activity, assay_url, primary_target, target_ligand_id, whole_organism_assay, hide, type_vector."
+    },
+    {
+        "prompt": "What are the columns in the interaction_affinity_refs table?",
+        "completion": "The interaction_affinity_refs table contains the following columns: interaction_id, reference_id."
+    },
+    {
+        "prompt": "Describe the interaction_affinity_refs table.",
+        "completion": "The interaction_affinity_refs table includes data related to interaction_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the introduction table?",
+        "completion": "The introduction table contains the following columns: family_id, text, last_modified, annotation_status, no_contributor_list, cite_id, intro_vector."
+    },
+    {
+        "prompt": "Describe the introduction table.",
+        "completion": "The introduction table includes data related to family_id, text, last_modified, annotation_status, no_contributor_list, cite_id, intro_vector."
+    },
+    {
+        "prompt": "What are the columns in the iuphar2discoverx table?",
+        "completion": "The iuphar2discoverx table contains the following columns: object_id, cat_no."
+    },
+    {
+        "prompt": "Describe the iuphar2discoverx table.",
+        "completion": "The iuphar2discoverx table includes data related to object_id, cat_no."
+    },
+    {
+        "prompt": "What are the columns in the iuphar2tocris table?",
+        "completion": "The iuphar2tocris table contains the following columns: ligand_id, cat_no, exact, match."
+    },
+    {
+        "prompt": "Describe the iuphar2tocris table.",
+        "completion": "The iuphar2tocris table includes data related to ligand_id, cat_no, exact, match."
+    },
+    {
+        "prompt": "What are the columns in the lgic table?",
+        "completion": "The lgic table contains the following columns: object_id, ligand, selectivity_comments."
+    },
+    {
+        "prompt": "Describe the lgic table.",
+        "completion": "The lgic table includes data related to object_id, ligand, selectivity_comments."
+    },
+    {
+        "prompt": "What are the columns in the ligand table?",
+        "completion": "The ligand table contains the following columns: ligand_id, name, pubchem_sid, radioactive, old_ligand_id, type, approved, approved_source, iupac_name, comments, withdrawn_drug, verified, abbreviation, clinical_use, mechanism_of_action, absorption_distribution, metabolism, elimination, popn_pharmacokinetics, organ_function_impairment, emc_url, drugs_url, ema_url, bioactivity_comments, labelled, in_gtip, immuno_comments, in_gtmp, gtmp_comments, who_essential, antibacterial, has_qi_interaction, has_chembl_interaction, name_vector, comments_vector, abbreviation_vector, clinical_use_vector, mechanism_of_action_vector, absorption_distribution_vector, metabolism_vector, elimination_vector, popn_pharmacokinetics_vector, organ_function_impairment_vector, bioactivity_comments_vector, immuno_comments_vector, gtmp_comments_vector."
+    },
+    {
+        "prompt": "Describe the ligand table.",
+        "completion": "The ligand table includes data related to ligand_id, name, pubchem_sid, radioactive, old_ligand_id, type, approved, approved_source, iupac_name, comments, withdrawn_drug, verified, abbreviation, clinical_use, mechanism_of_action, absorption_distribution, metabolism, elimination, popn_pharmacokinetics, organ_function_impairment, emc_url, drugs_url, ema_url, bioactivity_comments, labelled, in_gtip, immuno_comments, in_gtmp, gtmp_comments, who_essential, antibacterial, has_qi_interaction, has_chembl_interaction, name_vector, comments_vector, abbreviation_vector, clinical_use_vector, mechanism_of_action_vector, absorption_distribution_vector, metabolism_vector, elimination_vector, popn_pharmacokinetics_vector, organ_function_impairment_vector, bioactivity_comments_vector, immuno_comments_vector, gtmp_comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the ligand2adb table?",
+        "completion": "The ligand2adb table contains the following columns: ligand_id, adb_id."
+    },
+    {
+        "prompt": "Describe the ligand2adb table.",
+        "completion": "The ligand2adb table includes data related to ligand_id, adb_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand2clinical_trial table?",
+        "completion": "The ligand2clinical_trial table contains the following columns: ligand2clinical_trial_id, ligand_id, clinical_trial_id, comment."
+    },
+    {
+        "prompt": "Describe the ligand2clinical_trial table.",
+        "completion": "The ligand2clinical_trial table includes data related to ligand2clinical_trial_id, ligand_id, clinical_trial_id, comment."
+    },
+    {
+        "prompt": "What are the columns in the ligand2clinical_trial_refs table?",
+        "completion": "The ligand2clinical_trial_refs table contains the following columns: ligand2clinical_trial_id, reference_id."
+    },
+    {
+        "prompt": "Describe the ligand2clinical_trial_refs table.",
+        "completion": "The ligand2clinical_trial_refs table includes data related to ligand2clinical_trial_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand2family table?",
+        "completion": "The ligand2family table contains the following columns: ligand_id, family_id, display_order."
+    },
+    {
+        "prompt": "Describe the ligand2family table.",
+        "completion": "The ligand2family table includes data related to ligand_id, family_id, display_order."
+    },
+    {
+        "prompt": "What are the columns in the ligand2inn table?",
+        "completion": "The ligand2inn table contains the following columns: ligand_id, inn_number."
+    },
+    {
+        "prompt": "Describe the ligand2inn table.",
+        "completion": "The ligand2inn table includes data related to ligand_id, inn_number."
+    },
+    {
+        "prompt": "What are the columns in the ligand2meshpharmacology table?",
+        "completion": "The ligand2meshpharmacology table contains the following columns: ligand_id, mesh_term, type."
+    },
+    {
+        "prompt": "Describe the ligand2meshpharmacology table.",
+        "completion": "The ligand2meshpharmacology table includes data related to ligand_id, mesh_term, type."
+    },
+    {
+        "prompt": "What are the columns in the ligand2subunit table?",
+        "completion": "The ligand2subunit table contains the following columns: ligand_id, subunit_id."
+    },
+    {
+        "prompt": "Describe the ligand2subunit table.",
+        "completion": "The ligand2subunit table includes data related to ligand_id, subunit_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand2synonym table?",
+        "completion": "The ligand2synonym table contains the following columns: ligand_id, synonym, from_grac, ligand2synonym_id, display, synonym_vector."
+    },
+    {
+        "prompt": "Describe the ligand2synonym table.",
+        "completion": "The ligand2synonym table includes data related to ligand_id, synonym, from_grac, ligand2synonym_id, display, synonym_vector."
+    },
+    {
+        "prompt": "What are the columns in the ligand2synonym_refs table?",
+        "completion": "The ligand2synonym_refs table contains the following columns: ligand2synonym_id, reference_id."
+    },
+    {
+        "prompt": "Describe the ligand2synonym_refs table.",
+        "completion": "The ligand2synonym_refs table includes data related to ligand2synonym_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand2tcp table?",
+        "completion": "The ligand2tcp table contains the following columns: ligand2tcp_id, ligand_id, tcp_id, comment."
+    },
+    {
+        "prompt": "Describe the ligand2tcp table.",
+        "completion": "The ligand2tcp table includes data related to ligand2tcp_id, ligand_id, tcp_id, comment."
+    },
+    {
+        "prompt": "What are the columns in the ligand2tcp_refs table?",
+        "completion": "The ligand2tcp_refs table contains the following columns: ligand2tcp_id, reference_id."
+    },
+    {
+        "prompt": "Describe the ligand2tcp_refs table.",
+        "completion": "The ligand2tcp_refs table includes data related to ligand2tcp_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand_approval_sources table?",
+        "completion": "The ligand_approval_sources table contains the following columns: ligand_id, approval_source, year, comment."
+    },
+    {
+        "prompt": "Describe the ligand_approval_sources table.",
+        "completion": "The ligand_approval_sources table includes data related to ligand_id, approval_source, year, comment."
+    },
+    {
+        "prompt": "What are the columns in the ligand_cluster table?",
+        "completion": "The ligand_cluster table contains the following columns: ligand_id, cluster, distance, cluster_centre."
+    },
+    {
+        "prompt": "Describe the ligand_cluster table.",
+        "completion": "The ligand_cluster table includes data related to ligand_id, cluster, distance, cluster_centre."
+    },
+    {
+        "prompt": "What are the columns in the ligand_cluster_new table?",
+        "completion": "The ligand_cluster_new table contains the following columns: ligand_id, cluster, distance, cluster_centre, 1, 6199."
+    },
+    {
+        "prompt": "Describe the ligand_cluster_new table.",
+        "completion": "The ligand_cluster_new table includes data related to ligand_id, cluster, distance, cluster_centre, 1, 6199."
+    },
+    {
+        "prompt": "What are the columns in the ligand_database_link table?",
+        "completion": "The ligand_database_link table contains the following columns: ligand_database_link_id, ligand_id, database_id, placeholder, source, commercial, species_id."
+    },
+    {
+        "prompt": "Describe the ligand_database_link table.",
+        "completion": "The ligand_database_link table includes data related to ligand_database_link_id, ligand_id, database_id, placeholder, source, commercial, species_id."
+    },
+    {
+        "prompt": "What are the columns in the ligand_physchem table?",
+        "completion": "The ligand_physchem table contains the following columns: ligand_id, hydrogen_bond_acceptors, hydrogen_bond_donors, rotatable_bonds_count, topological_polar_surface_area, molecular_weight, xlogp, lipinski_s_rule_of_five."
+    },
+    {
+        "prompt": "Describe the ligand_physchem table.",
+        "completion": "The ligand_physchem table includes data related to ligand_id, hydrogen_bond_acceptors, hydrogen_bond_donors, rotatable_bonds_count, topological_polar_surface_area, molecular_weight, xlogp, lipinski_s_rule_of_five."
+    },
+    {
+        "prompt": "What are the columns in the ligand_physchem_public table?",
+        "completion": "The ligand_physchem_public table contains the following columns: ligand_id, hydrogen_bond_acceptors, hydrogen_bond_donors, rotatable_bonds_count, topological_polar_surface_area, molecular_weight, xlogp, lipinski_s_rule_of_five."
+    },
+    {
+        "prompt": "Describe the ligand_physchem_public table.",
+        "completion": "The ligand_physchem_public table includes data related to ligand_id, hydrogen_bond_acceptors, hydrogen_bond_donors, rotatable_bonds_count, topological_polar_surface_area, molecular_weight, xlogp, lipinski_s_rule_of_five."
+    },
+    {
+        "prompt": "What are the columns in the ligand_structure table?",
+        "completion": "The ligand_structure table contains the following columns: ligand_id, isomeric_smiles, isomeric_standard_inchi, isomeric_standard_inchi_key, nonisomeric_smiles, nonisomeric_standard_inchi, nonisomeric_standard_inchi_key, pubchem_cid."
+    },
+    {
+        "prompt": "Describe the ligand_structure table.",
+        "completion": "The ligand_structure table includes data related to ligand_id, isomeric_smiles, isomeric_standard_inchi, isomeric_standard_inchi_key, nonisomeric_smiles, nonisomeric_standard_inchi, nonisomeric_standard_inchi_key, pubchem_cid."
+    },
+    {
+        "prompt": "What are the columns in the list_ligand table?",
+        "completion": "The list_ligand table contains the following columns: object_id, ligand_id, display_order."
+    },
+    {
+        "prompt": "Describe the list_ligand table.",
+        "completion": "The list_ligand table includes data related to object_id, ligand_id, display_order."
+    },
+    {
+        "prompt": "What are the columns in the malaria_stage table?",
+        "completion": "The malaria_stage table contains the following columns: malaria_stage_id, name, description, short_name, name_vector, description_vector."
+    },
+    {
+        "prompt": "Describe the malaria_stage table.",
+        "completion": "The malaria_stage table includes data related to malaria_stage_id, name, description, short_name, name_vector, description_vector."
+    },
+    {
+        "prompt": "What are the columns in the malaria_stage2interaction table?",
+        "completion": "The malaria_stage2interaction table contains the following columns: interaction_id, malaria_stage_id."
+    },
+    {
+        "prompt": "Describe the malaria_stage2interaction table.",
+        "completion": "The malaria_stage2interaction table includes data related to interaction_id, malaria_stage_id."
+    },
+    {
+        "prompt": "What are the columns in the multimer table?",
+        "completion": "The multimer table contains the following columns: object_id, subunit_specific_agents_comments."
+    },
+    {
+        "prompt": "Describe the multimer table.",
+        "completion": "The multimer table includes data related to object_id, subunit_specific_agents_comments."
+    },
+    {
+        "prompt": "What are the columns in the mutation table?",
+        "completion": "The mutation table contains the following columns: mutation_id, pathophysiology_id, object_id, type, amino_acid_change, species_id, description, nucleotide_change."
+    },
+    {
+        "prompt": "Describe the mutation table.",
+        "completion": "The mutation table includes data related to mutation_id, pathophysiology_id, object_id, type, amino_acid_change, species_id, description, nucleotide_change."
+    },
+    {
+        "prompt": "What are the columns in the mutation_refs table?",
+        "completion": "The mutation_refs table contains the following columns: mutation_id, reference_id."
+    },
+    {
+        "prompt": "Describe the mutation_refs table.",
+        "completion": "The mutation_refs table includes data related to mutation_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the nhr table?",
+        "completion": "The nhr table contains the following columns: object_id, ligand, binding_partner_comments, coregulator_comments, dna_binding_comments, target_gene_comments."
+    },
+    {
+        "prompt": "Describe the nhr table.",
+        "completion": "The nhr table includes data related to object_id, ligand, binding_partner_comments, coregulator_comments, dna_binding_comments, target_gene_comments."
+    },
+    {
+        "prompt": "What are the columns in the object table?",
+        "completion": "The object table contains the following columns: object_id, name, last_modified, comments, structural_info_comments, old_object_id, annotation_status, only_iuphar, grac_comments, only_grac, no_contributor_list, abbreviation, systematic_name, quaternary_structure_comments, in_cgtp, in_gtip, gtip_comment, in_gtmp, gtmp_comment, cite_id."
+    },
+    {
+        "prompt": "Describe the object table.",
+        "completion": "The object table includes data related to object_id, name, last_modified, comments, structural_info_comments, old_object_id, annotation_status, only_iuphar, grac_comments, only_grac, no_contributor_list, abbreviation, systematic_name, quaternary_structure_comments, in_cgtp, in_gtip, gtip_comment, in_gtmp, gtmp_comment, cite_id."
+    },
+    {
+        "prompt": "What are the columns in the object2go_process table?",
+        "completion": "The object2go_process table contains the following columns: object_id, go_process_id, go_evidence, comment, comment_vector."
+    },
+    {
+        "prompt": "Describe the object2go_process table.",
+        "completion": "The object2go_process table includes data related to object_id, go_process_id, go_evidence, comment, comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the object2reaction table?",
+        "completion": "The object2reaction table contains the following columns: object_id, reaction_id."
+    },
+    {
+        "prompt": "Describe the object2reaction table.",
+        "completion": "The object2reaction table includes data related to object_id, reaction_id."
+    },
+    {
+        "prompt": "What are the columns in the object_vectors table?",
+        "completion": "The object_vectors table contains the following columns: object_id, name, abbreviation, comments, grac_comments, gtip_comments, gtmp_comments, structural_info_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments, subunit_specific_agents_comments, selectivity_comments, voltage_dependence_comments, target_gene_comments, dna_binding_comments, coregulator_comments, binding_partner_comments."
+    },
+    {
+        "prompt": "Describe the object_vectors table.",
+        "completion": "The object_vectors table includes data related to object_id, name, abbreviation, comments, grac_comments, gtip_comments, gtmp_comments, structural_info_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments, subunit_specific_agents_comments, selectivity_comments, voltage_dependence_comments, target_gene_comments, dna_binding_comments, coregulator_comments, binding_partner_comments."
+    },
+    {
+        "prompt": "What are the columns in the ontology table?",
+        "completion": "The ontology table contains the following columns: ontology_id, name, short_name."
+    },
+    {
+        "prompt": "Describe the ontology table.",
+        "completion": "The ontology table includes data related to ontology_id, name, short_name."
+    },
+    {
+        "prompt": "What are the columns in the ontology_term table?",
+        "completion": "The ontology_term table contains the following columns: ontology_id, term_id, term, description."
+    },
+    {
+        "prompt": "Describe the ontology_term table.",
+        "completion": "The ontology_term table includes data related to ontology_id, term_id, term, description."
+    },
+    {
+        "prompt": "What are the columns in the other_ic table?",
+        "completion": "The other_ic table contains the following columns: object_id, selectivity_comments."
+    },
+    {
+        "prompt": "Describe the other_ic table.",
+        "completion": "The other_ic table includes data related to object_id, selectivity_comments."
+    },
+    {
+        "prompt": "What are the columns in the other_protein table?",
+        "completion": "The other_protein table contains the following columns: object_id."
+    },
+    {
+        "prompt": "Describe the other_protein table.",
+        "completion": "The other_protein table includes data related to object_id."
+    },
+    {
+        "prompt": "What are the columns in the pathophysiology table?",
+        "completion": "The pathophysiology table contains the following columns: pathophysiology_id, object_id, disease, role, drugs, side_effects, use, omim, comments, orphanet, disease_id, role_vector, drugs_vector, side_effects_vector, use_vector, comments_vector."
+    },
+    {
+        "prompt": "Describe the pathophysiology table.",
+        "completion": "The pathophysiology table includes data related to pathophysiology_id, object_id, disease, role, drugs, side_effects, use, omim, comments, orphanet, disease_id, role_vector, drugs_vector, side_effects_vector, use_vector, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the pathophysiology_refs table?",
+        "completion": "The pathophysiology_refs table contains the following columns: pathophysiology_id, reference_id."
+    },
+    {
+        "prompt": "Describe the pathophysiology_refs table.",
+        "completion": "The pathophysiology_refs table includes data related to pathophysiology_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the pdb_inchi table?",
+        "completion": "The pdb_inchi table contains the following columns: inchikey, pdb_id."
+    },
+    {
+        "prompt": "Describe the pdb_inchi table.",
+        "completion": "The pdb_inchi table includes data related to inchikey, pdb_id."
+    },
+    {
+        "prompt": "What are the columns in the pdb_structure table?",
+        "completion": "The pdb_structure table contains the following columns: pdb_structure_id, object_id, ligand_id, endogenous, pdb_code, description, resolution, species_id, description_vector."
+    },
+    {
+        "prompt": "Describe the pdb_structure table.",
+        "completion": "The pdb_structure table includes data related to pdb_structure_id, object_id, ligand_id, endogenous, pdb_code, description, resolution, species_id, description_vector."
+    },
+    {
+        "prompt": "What are the columns in the pdb_structure_refs table?",
+        "completion": "The pdb_structure_refs table contains the following columns: pdb_structure_id, reference_id."
+    },
+    {
+        "prompt": "Describe the pdb_structure_refs table.",
+        "completion": "The pdb_structure_refs table includes data related to pdb_structure_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the peptide table?",
+        "completion": "The peptide table contains the following columns: ligand_id, one_letter_seq, three_letter_seq, post_translational_modifications, chemical_modifications, medical_relevance, helm_notation."
+    },
+    {
+        "prompt": "Describe the peptide table.",
+        "completion": "The peptide table includes data related to ligand_id, one_letter_seq, three_letter_seq, post_translational_modifications, chemical_modifications, medical_relevance, helm_notation."
+    },
+    {
+        "prompt": "What are the columns in the peptide_ligand_cluster table?",
+        "completion": "The peptide_ligand_cluster table contains the following columns: ligand_id, cluster."
+    },
+    {
+        "prompt": "Describe the peptide_ligand_cluster table.",
+        "completion": "The peptide_ligand_cluster table includes data related to ligand_id, cluster."
+    },
+    {
+        "prompt": "What are the columns in the peptide_ligand_sequence_cluster table?",
+        "completion": "The peptide_ligand_sequence_cluster table contains the following columns: ligand_id, cluster."
+    },
+    {
+        "prompt": "Describe the peptide_ligand_sequence_cluster table.",
+        "completion": "The peptide_ligand_sequence_cluster table includes data related to ligand_id, cluster."
+    },
+    {
+        "prompt": "What are the columns in the physiological_function table?",
+        "completion": "The physiological_function table contains the following columns: physiological_function_id, object_id, description, species_id, tissue, description_vector, tissue_vector."
+    },
+    {
+        "prompt": "Describe the physiological_function table.",
+        "completion": "The physiological_function table includes data related to physiological_function_id, object_id, description, species_id, tissue, description_vector, tissue_vector."
+    },
+    {
+        "prompt": "What are the columns in the physiological_function_refs table?",
+        "completion": "The physiological_function_refs table contains the following columns: physiological_function_id, reference_id."
+    },
+    {
+        "prompt": "Describe the physiological_function_refs table.",
+        "completion": "The physiological_function_refs table includes data related to physiological_function_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the precursor table?",
+        "completion": "The precursor table contains the following columns: precursor_id, gene_name, official_gene_id, protein_name, species_id, gene_long_name, protein_name_vector, gene_long_name_vector."
+    },
+    {
+        "prompt": "Describe the precursor table.",
+        "completion": "The precursor table includes data related to precursor_id, gene_name, official_gene_id, protein_name, species_id, gene_long_name, protein_name_vector, gene_long_name_vector."
+    },
+    {
+        "prompt": "What are the columns in the precursor2peptide table?",
+        "completion": "The precursor2peptide table contains the following columns: precursor_id, ligand_id."
+    },
+    {
+        "prompt": "Describe the precursor2peptide table.",
+        "completion": "The precursor2peptide table includes data related to precursor_id, ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the precursor2synonym table?",
+        "completion": "The precursor2synonym table contains the following columns: precursor2synonym_id, precursor_id, synonym, synonym_vector."
+    },
+    {
+        "prompt": "Describe the precursor2synonym table.",
+        "completion": "The precursor2synonym table includes data related to precursor2synonym_id, precursor_id, synonym, synonym_vector."
+    },
+    {
+        "prompt": "What are the columns in the primary_regulator table?",
+        "completion": "The primary_regulator table contains the following columns: primary_regulator_id, object_id, name, regulatory_effect, regulator_object_id."
+    },
+    {
+        "prompt": "Describe the primary_regulator table.",
+        "completion": "The primary_regulator table includes data related to primary_regulator_id, object_id, name, regulatory_effect, regulator_object_id."
+    },
+    {
+        "prompt": "What are the columns in the primary_regulator_refs table?",
+        "completion": "The primary_regulator_refs table contains the following columns: primary_regulator_id, reference_id."
+    },
+    {
+        "prompt": "Describe the primary_regulator_refs table.",
+        "completion": "The primary_regulator_refs table includes data related to primary_regulator_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the process_assoc table?",
+        "completion": "The process_assoc table contains the following columns: object_id, gtip_process_id, comment, direct_annotation, go_annotation, process_assoc_id, comment_vector."
+    },
+    {
+        "prompt": "Describe the process_assoc table.",
+        "completion": "The process_assoc table includes data related to object_id, gtip_process_id, comment, direct_annotation, go_annotation, process_assoc_id, comment_vector."
+    },
+    {
+        "prompt": "What are the columns in the process_assoc_refs table?",
+        "completion": "The process_assoc_refs table contains the following columns: process_assoc_id, reference_id."
+    },
+    {
+        "prompt": "Describe the process_assoc_refs table.",
+        "completion": "The process_assoc_refs table includes data related to process_assoc_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the prodrug table?",
+        "completion": "The prodrug table contains the following columns: prodrug_ligand_id, drug_ligand_id."
+    },
+    {
+        "prompt": "Describe the prodrug table.",
+        "completion": "The prodrug table includes data related to prodrug_ligand_id, drug_ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the product table?",
+        "completion": "The product table contains the following columns: product_id, object_id, species_id, ligand_id, name, endogenous, in_iuphar, in_grac, name_vector."
+    },
+    {
+        "prompt": "Describe the product table.",
+        "completion": "The product table includes data related to product_id, object_id, species_id, ligand_id, name, endogenous, in_iuphar, in_grac, name_vector."
+    },
+    {
+        "prompt": "What are the columns in the product_refs table?",
+        "completion": "The product_refs table contains the following columns: product_id, reference_id."
+    },
+    {
+        "prompt": "Describe the product_refs table.",
+        "completion": "The product_refs table includes data related to product_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the reaction table?",
+        "completion": "The reaction table contains the following columns: reaction_id, ec_number, reaction."
+    },
+    {
+        "prompt": "Describe the reaction table.",
+        "completion": "The reaction table includes data related to reaction_id, ec_number, reaction."
+    },
+    {
+        "prompt": "What are the columns in the receptor2family table?",
+        "completion": "The receptor2family table contains the following columns: object_id, family_id, display_order."
+    },
+    {
+        "prompt": "Describe the receptor2family table.",
+        "completion": "The receptor2family table includes data related to object_id, family_id, display_order."
+    },
+    {
+        "prompt": "What are the columns in the receptor2subunit table?",
+        "completion": "The receptor2subunit table contains the following columns: receptor_id, subunit_id, type."
+    },
+    {
+        "prompt": "Describe the receptor2subunit table.",
+        "completion": "The receptor2subunit table includes data related to receptor_id, subunit_id, type."
+    },
+    {
+        "prompt": "What are the columns in the receptor_basic table?",
+        "completion": "The receptor_basic table contains the following columns: object_id, list_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments."
+    },
+    {
+        "prompt": "Describe the receptor_basic table.",
+        "completion": "The receptor_basic table includes data related to object_id, list_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments."
+    },
+    {
+        "prompt": "What are the columns in the reference table?",
+        "completion": "The reference table contains the following columns: reference_id, type, title, article_title, year, issue, volume, pages, publisher, publisher_address, editors, pubmed_id, isbn, pub_status, topics, comments, read, useful, website, url, doi, accessed, modified, patent_number, priority, publication, authors, assignee, pmc_id, authors_vector, article_title_vector."
+    },
+    {
+        "prompt": "Describe the reference table.",
+        "completion": "The reference table includes data related to reference_id, type, title, article_title, year, issue, volume, pages, publisher, publisher_address, editors, pubmed_id, isbn, pub_status, topics, comments, read, useful, website, url, doi, accessed, modified, patent_number, priority, publication, authors, assignee, pmc_id, authors_vector, article_title_vector."
+    },
+    {
+        "prompt": "What are the columns in the reference2immuno table?",
+        "completion": "The reference2immuno table contains the following columns: reference_id, type."
+    },
+    {
+        "prompt": "Describe the reference2immuno table.",
+        "completion": "The reference2immuno table includes data related to reference_id, type."
+    },
+    {
+        "prompt": "What are the columns in the reference2ligand table?",
+        "completion": "The reference2ligand table contains the following columns: reference_id, ligand_id."
+    },
+    {
+        "prompt": "Describe the reference2ligand table.",
+        "completion": "The reference2ligand table includes data related to reference_id, ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the screen table?",
+        "completion": "The screen table contains the following columns: screen_id, name, description, url, affinity_cut_off_nm, company_logo_filename, technology_logo_filename."
+    },
+    {
+        "prompt": "Describe the screen table.",
+        "completion": "The screen table includes data related to screen_id, name, description, url, affinity_cut_off_nm, company_logo_filename, technology_logo_filename."
+    },
+    {
+        "prompt": "What are the columns in the screen_interaction table?",
+        "completion": "The screen_interaction table contains the following columns: screen_interaction_id, screen_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, percent_activity, assay_url."
+    },
+    {
+        "prompt": "Describe the screen_interaction table.",
+        "completion": "The screen_interaction table includes data related to screen_interaction_id, screen_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, percent_activity, assay_url."
+    },
+    {
+        "prompt": "What are the columns in the screen_refs table?",
+        "completion": "The screen_refs table contains the following columns: screen_id, reference_id."
+    },
+    {
+        "prompt": "Describe the screen_refs table.",
+        "completion": "The screen_refs table includes data related to screen_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the selectivity table?",
+        "completion": "The selectivity table contains the following columns: selectivity_id, object_id, ion, conductance_high, conductance_low, conductance_median, hide_conductance, species_id."
+    },
+    {
+        "prompt": "Describe the selectivity table.",
+        "completion": "The selectivity table includes data related to selectivity_id, object_id, ion, conductance_high, conductance_low, conductance_median, hide_conductance, species_id."
+    },
+    {
+        "prompt": "What are the columns in the selectivity_refs table?",
+        "completion": "The selectivity_refs table contains the following columns: selectivity_id, reference_id."
+    },
+    {
+        "prompt": "Describe the selectivity_refs table.",
+        "completion": "The selectivity_refs table includes data related to selectivity_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the skye_covid_ligand_log table?",
+        "completion": "The skye_covid_ligand_log table contains the following columns: covid_ligand_id, ligand_id, name, url, comment, curated, secondary_ligand_id, secondary_name, secondary_url, secondary_curated, priority, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_covid_ligand_log table.",
+        "completion": "The skye_covid_ligand_log table includes data related to covid_ligand_id, ligand_id, name, url, comment, curated, secondary_ligand_id, secondary_name, secondary_url, secondary_curated, priority, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_covid_target_log table?",
+        "completion": "The skye_covid_target_log table contains the following columns: covid_target_id, object_id, name, url, comment, curated, target_ligand_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_covid_target_log table.",
+        "completion": "The skye_covid_target_log table includes data related to covid_target_id, object_id, name, url, comment, curated, target_ligand_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_immuno_disease2ligand_log table?",
+        "completion": "The skye_immuno_disease2ligand_log table contains the following columns: immuno_disease2ligand_id, ligand_id, disease_id, comment, immuno, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_immuno_disease2ligand_log table.",
+        "completion": "The skye_immuno_disease2ligand_log table includes data related to immuno_disease2ligand_id, ligand_id, disease_id, comment, immuno, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_interaction_affinity_refs_log table?",
+        "completion": "The skye_interaction_affinity_refs_log table contains the following columns: interaction_id, reference_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_interaction_affinity_refs_log table.",
+        "completion": "The skye_interaction_affinity_refs_log table includes data related to interaction_id, reference_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_interaction_log table?",
+        "completion": "The skye_interaction_log table contains the following columns: interaction_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, selective, use_dependent, voltage_dependent, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, affinity_voltage_high, affinity_voltage_median, affinity_voltage_low, affinity_physiological_voltage, rank, selectivity, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, assay_conditions, from_grac, only_grac, receptor_site, ligand_context, percent_activity, assay_url, primary_target, target_ligand_id, whole_organism_assay, hide, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_interaction_log table.",
+        "completion": "The skye_interaction_log table includes data related to interaction_id, ligand_id, object_id, type, action, action_comment, species_id, endogenous, selective, use_dependent, voltage_dependent, affinity_units, affinity_high, affinity_median, affinity_low, concentration_range, affinity_voltage_high, affinity_voltage_median, affinity_voltage_low, affinity_physiological_voltage, rank, selectivity, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_units, original_affinity_relation, assay_description, assay_conditions, from_grac, only_grac, receptor_site, ligand_context, percent_activity, assay_url, primary_target, target_ligand_id, whole_organism_assay, hide, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand2clinical_trial_log table?",
+        "completion": "The skye_ligand2clinical_trial_log table contains the following columns: ligand2clinical_trial_id, ligand_id, clinical_trial_id, comment, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand2clinical_trial_log table.",
+        "completion": "The skye_ligand2clinical_trial_log table includes data related to ligand2clinical_trial_id, ligand_id, clinical_trial_id, comment, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand2synonym_log table?",
+        "completion": "The skye_ligand2synonym_log table contains the following columns: ligand_id, synonym, from_grac, ligand2synonym_id, display, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand2synonym_log table.",
+        "completion": "The skye_ligand2synonym_log table includes data related to ligand_id, synonym, from_grac, ligand2synonym_id, display, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand2tcp_log table?",
+        "completion": "The skye_ligand2tcp_log table contains the following columns: ligand2tcp_id, ligand_id, tcp_id, comment, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand2tcp_log table.",
+        "completion": "The skye_ligand2tcp_log table includes data related to ligand2tcp_id, ligand_id, tcp_id, comment, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand_database_link_log table?",
+        "completion": "The skye_ligand_database_link_log table contains the following columns: ligand_database_link_id, ligand_id, database_id, placeholder, source, commercial, species_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand_database_link_log table.",
+        "completion": "The skye_ligand_database_link_log table includes data related to ligand_database_link_id, ligand_id, database_id, placeholder, source, commercial, species_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand_log table?",
+        "completion": "The skye_ligand_log table contains the following columns: ligand_id, name, pubchem_sid, radioactive, old_ligand_id, type, approved, approved_source, iupac_name, comments, withdrawn_drug, verified, abbreviation, clinical_use, mechanism_of_action, absorption_distribution, metabolism, elimination, popn_pharmacokinetics, organ_function_impairment, emc_url, drugs_url, ema_url, bioactivity_comments, labelled, in_gtip, immuno_comments, in_gtmp, gtmp_comments, who_essential, antibiotic, has_qi_interaction, has_chembl_interaction, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand_log table.",
+        "completion": "The skye_ligand_log table includes data related to ligand_id, name, pubchem_sid, radioactive, old_ligand_id, type, approved, approved_source, iupac_name, comments, withdrawn_drug, verified, abbreviation, clinical_use, mechanism_of_action, absorption_distribution, metabolism, elimination, popn_pharmacokinetics, organ_function_impairment, emc_url, drugs_url, ema_url, bioactivity_comments, labelled, in_gtip, immuno_comments, in_gtmp, gtmp_comments, who_essential, antibiotic, has_qi_interaction, has_chembl_interaction, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_ligand_structure_log table?",
+        "completion": "The skye_ligand_structure_log table contains the following columns: ligand_id, isomeric_smiles, isomeric_standard_inchi, isomeric_standard_inchi_key, nonisomeric_smiles, nonisomeric_standard_inchi, nonisomeric_standard_inchi_key, pubchem_cid, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_ligand_structure_log table.",
+        "completion": "The skye_ligand_structure_log table includes data related to ligand_id, isomeric_smiles, isomeric_standard_inchi, isomeric_standard_inchi_key, nonisomeric_smiles, nonisomeric_standard_inchi, nonisomeric_standard_inchi_key, pubchem_cid, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_malaria_stage2interaction_log table?",
+        "completion": "The skye_malaria_stage2interaction_log table contains the following columns: interaction_id, malaria_stage_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_malaria_stage2interaction_log table.",
+        "completion": "The skye_malaria_stage2interaction_log table includes data related to interaction_id, malaria_stage_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_pdb_structure_log table?",
+        "completion": "The skye_pdb_structure_log table contains the following columns: pdb_structure_id, object_id, ligand_id, endogenous, pdb_code, description, resolution, species_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_pdb_structure_log table.",
+        "completion": "The skye_pdb_structure_log table includes data related to pdb_structure_id, object_id, ligand_id, endogenous, pdb_code, description, resolution, species_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_peptide_log table?",
+        "completion": "The skye_peptide_log table contains the following columns: ligand_id, one_letter_seq, three_letter_seq, post_translational_modifications, chemical_modifications, medical_relevance, helm_notation, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_peptide_log table.",
+        "completion": "The skye_peptide_log table includes data related to ligand_id, one_letter_seq, three_letter_seq, post_translational_modifications, chemical_modifications, medical_relevance, helm_notation, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_receptor_basic_log table?",
+        "completion": "The skye_receptor_basic_log table contains the following columns: object_id, list_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_receptor_basic_log table.",
+        "completion": "The skye_receptor_basic_log table includes data related to object_id, list_comments, associated_proteins_comments, functional_assay_comments, tissue_distribution_comments, functions_comments, altered_expression_comments, expression_pathophysiology_comments, mutations_pathophysiology_comments, variants_comments, xenobiotic_expression_comments, antibody_comments, agonists_comments, antagonists_comments, allosteric_modulators_comments, activators_comments, inhibitors_comments, channel_blockers_comments, gating_inhibitors_comments, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the skye_reference2ligand_log table?",
+        "completion": "The skye_reference2ligand_log table contains the following columns: reference_id, ligand_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "Describe the skye_reference2ligand_log table.",
+        "completion": "The skye_reference2ligand_log table includes data related to reference_id, ligand_id, operation, user_id, transaction_time."
+    },
+    {
+        "prompt": "What are the columns in the species table?",
+        "completion": "The species table contains the following columns: species_id, name, short_name, scientific_name, ncbi_taxonomy_id, comments, description, name_vector, short_name_vector."
+    },
+    {
+        "prompt": "Describe the species table.",
+        "completion": "The species table includes data related to species_id, name, short_name, scientific_name, ncbi_taxonomy_id, comments, description, name_vector, short_name_vector."
+    },
+    {
+        "prompt": "What are the columns in the specific_reaction table?",
+        "completion": "The specific_reaction table contains the following columns: specific_reaction_id, object_id, reaction_id, description, reaction."
+    },
+    {
+        "prompt": "Describe the specific_reaction table.",
+        "completion": "The specific_reaction table includes data related to specific_reaction_id, object_id, reaction_id, description, reaction."
+    },
+    {
+        "prompt": "What are the columns in the specific_reaction_refs table?",
+        "completion": "The specific_reaction_refs table contains the following columns: specific_reaction_id, reference_id."
+    },
+    {
+        "prompt": "Describe the specific_reaction_refs table.",
+        "completion": "The specific_reaction_refs table includes data related to specific_reaction_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the structural_info table?",
+        "completion": "The structural_info table contains the following columns: structural_info_id, object_id, species_id, transmembrane_domains, amino_acids, pore_loops, genomic_location, gene_name, official_gene_id, molecular_weight, gene_long_name, gene_long_name_vector."
+    },
+    {
+        "prompt": "Describe the structural_info table.",
+        "completion": "The structural_info table includes data related to structural_info_id, object_id, species_id, transmembrane_domains, amino_acids, pore_loops, genomic_location, gene_name, official_gene_id, molecular_weight, gene_long_name, gene_long_name_vector."
+    },
+    {
+        "prompt": "What are the columns in the structural_info_refs table?",
+        "completion": "The structural_info_refs table contains the following columns: structural_info_id, reference_id."
+    },
+    {
+        "prompt": "Describe the structural_info_refs table.",
+        "completion": "The structural_info_refs table includes data related to structural_info_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the subcommittee table?",
+        "completion": "The subcommittee table contains the following columns: contributor_id, family_id, role, display_order."
+    },
+    {
+        "prompt": "Describe the subcommittee table.",
+        "completion": "The subcommittee table includes data related to contributor_id, family_id, role, display_order."
+    },
+    {
+        "prompt": "What are the columns in the substrate table?",
+        "completion": "The substrate table contains the following columns: substrate_id, object_id, species_id, ligand_id, property, value, units, assay_description, assay_conditions, comments, name, endogenous, in_iuphar, in_grac, standard_property, standard_value, name_vector."
+    },
+    {
+        "prompt": "Describe the substrate table.",
+        "completion": "The substrate table includes data related to substrate_id, object_id, species_id, ligand_id, property, value, units, assay_description, assay_conditions, comments, name, endogenous, in_iuphar, in_grac, standard_property, standard_value, name_vector."
+    },
+    {
+        "prompt": "What are the columns in the substrate_refs table?",
+        "completion": "The substrate_refs table contains the following columns: substrate_id, reference_id."
+    },
+    {
+        "prompt": "Describe the substrate_refs table.",
+        "completion": "The substrate_refs table includes data related to substrate_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the synonym table?",
+        "completion": "The synonym table contains the following columns: synonym_id, object_id, synonym, display, from_grac, display_order, synonym_vector."
+    },
+    {
+        "prompt": "Describe the synonym table.",
+        "completion": "The synonym table includes data related to synonym_id, object_id, synonym, display, from_grac, display_order, synonym_vector."
+    },
+    {
+        "prompt": "What are the columns in the synonym_refs table?",
+        "completion": "The synonym_refs table contains the following columns: synonym_id, reference_id."
+    },
+    {
+        "prompt": "Describe the synonym_refs table.",
+        "completion": "The synonym_refs table includes data related to synonym_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the target_candidate_profile table?",
+        "completion": "The target_candidate_profile table contains the following columns: tcp_id, profile, intended_use, target_stage, profile_vector, intended_use_vector, target_stage_vector."
+    },
+    {
+        "prompt": "Describe the target_candidate_profile table.",
+        "completion": "The target_candidate_profile table includes data related to tcp_id, profile, intended_use, target_stage, profile_vector, intended_use_vector, target_stage_vector."
+    },
+    {
+        "prompt": "What are the columns in the target_gene table?",
+        "completion": "The target_gene table contains the following columns: target_gene_id, object_id, species_id, description, official_gene_id, effect, technique, comments, description_vector, effect_vector, technique_vector, comments_vector."
+    },
+    {
+        "prompt": "Describe the target_gene table.",
+        "completion": "The target_gene table includes data related to target_gene_id, object_id, species_id, description, official_gene_id, effect, technique, comments, description_vector, effect_vector, technique_vector, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the target_gene_refs table?",
+        "completion": "The target_gene_refs table contains the following columns: target_gene_id, reference_id."
+    },
+    {
+        "prompt": "Describe the target_gene_refs table.",
+        "completion": "The target_gene_refs table includes data related to target_gene_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the target_ligand_same_entity table?",
+        "completion": "The target_ligand_same_entity table contains the following columns: object_id, ligand_id."
+    },
+    {
+        "prompt": "Describe the target_ligand_same_entity table.",
+        "completion": "The target_ligand_same_entity table includes data related to object_id, ligand_id."
+    },
+    {
+        "prompt": "What are the columns in the tissue table?",
+        "completion": "The tissue table contains the following columns: tissue_id, name."
+    },
+    {
+        "prompt": "Describe the tissue table.",
+        "completion": "The tissue table includes data related to tissue_id, name."
+    },
+    {
+        "prompt": "What are the columns in the tissue_distribution table?",
+        "completion": "The tissue_distribution table contains the following columns: tissue_distribution_id, object_id, tissues, species_id, technique, expression_level, tissues_vector, technique_vector."
+    },
+    {
+        "prompt": "Describe the tissue_distribution table.",
+        "completion": "The tissue_distribution table includes data related to tissue_distribution_id, object_id, tissues, species_id, technique, expression_level, tissues_vector, technique_vector."
+    },
+    {
+        "prompt": "What are the columns in the tissue_distribution_refs table?",
+        "completion": "The tissue_distribution_refs table contains the following columns: tissue_distribution_id, reference_id."
+    },
+    {
+        "prompt": "Describe the tissue_distribution_refs table.",
+        "completion": "The tissue_distribution_refs table includes data related to tissue_distribution_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the tocris table?",
+        "completion": "The tocris table contains the following columns: cat_no, url, name, smiles, pubchem_cid, inchi, new_inchi, new_pubchem_cid."
+    },
+    {
+        "prompt": "Describe the tocris table.",
+        "completion": "The tocris table includes data related to cat_no, url, name, smiles, pubchem_cid, inchi, new_inchi, new_pubchem_cid."
+    },
+    {
+        "prompt": "What are the columns in the tocris_update table?",
+        "completion": "The tocris_update table contains the following columns: cat_no, url, name, smiles, pubchem_cid, inchi, cas."
+    },
+    {
+        "prompt": "Describe the tocris_update table.",
+        "completion": "The tocris_update table includes data related to cat_no, url, name, smiles, pubchem_cid, inchi, cas."
+    },
+    {
+        "prompt": "What are the columns in the transduction table?",
+        "completion": "The transduction table contains the following columns: transduction_id, object_id, secondary, t01, t02, t03, t04, t05, t06, e01, e02, e03, e04, e05, e06, e07, e08, e09, comments, comments_vector."
+    },
+    {
+        "prompt": "Describe the transduction table.",
+        "completion": "The transduction table includes data related to transduction_id, object_id, secondary, t01, t02, t03, t04, t05, t06, e01, e02, e03, e04, e05, e06, e07, e08, e09, comments, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the transduction_refs table?",
+        "completion": "The transduction_refs table contains the following columns: transduction_id, reference_id."
+    },
+    {
+        "prompt": "Describe the transduction_refs table.",
+        "completion": "The transduction_refs table includes data related to transduction_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the transporter table?",
+        "completion": "The transporter table contains the following columns: object_id, grac_stoichiometry, grac_stoichiometry_vector."
+    },
+    {
+        "prompt": "Describe the transporter table.",
+        "completion": "The transporter table includes data related to object_id, grac_stoichiometry, grac_stoichiometry_vector."
+    },
+    {
+        "prompt": "What are the columns in the variant table?",
+        "completion": "The variant table contains the following columns: variant_id, object_id, description, type, species_id, amino_acids, amino_acid_change, validation, global_maf, subpop_maf, minor_allele_count, frequency_comment, nucleotide_change, description_vector."
+    },
+    {
+        "prompt": "Describe the variant table.",
+        "completion": "The variant table includes data related to variant_id, object_id, description, type, species_id, amino_acids, amino_acid_change, validation, global_maf, subpop_maf, minor_allele_count, frequency_comment, nucleotide_change, description_vector."
+    },
+    {
+        "prompt": "What are the columns in the variant2database_link table?",
+        "completion": "The variant2database_link table contains the following columns: variant_id, database_link_id, type."
+    },
+    {
+        "prompt": "Describe the variant2database_link table.",
+        "completion": "The variant2database_link table includes data related to variant_id, database_link_id, type."
+    },
+    {
+        "prompt": "What are the columns in the variant_refs table?",
+        "completion": "The variant_refs table contains the following columns: variant_id, reference_id."
+    },
+    {
+        "prompt": "Describe the variant_refs table.",
+        "completion": "The variant_refs table includes data related to variant_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the version table?",
+        "completion": "The version table contains the following columns: version_number, publish_date."
+    },
+    {
+        "prompt": "Describe the version table.",
+        "completion": "The version table includes data related to version_number, publish_date."
+    },
+    {
+        "prompt": "What are the columns in the vgic table?",
+        "completion": "The vgic table contains the following columns: object_id, physiological_ion, selectivity_comments, voltage_dependence_comments."
+    },
+    {
+        "prompt": "Describe the vgic table.",
+        "completion": "The vgic table includes data related to object_id, physiological_ion, selectivity_comments, voltage_dependence_comments."
+    },
+    {
+        "prompt": "What are the columns in the voltage_dep_activation_refs table?",
+        "completion": "The voltage_dep_activation_refs table contains the following columns: voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "Describe the voltage_dep_activation_refs table.",
+        "completion": "The voltage_dep_activation_refs table includes data related to voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the voltage_dep_deactivation_refs table?",
+        "completion": "The voltage_dep_deactivation_refs table contains the following columns: voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "Describe the voltage_dep_deactivation_refs table.",
+        "completion": "The voltage_dep_deactivation_refs table includes data related to voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the voltage_dep_inactivation_refs table?",
+        "completion": "The voltage_dep_inactivation_refs table contains the following columns: voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "Describe the voltage_dep_inactivation_refs table.",
+        "completion": "The voltage_dep_inactivation_refs table includes data related to voltage_dependence_id, reference_id."
+    },
+    {
+        "prompt": "What are the columns in the voltage_dependence table?",
+        "completion": "The voltage_dependence table contains the following columns: voltage_dependence_id, object_id, cell_type, comments, activation_v_high, activation_v_median, activation_v_low, activation_t_high, activation_t_low, inactivation_v_high, inactivation_v_median, inactivation_v_low, inactivation_t_high, inactivation_t_low, deactivation_v_high, deactivation_v_median, deactivation_v_low, deactivation_t_high, deactivation_t_low, species_id, cell_type_vector, comments_vector."
+    },
+    {
+        "prompt": "Describe the voltage_dependence table.",
+        "completion": "The voltage_dependence table includes data related to voltage_dependence_id, object_id, cell_type, comments, activation_v_high, activation_v_median, activation_v_low, activation_t_high, activation_t_low, inactivation_v_high, inactivation_v_median, inactivation_v_low, inactivation_t_high, inactivation_t_low, deactivation_v_high, deactivation_v_median, deactivation_v_low, deactivation_t_high, deactivation_t_low, species_id, cell_type_vector, comments_vector."
+    },
+    {
+        "prompt": "What are the columns in the vw_gtmp_interaction_summary table?",
+        "completion": "The vw_gtmp_interaction_summary table contains the following columns: ligand_id, object_id, target_ligand_id, primary_target, species_id, type, action, affinity_units, affinity_high, affinity_low, ligand_context, interaction_ids, malaria_stage_ids."
+    },
+    {
+        "prompt": "Describe the vw_gtmp_interaction_summary table.",
+        "completion": "The vw_gtmp_interaction_summary table includes data related to ligand_id, object_id, target_ligand_id, primary_target, species_id, type, action, affinity_units, affinity_high, affinity_low, ligand_context, interaction_ids, malaria_stage_ids."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_all_dwld table?",
+        "completion": "The vw_interaction_all_dwld table contains the following columns: target, target_id, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_gene_symbol, target_ligand_ensembl_gene_id, target_ligand_uniprot, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id."
+    },
+    {
+        "prompt": "Describe the vw_interaction_all_dwld table.",
+        "completion": "The vw_interaction_all_dwld table includes data related to target, target_id, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_gene_symbol, target_ligand_ensembl_gene_id, target_ligand_uniprot, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_catalytic_receptor_dwld table?",
+        "completion": "The vw_interaction_catalytic_receptor_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_catalytic_receptor_dwld table.",
+        "completion": "The vw_interaction_catalytic_receptor_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_enzyme_dwld table?",
+        "completion": "The vw_interaction_enzyme_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_enzyme_dwld table.",
+        "completion": "The vw_interaction_enzyme_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_gpcr_dwld table?",
+        "completion": "The vw_interaction_gpcr_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_gpcr_dwld table.",
+        "completion": "The vw_interaction_gpcr_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_ion_channel_dwld table?",
+        "completion": "The vw_interaction_ion_channel_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_ion_channel_dwld table.",
+        "completion": "The vw_interaction_ion_channel_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_nhr_dwld table?",
+        "completion": "The vw_interaction_nhr_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_nhr_dwld table.",
+        "completion": "The vw_interaction_nhr_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_summary table?",
+        "completion": "The vw_interaction_summary table contains the following columns: ligand_id, ligandname, object_id, targetname, target_ligand_id, ligandtargetname, primary_target, species_id, type, action, selectivity, affinity_units, affinity_high, affinity_low, ligand_context, interaction_ids, ticket."
+    },
+    {
+        "prompt": "Describe the vw_interaction_summary table.",
+        "completion": "The vw_interaction_summary table includes data related to ligand_id, ligandname, object_id, targetname, target_ligand_id, ligandtargetname, primary_target, species_id, type, action, selectivity, affinity_units, affinity_high, affinity_low, ligand_context, interaction_ids, ticket."
+    },
+    {
+        "prompt": "What are the columns in the vw_interaction_transporter_dwld table?",
+        "completion": "The vw_interaction_transporter_dwld table contains the following columns: target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "Describe the vw_interaction_transporter_dwld table.",
+        "completion": "The vw_interaction_transporter_dwld table includes data related to target, target_id, target_subunit_ids, target_gene_symbol, target_uniprot, target_ensembl_gene_id, target_ligand, target_ligand_id, target_ligand_subunit_ids, target_ligand_gene_symbol, target_ligand_uniprot, target_ligand_ensembl_gene_id, target_ligand_pubchem_sid, target_species, ligand, ligand_id, ligand_subunit_ids, ligand_gene_symbol, ligand_species, ligand_pubchem_sid, approved_drug, type, action, action_comment, selectivity, endogenous, primary_target, concentration_range, affinity_units, affinity_high, affinity_median, affinity_low, original_affinity_units, original_affinity_low_nm, original_affinity_median_nm, original_affinity_high_nm, original_affinity_relation, assay_description, receptor_site, ligand_context, pubmed_id, ligand_type."
+    },
+    {
+        "prompt": "What are the columns in the vw_ligand_display_synonyms table?",
+        "completion": "The vw_ligand_display_synonyms table contains the following columns: ligand_id, synonyms."
+    },
+    {
+        "prompt": "Describe the vw_ligand_display_synonyms table.",
+        "completion": "The vw_ligand_display_synonyms table includes data related to ligand_id, synonyms."
+    },
+    {
+        "prompt": "What are the columns in the vw_ligand_peptide_species table?",
+        "completion": "The vw_ligand_peptide_species table contains the following columns: ligand_id, species."
+    },
+    {
+        "prompt": "Describe the vw_ligand_peptide_species table.",
+        "completion": "The vw_ligand_peptide_species table includes data related to ligand_id, species."
+    },
+    {
+        "prompt": "What are the columns in the vw_ligand_peptide_species_ids table?",
+        "completion": "The vw_ligand_peptide_species_ids table contains the following columns: ligand_id, species_id."
+    },
+    {
+        "prompt": "Describe the vw_ligand_peptide_species_ids table.",
+        "completion": "The vw_ligand_peptide_species_ids table includes data related to ligand_id, species_id."
+    },
+    {
+        "prompt": "What are the columns in the vw_ligand_summary table?",
+        "completion": "The vw_ligand_summary table contains the following columns: ligand_id, name, approved."
+    },
+    {
+        "prompt": "Describe the vw_ligand_summary table.",
+        "completion": "The vw_ligand_summary table includes data related to ligand_id, name, approved."
+    },
+    {
+        "prompt": "What are the columns in the xenobiotic_expression table?",
+        "completion": "The xenobiotic_expression table contains the following columns: xenobiotic_expression_id, object_id, change, technique, tissue, species_id, change_vector, tissue_vector, technique_vector."
+    },
+    {
+        "prompt": "Describe the xenobiotic_expression table.",
+        "completion": "The xenobiotic_expression table includes data related to xenobiotic_expression_id, object_id, change, technique, tissue, species_id, change_vector, tissue_vector, technique_vector."
+    },
+    {
+        "prompt": "What are the columns in the xenobiotic_expression_refs table?",
+        "completion": "The xenobiotic_expression_refs table contains the following columns: xenobiotic_expression_id, reference_id."
+    },
+    {
+        "prompt": "Describe the xenobiotic_expression_refs table.",
+        "completion": "The xenobiotic_expression_refs table includes data related to xenobiotic_expression_id, reference_id."
+    },
+    {
+        "prompt": "Explain the reference and linking structure of the database.",
+        "completion": "{\n    \"reference_table\": \"The reference table holds details of the primary reference used in curating data in GtoPdb. There are several tables suffixed with '_refs' linking to this reference table, except for 'interaction_affinity_refs' which links interactions to references for quantitative data.\",\n    \"interaction_links\": \"The interaction table links to ligand and object tables via foreign keys 'ligand_id' and 'object_id'.\",\n    \"ligand_table_info\": \"The ligand table has comprehensive data on ligands, including 'in_gtip' (immunopharmacology relevance), 'in_gtmp' (malaria relevance), 'immuno_comments', and 'gtmp_comments'.\",\n    \"structure_and_properties\": \"Ligands link to structure and physico-chemical properties tables via foreign keys. Ligands can also have sequence information stored in peptide and nucleic acid tables.\",\n    \"clinical_trials\": \"Ligands are linked to clinical trials through the 'ligand2clinical_trials' table, which connects to the reference table.\",\n    \"peptide_linkage\": \"Peptides are linked to the precursor table to provide gene name information.\",\n    \"external_database_links\": \"Both ligands and objects link to external databases via database link tables, which contain external database IDs.\",\n    \"target_details\": \"The object table connects to various tables, such as receptor_basic and structural_info, which provide comments and gene details about targets.\",\n    \"family_information\": \"The family table includes target family information, linked to the object table via receptor2family, and to ligand families through ligand2family. The grouping table organizes the protein family hierarchy.\"\n}"
+    }
+]
