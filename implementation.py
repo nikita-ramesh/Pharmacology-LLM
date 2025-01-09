@@ -4,11 +4,6 @@ import requests
 import psycopg2
 import pandas as pd
 import json
-from langchain.document_loaders import JSONLoader
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
 
 def pwd():
     s1 = ''.join([chr(int(i)) for i in ['120', '65', '103', '108', '101', '116', '116', '55']])
@@ -34,82 +29,111 @@ def connect_to_db():
         print(f"Error connecting to the database: {e}")
         return None
 
-# Load schema structure and create vector store
-def load_schema_and_create_vectorstore():
-    # Load schema structure from JSON file
-    with open('schema_structure.json', 'r') as schema_file:
-        schema_structure = json.load(schema_file)
+# Function to read schema from the JSON file
+def load_schema_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            schema = json.load(file)
+        return schema
+    except Exception as e:
+        print(f"Error loading schema: {e}")
+        return None
 
-    # Prepare documents for vectorization
-    documents = []
-    for table in schema_structure['tables']:
-        table_name = table['table_name']
-        columns = ', '.join(table['columns'])
-        content = f"Table: {table_name}\nColumns: {columns}"
-        documents.append({"page_content": content, "metadata": {"table_name": table_name}})
-
-    embedding_function = OpenAIEmbeddings()
-    vectorstore = Chroma.from_documents(documents, embedding_function)
-    return vectorstore
+# Function to generate a schema string from the schema structure
+def generate_schema_string(schema):
+    schema_str = "The database consists of the following tables:\n"
+    for table in schema["tables"]:
+        table_name = table["table_name"]
+        columns = ', '.join(table["columns"])
+        schema_str += f"Table: {table_name}\nColumns: {columns}\n"
+    return schema_str
 
 # Function to ask a question and get SQL using OpenAI API
-def ask_openai(question, vectorstore):
-    retriever = vectorstore.as_retriever()
-    relevant_docs = retriever.get_relevant_documents(question)
+def ask_openai(question, schema_str):
+    api_key = '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'
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {
+        "model": "gpt-4o",
+        "messages": [
+            {"role": "system", "content": f"You have the following database schema:\n{schema_str}\n"},
+            {"role": "user", "content": question}
+        ]
+    }
+
+    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
     
-    context = "\n".join([doc.page_content for doc in relevant_docs])
-    
-    llm = ChatOpenAI(model="gpt-4", temperature=0)
-    prompt = ChatPromptTemplate.from_template(
-        """You are an SQL expert. Given the following database schema:
-        {context}
-        
-        Generate an SQL query to answer the following question:
-        {question}
-        
-        Return only the SQL query, nothing else."""
-    )
-    
-    chain = prompt | llm
-    
-    response = chain.invoke({"context": context, "question": question})
-    return response.content
+    if response.status_code == 200:
+        try:
+            message_content = response.json()['choices'][0]['message']['content']
+            
+            # Try to extract the SQL query using the specific format
+            if '```sql' in message_content:
+                sql_query = message_content.split('```sql')[1].split('```')[0].strip()
+                return sql_query
+            else:
+                # If the SQL query format is missing, print the entire response
+                print("No SQL query found in the response. Full response:")
+                print(message_content)
+                return None
+        except Exception as e:
+            print(f"Error extracting SQL query: {e}")
+            return None
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return None
 
 # Function to execute SQL query
 def execute_query(conn, query):
     try:
-        return pd.read_sql_query(query, conn)
+        return pd.read_sql_query(query, conn)  # Use pandas to execute the query and return a DataFrame
     except Exception as e:
         print(f"Error executing query: {e}")
-        return None
+        return None  # Return None on error
 
 # Main function
 def main():
+    # Connect to the database
     conn = connect_to_db()
     if not conn:
         return
 
-    vectorstore = load_schema_and_create_vectorstore()
+    # Load the schema structure from the JSON file
+    schema = load_schema_from_file('schema_structure_compressed.json')
+    if not schema:
+        print("Failed to load schema.")
+        return
+
+    # Generate a string representation of the schema
+    schema_str = generate_schema_string(schema)
+    print("Schema loaded successfully.")
 
     while True:
+        # Ask the user for a question
         question = input("Enter your question (or type 'exit' to quit): ")
         
+        # Exit the loop if the user types 'exit'
         if question.lower() == 'exit':
             print("Exiting the program.")
             break
 
-        sql_query = ask_openai(question, vectorstore)
+        # Generate SQL query based on the question and schema
+        sql_query = ask_openai(question, schema_str)
 
         if sql_query:
             print(f"Generated SQL Query: {sql_query}")
 
+            # Execute the SQL query
             results = execute_query(conn, sql_query)
             if results is not None and not results.empty:
                 print("Query Results:")
-                print(results)
+                print(results)  # Pandas will display the DataFrame in a structured format
             else:
                 print("No results found.")
 
+    # Close the database connection
     conn.close()
 
 if __name__ == "__main__":
