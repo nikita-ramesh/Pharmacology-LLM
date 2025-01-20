@@ -1,0 +1,3008 @@
+{
+  "columns": {
+    "object_id": [
+      "accessory_protein",
+      "altered_expression",
+      "associated_protein",
+      "binding_partner",
+      "catalytic_receptor",
+      "celltype_assoc",
+      "cellular_location",
+      "chembl_cluster",
+      "cofactor",
+      "conductance",
+      "conductance_states",
+      "contributor2object",
+      "coregulator",
+      "covid_target",
+      "database_link",
+      "dna_binding",
+      "endo_ligand_pairings",
+      "endo_ligand_pairings_nomatch",
+      "enzyme",
+      "expression_pathophysiology",
+      "functional_assay",
+      "further_reading",
+      "gpcr",
+      "grac_functional_characteristics",
+      "grac_ligand_rank_potency",
+      "grac_transduction",
+      "hot_topics2object",
+      "immuno_disease2object",
+      "immunopaedia2object",
+      "interaction",
+      "iuphar2discoverx",
+      "lgic",
+      "list_ligand",
+      "multimer",
+      "mutation",
+      "nhr",
+      "object",
+      "object2go_process",
+      "object2reaction",
+      "object_vectors",
+      "other_ic",
+      "other_protein",
+      "pathophysiology",
+      "pdb_structure",
+      "physiological_function",
+      "primary_regulator",
+      "process_assoc",
+      "product",
+      "receptor2family",
+      "receptor_basic",
+      "screen_interaction",
+      "selectivity",
+      "skye_covid_target_log",
+      "skye_interaction_log",
+      "skye_pdb_structure_log",
+      "skye_receptor_basic_log",
+      "specific_reaction",
+      "structural_info",
+      "substrate",
+      "synonym",
+      "target_gene",
+      "target_ligand_same_entity",
+      "tissue_distribution",
+      "transduction",
+      "transporter",
+      "variant",
+      "vgic",
+      "voltage_dependence",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_summary",
+      "xenobiotic_expression"
+    ],
+    "full_name": [
+      "accessory_protein"
+    ],
+    "adb_id": [
+      "adb_compound",
+      "antibiotic_db",
+      "antibiotic_db_full",
+      "ligand2adb"
+    ],
+    "drug_name": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db",
+      "antibiotic_db_full"
+    ],
+    "drug_class": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db",
+      "antibiotic_db_full"
+    ],
+    "year_fm": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "institute": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db",
+      "antibiotic_db_full"
+    ],
+    "current_status": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "high_dev_phase": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db",
+      "antibiotic_db_full"
+    ],
+    "reason_dropped": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "moa_target_pathogen": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "gram_neg_effect": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "gram_pos_effect": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "combination_therapy": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "combination_therapy_comment": [
+      "adb_compound",
+      "adb_to_add"
+    ],
+    "prop_select_res_mutants": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "prop_select_res_mutants_comment": [
+      "adb_compound",
+      "adb_to_add"
+    ],
+    "additional_info": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "source_hp": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "ligand_id": [
+      "adb_compound",
+      "adb_to_add",
+      "analogue_cluster",
+      "antibiotic_db",
+      "antibiotic_db_full",
+      "cofactor",
+      "covid_ligand",
+      "drug2disease",
+      "endo_ligand_pairings",
+      "endo_ligand_pairings_nomatch",
+      "gtopdb_cidmap",
+      "immuno_disease2ligand",
+      "immunopaedia2ligand",
+      "interaction",
+      "iuphar2tocris",
+      "ligand",
+      "ligand2adb",
+      "ligand2clinical_trial",
+      "ligand2family",
+      "ligand2inn",
+      "ligand2meshpharmacology",
+      "ligand2subunit",
+      "ligand2synonym",
+      "ligand2tcp",
+      "ligand_approval_sources",
+      "ligand_cluster",
+      "ligand_cluster_new",
+      "ligand_database_link",
+      "ligand_physchem",
+      "ligand_physchem_public",
+      "ligand_structure",
+      "list_ligand",
+      "pdb_structure",
+      "peptide",
+      "peptide_ligand_cluster",
+      "peptide_ligand_sequence_cluster",
+      "precursor2peptide",
+      "product",
+      "reference2ligand",
+      "screen_interaction",
+      "skye_covid_ligand_log",
+      "skye_immuno_disease2ligand_log",
+      "skye_interaction_log",
+      "skye_ligand2clinical_trial_log",
+      "skye_ligand2synonym_log",
+      "skye_ligand2tcp_log",
+      "skye_ligand_database_link_log",
+      "skye_ligand_log",
+      "skye_ligand_structure_log",
+      "skye_pdb_structure_log",
+      "skye_peptide_log",
+      "skye_reference2ligand_log",
+      "substrate",
+      "target_ligand_same_entity",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld",
+      "vw_ligand_display_synonyms",
+      "vw_ligand_peptide_species",
+      "vw_ligand_peptide_species_ids",
+      "vw_ligand_summary"
+    ],
+    "patents": [
+      "adb_compound",
+      "adb_to_add",
+      "antibiotic_db_full"
+    ],
+    "drug_name_vector": [
+      "adb_compound"
+    ],
+    "drug_class_vector": [
+      "adb_compound"
+    ],
+    "moa_target_pathogen_vector": [
+      "adb_compound"
+    ],
+    "institute_vector": [
+      "adb_compound"
+    ],
+    "combination_therapy_comment_vector": [
+      "adb_compound"
+    ],
+    "prop_select_res_mutants_comment_vector": [
+      "adb_compound"
+    ],
+    "synonyms": [
+      "adb_to_add",
+      "vw_ligand_display_synonyms"
+    ],
+    "papers": [
+      "adb_to_add"
+    ],
+    "structures": [
+      "adb_to_add"
+    ],
+    "can_smiles": [
+      "adb_to_add"
+    ],
+    "iso_smiles": [
+      "adb_to_add"
+    ],
+    "inchikey": [
+      "adb_to_add",
+      "pdb_inchi"
+    ],
+    "version_number": [
+      "adb_version",
+      "version"
+    ],
+    "publish_date": [
+      "adb_version",
+      "version"
+    ],
+    "current_version": [
+      "adb_version"
+    ],
+    "from_file": [
+      "adb_version"
+    ],
+    "allele_id": [
+      "allele"
+    ],
+    "accessions": [
+      "allele"
+    ],
+    "species_id": [
+      "allele",
+      "altered_expression",
+      "cofactor",
+      "conductance",
+      "coregulator_gene",
+      "database_link",
+      "discoverx",
+      "expression_experiment",
+      "expression_pathophysiology",
+      "functional_assay",
+      "grac_ligand_rank_potency",
+      "interaction",
+      "ligand_database_link",
+      "mutation",
+      "pdb_structure",
+      "physiological_function",
+      "precursor",
+      "product",
+      "screen_interaction",
+      "selectivity",
+      "skye_interaction_log",
+      "skye_ligand_database_link_log",
+      "skye_pdb_structure_log",
+      "species",
+      "structural_info",
+      "substrate",
+      "target_gene",
+      "tissue_distribution",
+      "variant",
+      "voltage_dependence",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_summary",
+      "vw_ligand_peptide_species_ids",
+      "xenobiotic_expression"
+    ],
+    "pubmed_ids": [
+      "allele"
+    ],
+    "ontology_id": [
+      "allele",
+      "ontology",
+      "ontology_term"
+    ],
+    "term_id": [
+      "allele",
+      "ontology_term"
+    ],
+    "allelic_composition": [
+      "allele"
+    ],
+    "allele_symbol": [
+      "allele"
+    ],
+    "genetic_background": [
+      "allele"
+    ],
+    "altered_expression_id": [
+      "altered_expression",
+      "altered_expression_refs"
+    ],
+    "description": [
+      "altered_expression",
+      "clinical_trial",
+      "committee",
+      "contributor",
+      "contributor_copy",
+      "discoverx",
+      "disease",
+      "disease_category",
+      "expression_experiment",
+      "functional_assay",
+      "grac_ligand_rank_potency",
+      "malaria_stage",
+      "mutation",
+      "ontology_term",
+      "pdb_structure",
+      "physiological_function",
+      "screen",
+      "skye_pdb_structure_log",
+      "species",
+      "specific_reaction",
+      "target_gene",
+      "variant"
+    ],
+    "tissue": [
+      "altered_expression",
+      "expression_pathophysiology",
+      "functional_assay",
+      "physiological_function",
+      "xenobiotic_expression"
+    ],
+    "technique": [
+      "altered_expression",
+      "cellular_location",
+      "expression_experiment",
+      "expression_pathophysiology",
+      "target_gene",
+      "tissue_distribution",
+      "xenobiotic_expression"
+    ],
+    "description_vector": [
+      "altered_expression",
+      "disease",
+      "functional_assay",
+      "malaria_stage",
+      "pdb_structure",
+      "physiological_function",
+      "target_gene",
+      "variant"
+    ],
+    "tissue_vector": [
+      "altered_expression",
+      "expression_pathophysiology",
+      "functional_assay",
+      "physiological_function",
+      "xenobiotic_expression"
+    ],
+    "technique_vector": [
+      "altered_expression",
+      "expression_pathophysiology",
+      "target_gene",
+      "tissue_distribution",
+      "xenobiotic_expression"
+    ],
+    "reference_id": [
+      "altered_expression_refs",
+      "associated_protein_refs",
+      "binding_partner_refs",
+      "celltype_assoc_refs",
+      "cellular_location_refs",
+      "clinical_trial_refs",
+      "cofactor_refs",
+      "conductance_refs",
+      "conductance_states_refs",
+      "coregulator_refs",
+      "dna_binding_refs",
+      "export_refs",
+      "expression_pathophysiology_refs",
+      "functional_assay_refs",
+      "further_reading",
+      "grac_further_reading",
+      "grac_ligand_rank_potency_refs",
+      "hot_topics_refs",
+      "hottopic_refs",
+      "immuno_disease2ligand_refs",
+      "immuno_disease2object_refs",
+      "interaction_affinity_refs",
+      "ligand2clinical_trial_refs",
+      "ligand2synonym_refs",
+      "ligand2tcp_refs",
+      "mutation_refs",
+      "pathophysiology_refs",
+      "pdb_structure_refs",
+      "physiological_function_refs",
+      "primary_regulator_refs",
+      "process_assoc_refs",
+      "product_refs",
+      "reference",
+      "reference2immuno",
+      "reference2ligand",
+      "screen_refs",
+      "selectivity_refs",
+      "skye_interaction_affinity_refs_log",
+      "skye_reference2ligand_log",
+      "specific_reaction_refs",
+      "structural_info_refs",
+      "substrate_refs",
+      "synonym_refs",
+      "target_gene_refs",
+      "tissue_distribution_refs",
+      "transduction_refs",
+      "variant_refs",
+      "voltage_dep_activation_refs",
+      "voltage_dep_deactivation_refs",
+      "voltage_dep_inactivation_refs",
+      "xenobiotic_expression_refs"
+    ],
+    "cluster": [
+      "analogue_cluster",
+      "chembl_cluster",
+      "ligand_cluster",
+      "ligand_cluster_new",
+      "peptide_ligand_cluster",
+      "peptide_ligand_sequence_cluster"
+    ],
+    "papers_cited_1": [
+      "antibiotic_db_full"
+    ],
+    "papers_cited_2": [
+      "antibiotic_db_full"
+    ],
+    "papers_cited_3": [
+      "antibiotic_db_full"
+    ],
+    "link_to_structure_1": [
+      "antibiotic_db_full"
+    ],
+    "link_to_structure_2": [
+      "antibiotic_db_full"
+    ],
+    "associated_protein_id": [
+      "associated_protein",
+      "associated_protein_refs"
+    ],
+    "name": [
+      "associated_protein",
+      "binding_partner",
+      "co_celltype",
+      "cofactor",
+      "committee",
+      "covid_ligand",
+      "covid_target",
+      "database",
+      "deleted_family",
+      "discoverx",
+      "disease",
+      "disease_category",
+      "family",
+      "gtopdb_cidmap",
+      "ligand",
+      "malaria_stage",
+      "object",
+      "object_vectors",
+      "ontology",
+      "primary_regulator",
+      "product",
+      "screen",
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "skye_ligand_log",
+      "species",
+      "substrate",
+      "tissue",
+      "tocris",
+      "tocris_update",
+      "vw_ligand_summary"
+    ],
+    "type": [
+      "associated_protein",
+      "clinical_trial",
+      "co_celltype",
+      "co_celltype_relationship",
+      "deleted_family",
+      "disease",
+      "export_refs",
+      "family",
+      "interaction",
+      "ligand",
+      "ligand2meshpharmacology",
+      "mutation",
+      "receptor2subunit",
+      "reference",
+      "reference2immuno",
+      "screen_interaction",
+      "skye_interaction_log",
+      "skye_ligand_log",
+      "variant",
+      "variant2database_link",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "associated_object_id": [
+      "associated_protein"
+    ],
+    "effect": [
+      "associated_protein",
+      "binding_partner",
+      "target_gene"
+    ],
+    "name_vector": [
+      "associated_protein",
+      "binding_partner",
+      "co_celltype",
+      "cofactor",
+      "contributor",
+      "disease",
+      "family",
+      "ligand",
+      "malaria_stage",
+      "product",
+      "species",
+      "substrate"
+    ],
+    "binding_partner_id": [
+      "binding_partner",
+      "binding_partner_refs"
+    ],
+    "interaction": [
+      "binding_partner"
+    ],
+    "partner_object_id": [
+      "binding_partner"
+    ],
+    "effect_vector": [
+      "binding_partner",
+      "target_gene"
+    ],
+    "interaction_vector": [
+      "binding_partner"
+    ],
+    "rtk_class": [
+      "catalytic_receptor"
+    ],
+    "celltype_assoc_id": [
+      "celltype_assoc",
+      "celltype_assoc_colist",
+      "celltype_assoc_refs"
+    ],
+    "immuno_celltype_id": [
+      "celltype_assoc",
+      "immuno2co_celltype",
+      "immuno_celltype"
+    ],
+    "comment": [
+      "celltype_assoc",
+      "covid_ligand",
+      "covid_target",
+      "disease2category",
+      "gtip2go_process",
+      "immuno2co_celltype",
+      "immuno_disease2ligand",
+      "immuno_disease2object",
+      "immunopaedia2family",
+      "immunopaedia2ligand",
+      "immunopaedia2object",
+      "ligand2clinical_trial",
+      "ligand2tcp",
+      "ligand_approval_sources",
+      "object2go_process",
+      "process_assoc",
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "skye_immuno_disease2ligand_log",
+      "skye_ligand2clinical_trial_log",
+      "skye_ligand2tcp_log"
+    ],
+    "comment_vector": [
+      "celltype_assoc",
+      "immuno_disease2ligand",
+      "immuno_disease2object",
+      "object2go_process",
+      "process_assoc"
+    ],
+    "co_celltype_id": [
+      "celltype_assoc_colist",
+      "co_celltype",
+      "co_celltype_relationship"
+    ],
+    "cellonto_id": [
+      "celltype_assoc_colist",
+      "co_celltype",
+      "immuno2co_celltype"
+    ],
+    "cellular_location_id": [
+      "cellular_location",
+      "cellular_location_refs"
+    ],
+    "location": [
+      "cellular_location"
+    ],
+    "comments": [
+      "cellular_location",
+      "cofactor",
+      "coregulator",
+      "coregulator_gene",
+      "export_refs",
+      "grac_family_text",
+      "ligand",
+      "object",
+      "object_vectors",
+      "pathophysiology",
+      "reference",
+      "skye_ligand_log",
+      "species",
+      "substrate",
+      "target_gene",
+      "transduction",
+      "voltage_dependence"
+    ],
+    "chembl_id": [
+      "chembl_cluster"
+    ],
+    "cluster_family": [
+      "chembl_cluster"
+    ],
+    "cite_id": [
+      "cite",
+      "family",
+      "introduction",
+      "object"
+    ],
+    "doi": [
+      "cite",
+      "export_refs",
+      "reference"
+    ],
+    "issue_volume": [
+      "cite"
+    ],
+    "issue_number": [
+      "cite"
+    ],
+    "edition": [
+      "cite"
+    ],
+    "year": [
+      "cite",
+      "export_refs",
+      "ligand_approval_sources",
+      "reference"
+    ],
+    "month": [
+      "cite"
+    ],
+    "clinical_trial_id": [
+      "clinical_trial",
+      "clinical_trial_refs",
+      "ligand2clinical_trial",
+      "skye_ligand2clinical_trial_log"
+    ],
+    "accession": [
+      "clinical_trial"
+    ],
+    "title": [
+      "clinical_trial",
+      "export_refs",
+      "hot_topics",
+      "immunopaedia_cases",
+      "reference"
+    ],
+    "url": [
+      "clinical_trial",
+      "contributor_link",
+      "covid_ligand",
+      "covid_target",
+      "database",
+      "discoverx",
+      "export_refs",
+      "immunopaedia2family",
+      "immunopaedia2ligand",
+      "immunopaedia2object",
+      "immunopaedia_cases",
+      "reference",
+      "screen",
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "tocris",
+      "tocris_update"
+    ],
+    "source": [
+      "clinical_trial",
+      "endo_ligand_pairings",
+      "endo_ligand_pairings_nomatch",
+      "ligand_database_link",
+      "skye_ligand_database_link_log"
+    ],
+    "definition": [
+      "co_celltype",
+      "do_disease",
+      "go_process",
+      "gtip_process",
+      "immuno_celltype"
+    ],
+    "last_modified": [
+      "co_celltype",
+      "do_disease",
+      "family",
+      "go_process",
+      "grac_family_text",
+      "gtip_process",
+      "immuno_celltype",
+      "immunopaedia_cases",
+      "introduction",
+      "object"
+    ],
+    "definition_vector": [
+      "co_celltype",
+      "go_process",
+      "gtip_process",
+      "immuno_celltype"
+    ],
+    "cellonto_id_vector": [
+      "co_celltype"
+    ],
+    "parent_id": [
+      "co_celltype_isa",
+      "do_disease_isa",
+      "go_process_rel"
+    ],
+    "child_id": [
+      "co_celltype_isa",
+      "do_disease_isa",
+      "go_process_rel"
+    ],
+    "co_celltype_rel_id": [
+      "co_celltype_relationship"
+    ],
+    "relationship_id": [
+      "co_celltype_relationship"
+    ],
+    "cofactor_id": [
+      "cofactor",
+      "cofactor_refs"
+    ],
+    "in_iuphar": [
+      "cofactor",
+      "grac_ligand_rank_potency",
+      "product",
+      "substrate"
+    ],
+    "in_grac": [
+      "cofactor",
+      "product",
+      "substrate"
+    ],
+    "committee_id": [
+      "committee",
+      "contributor2committee"
+    ],
+    "family_id": [
+      "committee",
+      "contributor2family",
+      "contributor2intro",
+      "deleted_family",
+      "family",
+      "grac_family_text",
+      "grac_further_reading",
+      "grouping",
+      "hot_topics2family",
+      "immunopaedia2family",
+      "introduction",
+      "ligand2family",
+      "receptor2family",
+      "subcommittee"
+    ],
+    "conductance_id": [
+      "conductance",
+      "conductance_refs"
+    ],
+    "overall_channel_conductance": [
+      "conductance"
+    ],
+    "macroscopic_current_rectification": [
+      "conductance"
+    ],
+    "single_channel_current_rectification": [
+      "conductance"
+    ],
+    "conductance_states_id": [
+      "conductance_states",
+      "conductance_states_refs"
+    ],
+    "receptor": [
+      "conductance_states"
+    ],
+    "state1_high": [
+      "conductance_states"
+    ],
+    "state1_low": [
+      "conductance_states"
+    ],
+    "state2_high": [
+      "conductance_states"
+    ],
+    "state2_low": [
+      "conductance_states"
+    ],
+    "state3_high": [
+      "conductance_states"
+    ],
+    "state3_low": [
+      "conductance_states"
+    ],
+    "state4_high": [
+      "conductance_states"
+    ],
+    "state4_low": [
+      "conductance_states"
+    ],
+    "state5_high": [
+      "conductance_states"
+    ],
+    "state5_low": [
+      "conductance_states"
+    ],
+    "state6_high": [
+      "conductance_states"
+    ],
+    "state6_low": [
+      "conductance_states"
+    ],
+    "most_frequent_state": [
+      "conductance_states"
+    ],
+    "contributor_id": [
+      "contributor",
+      "contributor2committee",
+      "contributor2family",
+      "contributor2intro",
+      "contributor2object",
+      "contributor_copy",
+      "contributor_link",
+      "subcommittee"
+    ],
+    "address": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "email": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "first_names": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "surname": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "suffix": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "note": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "orcid": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "country": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "institution": [
+      "contributor",
+      "contributor_copy"
+    ],
+    "role": [
+      "contributor2committee",
+      "contributor2family",
+      "contributor2object",
+      "pathophysiology",
+      "subcommittee"
+    ],
+    "display_order": [
+      "contributor2committee",
+      "contributor2family",
+      "contributor2intro",
+      "contributor2object",
+      "family",
+      "grouping",
+      "ligand2family",
+      "list_ligand",
+      "receptor2family",
+      "subcommittee",
+      "synonym"
+    ],
+    "old_display_order": [
+      "contributor2family"
+    ],
+    "coregulator_id": [
+      "coregulator",
+      "coregulator_refs"
+    ],
+    "activity": [
+      "coregulator"
+    ],
+    "specific": [
+      "coregulator"
+    ],
+    "ligand_dependent": [
+      "coregulator"
+    ],
+    "af2_dependent": [
+      "coregulator"
+    ],
+    "coregulator_gene_id": [
+      "coregulator",
+      "coregulator_gene"
+    ],
+    "activity_vector": [
+      "coregulator"
+    ],
+    "comments_vector": [
+      "coregulator",
+      "coregulator_gene",
+      "grac_family_text",
+      "ligand",
+      "pathophysiology",
+      "target_gene",
+      "transduction",
+      "voltage_dependence"
+    ],
+    "primary_name": [
+      "coregulator_gene"
+    ],
+    "official_gene_id": [
+      "coregulator_gene",
+      "precursor",
+      "structural_info",
+      "target_gene"
+    ],
+    "other_names": [
+      "coregulator_gene"
+    ],
+    "nursa_id": [
+      "coregulator_gene"
+    ],
+    "gene_long_name": [
+      "coregulator_gene",
+      "precursor",
+      "structural_info"
+    ],
+    "primary_name_vector": [
+      "coregulator_gene"
+    ],
+    "other_names_vector": [
+      "coregulator_gene"
+    ],
+    "gene_long_name_vector": [
+      "coregulator_gene",
+      "precursor",
+      "structural_info"
+    ],
+    "covid_ligand_id": [
+      "covid_ligand",
+      "skye_covid_ligand_log"
+    ],
+    "curated": [
+      "covid_ligand",
+      "covid_target",
+      "skye_covid_ligand_log",
+      "skye_covid_target_log"
+    ],
+    "secondary_ligand_id": [
+      "covid_ligand",
+      "skye_covid_ligand_log"
+    ],
+    "secondary_name": [
+      "covid_ligand",
+      "skye_covid_ligand_log"
+    ],
+    "secondary_url": [
+      "covid_ligand",
+      "skye_covid_ligand_log"
+    ],
+    "secondary_curated": [
+      "covid_ligand",
+      "skye_covid_ligand_log"
+    ],
+    "priority": [
+      "covid_ligand",
+      "export_refs",
+      "reference",
+      "skye_covid_ligand_log"
+    ],
+    "covid_target_id": [
+      "covid_target",
+      "skye_covid_target_log"
+    ],
+    "target_ligand_id": [
+      "covid_target",
+      "interaction",
+      "skye_covid_target_log",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "database_id": [
+      "database",
+      "database_link",
+      "disease_database_link",
+      "ligand_database_link",
+      "skye_ligand_database_link_log"
+    ],
+    "specialist": [
+      "database"
+    ],
+    "prefix": [
+      "database"
+    ],
+    "database_link_id": [
+      "database_link",
+      "variant2database_link"
+    ],
+    "placeholder": [
+      "database_link",
+      "disease_database_link",
+      "gtopdb_cidmap",
+      "immunopaedia2ligand",
+      "ligand_database_link",
+      "skye_ligand_database_link_log"
+    ],
+    "previous_names": [
+      "deleted_family",
+      "family"
+    ],
+    "old_family_id": [
+      "deleted_family",
+      "family"
+    ],
+    "new_family_id": [
+      "deleted_family"
+    ],
+    "cat_no": [
+      "discoverx",
+      "iuphar2discoverx",
+      "iuphar2tocris",
+      "tocris",
+      "tocris_update"
+    ],
+    "disease_id": [
+      "disease",
+      "disease2category",
+      "disease2synonym",
+      "disease_database_link",
+      "drug2disease",
+      "immuno_disease2ligand",
+      "immuno_disease2object",
+      "pathophysiology",
+      "skye_immuno_disease2ligand_log"
+    ],
+    "disease_category_id": [
+      "disease2category",
+      "disease_category"
+    ],
+    "disease2synonym_id": [
+      "disease2synonym",
+      "disease_synonym2database_link"
+    ],
+    "synonym": [
+      "disease2synonym",
+      "ligand2synonym",
+      "precursor2synonym",
+      "skye_ligand2synonym_log",
+      "synonym"
+    ],
+    "synonym_vector": [
+      "disease2synonym",
+      "ligand2synonym",
+      "precursor2synonym",
+      "synonym"
+    ],
+    "disease_database_link_id": [
+      "disease_database_link",
+      "disease_synonym2database_link"
+    ],
+    "dna_binding_id": [
+      "dna_binding",
+      "dna_binding_refs"
+    ],
+    "structure": [
+      "dna_binding"
+    ],
+    "sequence": [
+      "dna_binding"
+    ],
+    "response_element": [
+      "dna_binding"
+    ],
+    "structure_vector": [
+      "dna_binding"
+    ],
+    "sequence_vector": [
+      "dna_binding"
+    ],
+    "response_element_vector": [
+      "dna_binding"
+    ],
+    "do_disease_id": [
+      "do_disease"
+    ],
+    "term": [
+      "do_disease",
+      "go_process",
+      "gtip_process",
+      "immuno_celltype",
+      "ontology_term"
+    ],
+    "do_id": [
+      "do_disease"
+    ],
+    "endo_ligand_pairings_id": [
+      "endo_ligand_pairings"
+    ],
+    "lig_species_id": [
+      "endo_ligand_pairings",
+      "endo_ligand_pairings_nomatch"
+    ],
+    "tar_species_id": [
+      "endo_ligand_pairings",
+      "endo_ligand_pairings_nomatch"
+    ],
+    "endo_ligand_pairings_nomatch_id": [
+      "endo_ligand_pairings_nomatch"
+    ],
+    "ens_id": [
+      "ens_ncbi_ids"
+    ],
+    "ncbi_id": [
+      "ens_ncbi_ids"
+    ],
+    "article_title": [
+      "export_refs",
+      "reference"
+    ],
+    "issue": [
+      "export_refs",
+      "reference"
+    ],
+    "volume": [
+      "export_refs",
+      "reference"
+    ],
+    "pages": [
+      "export_refs",
+      "reference"
+    ],
+    "publisher": [
+      "export_refs",
+      "reference"
+    ],
+    "publisher_address": [
+      "export_refs",
+      "reference"
+    ],
+    "editors": [
+      "export_refs",
+      "reference"
+    ],
+    "pubmed_id": [
+      "export_refs",
+      "reference",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "isbn": [
+      "export_refs",
+      "reference"
+    ],
+    "pub_status": [
+      "export_refs",
+      "reference"
+    ],
+    "topics": [
+      "export_refs",
+      "reference"
+    ],
+    "read": [
+      "export_refs",
+      "reference"
+    ],
+    "useful": [
+      "export_refs",
+      "reference"
+    ],
+    "website": [
+      "export_refs",
+      "reference"
+    ],
+    "accessed": [
+      "export_refs",
+      "reference"
+    ],
+    "modified": [
+      "export_refs",
+      "reference"
+    ],
+    "patent_number": [
+      "export_refs",
+      "reference"
+    ],
+    "publication": [
+      "export_refs",
+      "reference"
+    ],
+    "authors": [
+      "export_refs",
+      "reference"
+    ],
+    "assignee": [
+      "export_refs",
+      "reference"
+    ],
+    "pmc_id": [
+      "export_refs",
+      "reference"
+    ],
+    "expression_experiment_id": [
+      "expression_experiment",
+      "expression_level"
+    ],
+    "baseline": [
+      "expression_experiment"
+    ],
+    "structural_info_id": [
+      "expression_level",
+      "structural_info",
+      "structural_info_refs"
+    ],
+    "tissue_id": [
+      "expression_level",
+      "tissue"
+    ],
+    "value": [
+      "expression_level",
+      "substrate"
+    ],
+    "expression_pathophysiology_id": [
+      "expression_pathophysiology",
+      "expression_pathophysiology_refs"
+    ],
+    "change": [
+      "expression_pathophysiology",
+      "xenobiotic_expression"
+    ],
+    "pathophysiology": [
+      "expression_pathophysiology"
+    ],
+    "change_vector": [
+      "expression_pathophysiology",
+      "xenobiotic_expression"
+    ],
+    "pathophysiology_vector": [
+      "expression_pathophysiology"
+    ],
+    "annotation_status": [
+      "family",
+      "introduction",
+      "object"
+    ],
+    "only_grac": [
+      "family",
+      "interaction",
+      "object",
+      "skye_interaction_log"
+    ],
+    "only_iuphar": [
+      "family",
+      "object"
+    ],
+    "in_cgtp": [
+      "family",
+      "object"
+    ],
+    "previous_names_vector": [
+      "family"
+    ],
+    "functional_assay_id": [
+      "functional_assay",
+      "functional_assay_refs"
+    ],
+    "response_measured": [
+      "functional_assay"
+    ],
+    "response_vector": [
+      "functional_assay"
+    ],
+    "go_process_id": [
+      "go_process",
+      "gtip2go_process",
+      "object2go_process"
+    ],
+    "annotation": [
+      "go_process"
+    ],
+    "go_id": [
+      "go_process",
+      "gtip2go_process"
+    ],
+    "term_vector": [
+      "go_process",
+      "gtip_process",
+      "immuno_celltype"
+    ],
+    "go_id_vector": [
+      "go_process"
+    ],
+    "class": [
+      "gpcr"
+    ],
+    "ligand": [
+      "gpcr",
+      "lgic",
+      "nhr",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "overview": [
+      "grac_family_text"
+    ],
+    "overview_vector": [
+      "grac_family_text"
+    ],
+    "functional_characteristics": [
+      "grac_functional_characteristics"
+    ],
+    "functional_characteristics_vector": [
+      "grac_functional_characteristics"
+    ],
+    "key_ref": [
+      "grac_further_reading"
+    ],
+    "grac_ligand_rank_potency_id": [
+      "grac_ligand_rank_potency",
+      "grac_ligand_rank_potency_refs"
+    ],
+    "rank_potency": [
+      "grac_ligand_rank_potency"
+    ],
+    "rank_potency_vector": [
+      "grac_ligand_rank_potency"
+    ],
+    "transduction": [
+      "grac_transduction"
+    ],
+    "group_id": [
+      "grouping"
+    ],
+    "gtip_process_id": [
+      "gtip2go_process",
+      "gtip_process",
+      "process_assoc"
+    ],
+    "go_term": [
+      "gtip2go_process"
+    ],
+    "short_term": [
+      "gtip_process",
+      "immuno_celltype"
+    ],
+    "anchor": [
+      "gtip_process"
+    ],
+    "pubchem_sid": [
+      "gtopdb_cidmap",
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "hot_topics_id": [
+      "hot_topics",
+      "hot_topics2family",
+      "hot_topics2object",
+      "hot_topics_refs"
+    ],
+    "date": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "blog_url": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "blog_summary": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "has_blog": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "author_name": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "author_affiliation": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "author_link": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "author_twitter": [
+      "hot_topics",
+      "hottopic_refs"
+    ],
+    "authorship": [
+      "hot_topics"
+    ],
+    "title_vector": [
+      "hot_topics"
+    ],
+    "blog_summary_vector": [
+      "hot_topics"
+    ],
+    "authorship_vector": [
+      "hot_topics"
+    ],
+    "is_primary": [
+      "hot_topics_refs"
+    ],
+    "immuno_disease2ligand_id": [
+      "immuno_disease2ligand",
+      "immuno_disease2ligand_refs",
+      "skye_immuno_disease2ligand_log"
+    ],
+    "immuno": [
+      "immuno_disease2ligand",
+      "immuno_disease2object",
+      "skye_immuno_disease2ligand_log"
+    ],
+    "immuno_disease2object_id": [
+      "immuno_disease2object",
+      "immuno_disease2object_refs"
+    ],
+    "immunopaedia_case_id": [
+      "immunopaedia2family",
+      "immunopaedia2ligand",
+      "immunopaedia2object",
+      "immunopaedia_cases"
+    ],
+    "section": [
+      "immunopaedia2family",
+      "immunopaedia2ligand",
+      "immunopaedia2object"
+    ],
+    "short_title": [
+      "immunopaedia_cases"
+    ],
+    "inn_number": [
+      "inn",
+      "ligand2inn"
+    ],
+    "inn": [
+      "inn"
+    ],
+    "cas": [
+      "inn",
+      "tocris_update"
+    ],
+    "smiles": [
+      "inn",
+      "tocris",
+      "tocris_update"
+    ],
+    "smiles_salts_stripped": [
+      "inn"
+    ],
+    "inchi_key_salts_stripped": [
+      "inn"
+    ],
+    "nonisomeric_smiles_salts_stripped": [
+      "inn"
+    ],
+    "nonisomeric_inchi_key_salts_stripped": [
+      "inn"
+    ],
+    "neutralised_smiles": [
+      "inn"
+    ],
+    "neutralised_inchi_key": [
+      "inn"
+    ],
+    "neutralised_nonisomeric_smiles": [
+      "inn"
+    ],
+    "neutralised_nonisomeric_inchi_key": [
+      "inn"
+    ],
+    "inn_vector": [
+      "inn"
+    ],
+    "interaction_id": [
+      "interaction",
+      "interaction_affinity_refs",
+      "malaria_stage2interaction",
+      "skye_interaction_affinity_refs_log",
+      "skye_interaction_log",
+      "skye_malaria_stage2interaction_log"
+    ],
+    "action": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "action_comment": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "endogenous": [
+      "interaction",
+      "pdb_structure",
+      "product",
+      "screen_interaction",
+      "skye_interaction_log",
+      "skye_pdb_structure_log",
+      "substrate",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "selective": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "use_dependent": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "voltage_dependent": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "affinity_units": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "affinity_high": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "affinity_median": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "affinity_low": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "concentration_range": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "affinity_voltage_high": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "affinity_voltage_median": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "affinity_voltage_low": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "affinity_physiological_voltage": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "rank": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "selectivity": [
+      "interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "original_affinity_low_nm": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "original_affinity_median_nm": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "original_affinity_high_nm": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "original_affinity_units": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "original_affinity_relation": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "assay_description": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log",
+      "substrate",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "assay_conditions": [
+      "interaction",
+      "skye_interaction_log",
+      "substrate"
+    ],
+    "from_grac": [
+      "interaction",
+      "ligand2synonym",
+      "skye_interaction_log",
+      "skye_ligand2synonym_log",
+      "synonym"
+    ],
+    "receptor_site": [
+      "interaction",
+      "skye_interaction_log",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_context": [
+      "interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "percent_activity": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log"
+    ],
+    "assay_url": [
+      "interaction",
+      "screen_interaction",
+      "skye_interaction_log"
+    ],
+    "primary_target": [
+      "interaction",
+      "skye_interaction_log",
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_summary",
+      "vw_interaction_transporter_dwld"
+    ],
+    "whole_organism_assay": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "hide": [
+      "interaction",
+      "skye_interaction_log"
+    ],
+    "type_vector": [
+      "interaction"
+    ],
+    "text": [
+      "introduction"
+    ],
+    "no_contributor_list": [
+      "introduction",
+      "object"
+    ],
+    "intro_vector": [
+      "introduction"
+    ],
+    "exact": [
+      "iuphar2tocris"
+    ],
+    "match": [
+      "iuphar2tocris"
+    ],
+    "selectivity_comments": [
+      "lgic",
+      "object_vectors",
+      "other_ic",
+      "vgic"
+    ],
+    "radioactive": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "old_ligand_id": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "approved": [
+      "ligand",
+      "skye_ligand_log",
+      "vw_ligand_summary"
+    ],
+    "approved_source": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "iupac_name": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "withdrawn_drug": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "verified": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "abbreviation": [
+      "ligand",
+      "object",
+      "object_vectors",
+      "skye_ligand_log"
+    ],
+    "clinical_use": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "mechanism_of_action": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "absorption_distribution": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "metabolism": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "elimination": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "popn_pharmacokinetics": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "organ_function_impairment": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "emc_url": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "drugs_url": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "ema_url": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "bioactivity_comments": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "labelled": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "in_gtip": [
+      "ligand",
+      "object",
+      "skye_ligand_log"
+    ],
+    "immuno_comments": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "in_gtmp": [
+      "ligand",
+      "object",
+      "skye_ligand_log"
+    ],
+    "gtmp_comments": [
+      "ligand",
+      "object_vectors",
+      "skye_ligand_log"
+    ],
+    "who_essential": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "antibacterial": [
+      "ligand"
+    ],
+    "has_qi_interaction": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "has_chembl_interaction": [
+      "ligand",
+      "skye_ligand_log"
+    ],
+    "abbreviation_vector": [
+      "ligand"
+    ],
+    "clinical_use_vector": [
+      "ligand"
+    ],
+    "mechanism_of_action_vector": [
+      "ligand"
+    ],
+    "absorption_distribution_vector": [
+      "ligand"
+    ],
+    "metabolism_vector": [
+      "ligand"
+    ],
+    "elimination_vector": [
+      "ligand"
+    ],
+    "popn_pharmacokinetics_vector": [
+      "ligand"
+    ],
+    "organ_function_impairment_vector": [
+      "ligand"
+    ],
+    "bioactivity_comments_vector": [
+      "ligand"
+    ],
+    "immuno_comments_vector": [
+      "ligand"
+    ],
+    "gtmp_comments_vector": [
+      "ligand"
+    ],
+    "ligand2clinical_trial_id": [
+      "ligand2clinical_trial",
+      "ligand2clinical_trial_refs",
+      "skye_ligand2clinical_trial_log"
+    ],
+    "mesh_term": [
+      "ligand2meshpharmacology"
+    ],
+    "subunit_id": [
+      "ligand2subunit",
+      "receptor2subunit"
+    ],
+    "ligand2synonym_id": [
+      "ligand2synonym",
+      "ligand2synonym_refs",
+      "skye_ligand2synonym_log"
+    ],
+    "display": [
+      "ligand2synonym",
+      "skye_ligand2synonym_log",
+      "synonym"
+    ],
+    "ligand2tcp_id": [
+      "ligand2tcp",
+      "ligand2tcp_refs",
+      "skye_ligand2tcp_log"
+    ],
+    "tcp_id": [
+      "ligand2tcp",
+      "skye_ligand2tcp_log",
+      "target_candidate_profile"
+    ],
+    "approval_source": [
+      "ligand_approval_sources"
+    ],
+    "distance": [
+      "ligand_cluster",
+      "ligand_cluster_new"
+    ],
+    "cluster_centre": [
+      "ligand_cluster",
+      "ligand_cluster_new"
+    ],
+    "1": [
+      "ligand_cluster_new"
+    ],
+    "6199": [
+      "ligand_cluster_new"
+    ],
+    "ligand_database_link_id": [
+      "ligand_database_link",
+      "skye_ligand_database_link_log"
+    ],
+    "commercial": [
+      "ligand_database_link",
+      "skye_ligand_database_link_log"
+    ],
+    "hydrogen_bond_acceptors": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "hydrogen_bond_donors": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "rotatable_bonds_count": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "topological_polar_surface_area": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "molecular_weight": [
+      "ligand_physchem",
+      "ligand_physchem_public",
+      "structural_info"
+    ],
+    "xlogp": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "lipinski_s_rule_of_five": [
+      "ligand_physchem",
+      "ligand_physchem_public"
+    ],
+    "isomeric_smiles": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "isomeric_standard_inchi": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "isomeric_standard_inchi_key": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "nonisomeric_smiles": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "nonisomeric_standard_inchi": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "nonisomeric_standard_inchi_key": [
+      "ligand_structure",
+      "skye_ligand_structure_log"
+    ],
+    "pubchem_cid": [
+      "ligand_structure",
+      "skye_ligand_structure_log",
+      "tocris",
+      "tocris_update"
+    ],
+    "malaria_stage_id": [
+      "malaria_stage",
+      "malaria_stage2interaction",
+      "skye_malaria_stage2interaction_log"
+    ],
+    "short_name": [
+      "malaria_stage",
+      "ontology",
+      "species"
+    ],
+    "subunit_specific_agents_comments": [
+      "multimer",
+      "object_vectors"
+    ],
+    "mutation_id": [
+      "mutation",
+      "mutation_refs"
+    ],
+    "pathophysiology_id": [
+      "mutation",
+      "pathophysiology",
+      "pathophysiology_refs"
+    ],
+    "amino_acid_change": [
+      "mutation",
+      "variant"
+    ],
+    "nucleotide_change": [
+      "mutation",
+      "variant"
+    ],
+    "binding_partner_comments": [
+      "nhr",
+      "object_vectors"
+    ],
+    "coregulator_comments": [
+      "nhr",
+      "object_vectors"
+    ],
+    "dna_binding_comments": [
+      "nhr",
+      "object_vectors"
+    ],
+    "target_gene_comments": [
+      "nhr",
+      "object_vectors"
+    ],
+    "structural_info_comments": [
+      "object",
+      "object_vectors"
+    ],
+    "old_object_id": [
+      "object"
+    ],
+    "grac_comments": [
+      "object",
+      "object_vectors"
+    ],
+    "systematic_name": [
+      "object"
+    ],
+    "quaternary_structure_comments": [
+      "object"
+    ],
+    "gtip_comment": [
+      "object"
+    ],
+    "gtmp_comment": [
+      "object"
+    ],
+    "go_evidence": [
+      "object2go_process"
+    ],
+    "reaction_id": [
+      "object2reaction",
+      "reaction",
+      "specific_reaction"
+    ],
+    "gtip_comments": [
+      "object_vectors"
+    ],
+    "associated_proteins_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "functional_assay_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "tissue_distribution_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "functions_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "altered_expression_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "expression_pathophysiology_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "mutations_pathophysiology_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "variants_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "xenobiotic_expression_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "antibody_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "agonists_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "antagonists_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "allosteric_modulators_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "activators_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "inhibitors_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "channel_blockers_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "gating_inhibitors_comments": [
+      "object_vectors",
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "voltage_dependence_comments": [
+      "object_vectors",
+      "vgic"
+    ],
+    "disease": [
+      "pathophysiology"
+    ],
+    "drugs": [
+      "pathophysiology"
+    ],
+    "side_effects": [
+      "pathophysiology"
+    ],
+    "use": [
+      "pathophysiology"
+    ],
+    "omim": [
+      "pathophysiology"
+    ],
+    "orphanet": [
+      "pathophysiology"
+    ],
+    "role_vector": [
+      "pathophysiology"
+    ],
+    "drugs_vector": [
+      "pathophysiology"
+    ],
+    "side_effects_vector": [
+      "pathophysiology"
+    ],
+    "use_vector": [
+      "pathophysiology"
+    ],
+    "pdb_id": [
+      "pdb_inchi"
+    ],
+    "pdb_structure_id": [
+      "pdb_structure",
+      "pdb_structure_refs",
+      "skye_pdb_structure_log"
+    ],
+    "pdb_code": [
+      "pdb_structure",
+      "skye_pdb_structure_log"
+    ],
+    "resolution": [
+      "pdb_structure",
+      "skye_pdb_structure_log"
+    ],
+    "one_letter_seq": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "three_letter_seq": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "post_translational_modifications": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "chemical_modifications": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "medical_relevance": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "helm_notation": [
+      "peptide",
+      "skye_peptide_log"
+    ],
+    "physiological_function_id": [
+      "physiological_function",
+      "physiological_function_refs"
+    ],
+    "precursor_id": [
+      "precursor",
+      "precursor2peptide",
+      "precursor2synonym"
+    ],
+    "gene_name": [
+      "precursor",
+      "structural_info"
+    ],
+    "protein_name": [
+      "precursor"
+    ],
+    "protein_name_vector": [
+      "precursor"
+    ],
+    "precursor2synonym_id": [
+      "precursor2synonym"
+    ],
+    "primary_regulator_id": [
+      "primary_regulator",
+      "primary_regulator_refs"
+    ],
+    "regulatory_effect": [
+      "primary_regulator"
+    ],
+    "regulator_object_id": [
+      "primary_regulator"
+    ],
+    "direct_annotation": [
+      "process_assoc"
+    ],
+    "go_annotation": [
+      "process_assoc"
+    ],
+    "process_assoc_id": [
+      "process_assoc",
+      "process_assoc_refs"
+    ],
+    "prodrug_ligand_id": [
+      "prodrug"
+    ],
+    "drug_ligand_id": [
+      "prodrug"
+    ],
+    "product_id": [
+      "product",
+      "product_refs"
+    ],
+    "ec_number": [
+      "reaction"
+    ],
+    "reaction": [
+      "reaction",
+      "specific_reaction"
+    ],
+    "receptor_id": [
+      "receptor2subunit"
+    ],
+    "list_comments": [
+      "receptor_basic",
+      "skye_receptor_basic_log"
+    ],
+    "authors_vector": [
+      "reference"
+    ],
+    "article_title_vector": [
+      "reference"
+    ],
+    "screen_id": [
+      "screen",
+      "screen_interaction",
+      "screen_refs"
+    ],
+    "affinity_cut_off_nm": [
+      "screen"
+    ],
+    "company_logo_filename": [
+      "screen"
+    ],
+    "technology_logo_filename": [
+      "screen"
+    ],
+    "screen_interaction_id": [
+      "screen_interaction"
+    ],
+    "selectivity_id": [
+      "selectivity",
+      "selectivity_refs"
+    ],
+    "ion": [
+      "selectivity"
+    ],
+    "conductance_high": [
+      "selectivity"
+    ],
+    "conductance_low": [
+      "selectivity"
+    ],
+    "conductance_median": [
+      "selectivity"
+    ],
+    "hide_conductance": [
+      "selectivity"
+    ],
+    "operation": [
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "skye_immuno_disease2ligand_log",
+      "skye_interaction_affinity_refs_log",
+      "skye_interaction_log",
+      "skye_ligand2clinical_trial_log",
+      "skye_ligand2synonym_log",
+      "skye_ligand2tcp_log",
+      "skye_ligand_database_link_log",
+      "skye_ligand_log",
+      "skye_ligand_structure_log",
+      "skye_malaria_stage2interaction_log",
+      "skye_pdb_structure_log",
+      "skye_peptide_log",
+      "skye_receptor_basic_log",
+      "skye_reference2ligand_log"
+    ],
+    "user_id": [
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "skye_immuno_disease2ligand_log",
+      "skye_interaction_affinity_refs_log",
+      "skye_interaction_log",
+      "skye_ligand2clinical_trial_log",
+      "skye_ligand2synonym_log",
+      "skye_ligand2tcp_log",
+      "skye_ligand_database_link_log",
+      "skye_ligand_log",
+      "skye_ligand_structure_log",
+      "skye_malaria_stage2interaction_log",
+      "skye_pdb_structure_log",
+      "skye_peptide_log",
+      "skye_receptor_basic_log",
+      "skye_reference2ligand_log"
+    ],
+    "transaction_time": [
+      "skye_covid_ligand_log",
+      "skye_covid_target_log",
+      "skye_immuno_disease2ligand_log",
+      "skye_interaction_affinity_refs_log",
+      "skye_interaction_log",
+      "skye_ligand2clinical_trial_log",
+      "skye_ligand2synonym_log",
+      "skye_ligand2tcp_log",
+      "skye_ligand_database_link_log",
+      "skye_ligand_log",
+      "skye_ligand_structure_log",
+      "skye_malaria_stage2interaction_log",
+      "skye_pdb_structure_log",
+      "skye_peptide_log",
+      "skye_receptor_basic_log",
+      "skye_reference2ligand_log"
+    ],
+    "antibiotic": [
+      "skye_ligand_log"
+    ],
+    "scientific_name": [
+      "species"
+    ],
+    "ncbi_taxonomy_id": [
+      "species"
+    ],
+    "short_name_vector": [
+      "species"
+    ],
+    "specific_reaction_id": [
+      "specific_reaction",
+      "specific_reaction_refs"
+    ],
+    "transmembrane_domains": [
+      "structural_info"
+    ],
+    "amino_acids": [
+      "structural_info",
+      "variant"
+    ],
+    "pore_loops": [
+      "structural_info"
+    ],
+    "genomic_location": [
+      "structural_info"
+    ],
+    "substrate_id": [
+      "substrate",
+      "substrate_refs"
+    ],
+    "property": [
+      "substrate"
+    ],
+    "units": [
+      "substrate"
+    ],
+    "standard_property": [
+      "substrate"
+    ],
+    "standard_value": [
+      "substrate"
+    ],
+    "synonym_id": [
+      "synonym",
+      "synonym_refs"
+    ],
+    "profile": [
+      "target_candidate_profile"
+    ],
+    "intended_use": [
+      "target_candidate_profile"
+    ],
+    "target_stage": [
+      "target_candidate_profile"
+    ],
+    "profile_vector": [
+      "target_candidate_profile"
+    ],
+    "intended_use_vector": [
+      "target_candidate_profile"
+    ],
+    "target_stage_vector": [
+      "target_candidate_profile"
+    ],
+    "target_gene_id": [
+      "target_gene",
+      "target_gene_refs"
+    ],
+    "tissue_distribution_id": [
+      "tissue_distribution",
+      "tissue_distribution_refs"
+    ],
+    "tissues": [
+      "tissue_distribution"
+    ],
+    "expression_level": [
+      "tissue_distribution"
+    ],
+    "tissues_vector": [
+      "tissue_distribution"
+    ],
+    "inchi": [
+      "tocris",
+      "tocris_update"
+    ],
+    "new_inchi": [
+      "tocris"
+    ],
+    "new_pubchem_cid": [
+      "tocris"
+    ],
+    "transduction_id": [
+      "transduction",
+      "transduction_refs"
+    ],
+    "secondary": [
+      "transduction"
+    ],
+    "t01": [
+      "transduction"
+    ],
+    "t02": [
+      "transduction"
+    ],
+    "t03": [
+      "transduction"
+    ],
+    "t04": [
+      "transduction"
+    ],
+    "t05": [
+      "transduction"
+    ],
+    "t06": [
+      "transduction"
+    ],
+    "e01": [
+      "transduction"
+    ],
+    "e02": [
+      "transduction"
+    ],
+    "e03": [
+      "transduction"
+    ],
+    "e04": [
+      "transduction"
+    ],
+    "e05": [
+      "transduction"
+    ],
+    "e06": [
+      "transduction"
+    ],
+    "e07": [
+      "transduction"
+    ],
+    "e08": [
+      "transduction"
+    ],
+    "e09": [
+      "transduction"
+    ],
+    "grac_stoichiometry": [
+      "transporter"
+    ],
+    "grac_stoichiometry_vector": [
+      "transporter"
+    ],
+    "variant_id": [
+      "variant",
+      "variant2database_link",
+      "variant_refs"
+    ],
+    "validation": [
+      "variant"
+    ],
+    "global_maf": [
+      "variant"
+    ],
+    "subpop_maf": [
+      "variant"
+    ],
+    "minor_allele_count": [
+      "variant"
+    ],
+    "frequency_comment": [
+      "variant"
+    ],
+    "physiological_ion": [
+      "vgic"
+    ],
+    "voltage_dependence_id": [
+      "voltage_dep_activation_refs",
+      "voltage_dep_deactivation_refs",
+      "voltage_dep_inactivation_refs",
+      "voltage_dependence"
+    ],
+    "cell_type": [
+      "voltage_dependence"
+    ],
+    "activation_v_high": [
+      "voltage_dependence"
+    ],
+    "activation_v_median": [
+      "voltage_dependence"
+    ],
+    "activation_v_low": [
+      "voltage_dependence"
+    ],
+    "activation_t_high": [
+      "voltage_dependence"
+    ],
+    "activation_t_low": [
+      "voltage_dependence"
+    ],
+    "inactivation_v_high": [
+      "voltage_dependence"
+    ],
+    "inactivation_v_median": [
+      "voltage_dependence"
+    ],
+    "inactivation_v_low": [
+      "voltage_dependence"
+    ],
+    "inactivation_t_high": [
+      "voltage_dependence"
+    ],
+    "inactivation_t_low": [
+      "voltage_dependence"
+    ],
+    "deactivation_v_high": [
+      "voltage_dependence"
+    ],
+    "deactivation_v_median": [
+      "voltage_dependence"
+    ],
+    "deactivation_v_low": [
+      "voltage_dependence"
+    ],
+    "deactivation_t_high": [
+      "voltage_dependence"
+    ],
+    "deactivation_t_low": [
+      "voltage_dependence"
+    ],
+    "cell_type_vector": [
+      "voltage_dependence"
+    ],
+    "interaction_ids": [
+      "vw_gtmp_interaction_summary",
+      "vw_interaction_summary"
+    ],
+    "malaria_stage_ids": [
+      "vw_gtmp_interaction_summary"
+    ],
+    "target": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_id": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_gene_symbol": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_uniprot": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ensembl_gene_id": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand_gene_symbol": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand_ensembl_gene_id": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand_uniprot": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand_pubchem_sid": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_species": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_gene_symbol": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_species": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_pubchem_sid": [
+      "vw_interaction_all_dwld",
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_subunit_ids": [
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "target_ligand_subunit_ids": [
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_subunit_ids": [
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "approved_drug": [
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligand_type": [
+      "vw_interaction_catalytic_receptor_dwld",
+      "vw_interaction_enzyme_dwld",
+      "vw_interaction_gpcr_dwld",
+      "vw_interaction_ion_channel_dwld",
+      "vw_interaction_nhr_dwld",
+      "vw_interaction_transporter_dwld"
+    ],
+    "ligandname": [
+      "vw_interaction_summary"
+    ],
+    "targetname": [
+      "vw_interaction_summary"
+    ],
+    "ligandtargetname": [
+      "vw_interaction_summary"
+    ],
+    "ticket": [
+      "vw_interaction_summary"
+    ],
+    "species": [
+      "vw_ligand_peptide_species"
+    ],
+    "xenobiotic_expression_id": [
+      "xenobiotic_expression",
+      "xenobiotic_expression_refs"
+    ]
+  }
+}
