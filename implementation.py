@@ -101,7 +101,7 @@ def main():
         return
 
     # Load the schema structure from the JSON file
-    schema = load_schema_from_file('schema_structure_compressed.json')
+    schema = load_schema_from_file('schema_structure.json')
     if not schema:
         print("Failed to load schema.")
         return
