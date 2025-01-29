@@ -40,15 +40,35 @@ def load_schema_from_file(file_path):
         print(f"Error loading schema: {e}")
         return None
 
-# Function to load training data from the CSV
-def load_training_data(file_path):
+# Function to load and split training data from CSV
+def load_and_split_training_data(file_path, split_ratio=0.5, random_seed=42):
     try:
         df = pd.read_csv(file_path)
-        # Let's keep only relevant columns (ID, SQL, Notes for student)
-        return df[['SQL', 'Training/test set']].dropna()
+        
+        # Ensure the dataset has the required columns
+        if 'SQL' not in df.columns or 'Training/test set' not in df.columns:
+            print("Error: Required columns not found in the dataset.")
+            return None, None
+
+        # Drop rows with missing values in relevant columns
+        df = df[['SQL', 'Training/test set']].dropna()
+
+        # Shuffle the dataset for randomness
+        df = df.sample(frac=1, random_state=random_seed).reset_index(drop=True)
+
+        # Calculate the split index
+        split_index = int(len(df) * split_ratio)
+
+        # Split into training and test sets
+        training_data = df.iloc[:split_index]
+        test_data = df.iloc[split_index:]
+
+        print(f"Dataset split: {len(training_data)} training samples, {len(test_data)} test samples.")
+        return training_data, test_data
+
     except Exception as e:
         print(f"Error loading training data: {e}")
-        return None
+        return None, None
 
 # Function to generate schema string from the schema structure
 def generate_schema_string(schema):
@@ -111,7 +131,6 @@ def execute_query(conn, query):
         print(f"Error executing query: {e}")
         return None  # Return None on error
 
-# Main function
 def main():
     # Connect to the database
     conn = connect_to_db()
@@ -124,14 +143,15 @@ def main():
         print("Failed to load schema.")
         return
 
-    # Load training data from CSV
-    training_data = load_training_data('Training/all_queries_categorised_train.csv')
+    # Load and split training data
+    training_data, test_data = load_and_split_training_data('Training/all_queries_categorised_train.csv', split_ratio=0.5)
+
     if training_data is None or training_data.empty:
         print("No training data available.")
         return
-    
-    # Sample FIVE training queries and SQL pairs for context
-    training_data_sample = "\n".join([f"Q: {row['SQL']}\nA: {row['SQL']}" for _, row in training_data.sample(5).iterrows()])
+
+    # Sample all training queries and SQL pairs for context (use only from training data)
+    training_data_sample = "\n".join([f"Q: {row['SQL']}\nA: {row['SQL']}" for _, row in training_data.iterrows()])
 
     # Generate a string representation of the schema
     schema_str = generate_schema_string(schema)
