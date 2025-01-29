@@ -48,19 +48,27 @@ def generate_schema_string(schema):
         schema_str += f"Table: {table_name}\nColumns: {columns}\n"
     return schema_str
 
-# Function to ask a question and get SQL using OpenAI API
-def ask_openai(question, schema_str):
+# Function to initialize the schema context for the conversation
+def initialize_schema_context(schema_str):
+    # Send the schema context once and then wait for the user query in the loop
+    initial_message = {
+        "role": "system", 
+        "content": f"You have the following database schema:\n{schema_str}\n"
+    }
+    return initial_message
+
+# Function to process user queries and generate SQL using OpenAI API
+def process_user_query(question, schema_context):
     api_key = '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'
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
+
+    # Add user query to the schema context
     data = {
         "model": "gpt-4o",
-        "messages": [
-            {"role": "system", "content": f"You have the following database schema:\n{schema_str}\n"},
-            {"role": "user", "content": question}
-        ]
+        "messages": schema_context + [{"role": "user", "content": question}]
     }
 
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
@@ -110,6 +118,9 @@ def main():
     schema_str = generate_schema_string(schema)
     print("Schema loaded successfully.")
 
+    # Initialize the schema context for the conversation
+    schema_context = [initialize_schema_context(schema_str)]  # Initial context
+
     while True:
         # Ask the user for a question
         question = input("Enter your question (or type 'exit' to quit): ")
@@ -119,8 +130,8 @@ def main():
             print("Exiting the program.")
             break
 
-        # Generate SQL query based on the question and schema
-        sql_query = ask_openai(question, schema_str)
+        # Process the user's query with the schema context
+        sql_query = process_user_query(question, schema_context)
 
         if sql_query:
             print(f"Generated SQL Query: {sql_query}")
