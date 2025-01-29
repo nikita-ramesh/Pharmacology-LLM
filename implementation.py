@@ -4,6 +4,7 @@ import requests
 import psycopg2
 import pandas as pd
 import json
+import random
 
 def pwd():
     s1 = ''.join([chr(int(i)) for i in ['120', '65', '103', '108', '101', '116', '116', '55']])
@@ -39,7 +40,17 @@ def load_schema_from_file(file_path):
         print(f"Error loading schema: {e}")
         return None
 
-# Function to generate a schema string from the schema structure
+# Function to load training data from the CSV
+def load_training_data(file_path):
+    try:
+        df = pd.read_csv(file_path)
+        # Let's keep only relevant columns (ID, SQL, Notes for student)
+        return df[['SQL', 'Training/test set']].dropna()
+    except Exception as e:
+        print(f"Error loading training data: {e}")
+        return None
+
+# Function to generate schema string from the schema structure
 def generate_schema_string(schema):
     schema_str = "The database consists of the following tables:\n"
     for table in schema["tables"]:
@@ -49,11 +60,11 @@ def generate_schema_string(schema):
     return schema_str
 
 # Function to initialize the schema context for the conversation
-def initialize_schema_context(schema_str):
-    # Send the schema context once and then wait for the user query in the loop
+def initialize_schema_context(schema_str, training_data_sample):
+    # Send the schema context along with some sample queries from the training data
     initial_message = {
         "role": "system", 
-        "content": f"You have the following database schema:\n{schema_str}\n"
+        "content": f"You have the following database schema:\n{schema_str}\nHere are some examples of natural language queries and their corresponding SQL queries:\n{training_data_sample}\n"
     }
     return initial_message
 
@@ -82,7 +93,6 @@ def process_user_query(question, schema_context):
                 sql_query = message_content.split('```sql')[1].split('```')[0].strip()
                 return sql_query
             else:
-                # If the SQL query format is missing, print the entire response
                 print("No SQL query found in the response. Full response:")
                 print(message_content)
                 return None
@@ -114,12 +124,21 @@ def main():
         print("Failed to load schema.")
         return
 
+    # Load training data from CSV
+    training_data = load_training_data('Training/all_queries_categorised_train.csv')
+    if training_data is None or training_data.empty:
+        print("No training data available.")
+        return
+    
+    # Sample FIVE training queries and SQL pairs for context
+    training_data_sample = "\n".join([f"Q: {row['SQL']}\nA: {row['SQL']}" for _, row in training_data.sample(5).iterrows()])
+
     # Generate a string representation of the schema
     schema_str = generate_schema_string(schema)
     print("Schema loaded successfully.")
 
-    # Initialize the schema context for the conversation
-    schema_context = [initialize_schema_context(schema_str)]  # Initial context
+    # Initialize the schema context for the conversation with sample training data
+    schema_context = [initialize_schema_context(schema_str, training_data_sample)]  # Initial context
 
     while True:
         # Ask the user for a question
