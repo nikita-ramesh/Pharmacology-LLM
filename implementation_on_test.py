@@ -116,7 +116,7 @@ def run_test_set():
         print("Failed to load schema.")
         return
 
-    training_data, test_data = load_and_split_training_data('Training/all_queries_categorised_train.csv', split_ratio=0.5)
+    training_data, test_data = load_and_split_training_data('Training/all_queries_categorised_train.csv', split_ratio=0.75)
     if training_data is None or training_data.empty or test_data is None or test_data.empty:
         print("Error: Training or test data unavailable.")
         return
