@@ -4,8 +4,6 @@ import requests
 import psycopg2
 import pandas as pd
 import json
-from sklearn.metrics import precision_score, recall_score
-import numpy as np
 
 def pwd():
     s1 = ''.join([chr(int(i)) for i in ['120', '65', '103', '108', '101', '116', '116', '55']])
@@ -94,144 +92,6 @@ def execute_query(conn, query):
     except Exception as e:
         print(f"Error executing query: {e}")
         return None
-    
-# EVALUATION FUNCTIONS
-
-def evaluate_execution_accuracy(expected_results, generated_results):
-    """Evaluate whether the predicted result matches the gold result."""
-    if expected_results is None or generated_results is None or expected_results.empty or generated_results.empty:
-        return False
-    return expected_results.equals(generated_results)
-
-def evaluate_precision(expected_results, generated_results):
-    """Calculate the precision of the generated query's results."""
-    if expected_results is None or generated_results is None or expected_results.empty or generated_results.empty:
-        return 0
-    
-    # Ensure both DataFrames have the same number of rows by aligning them
-    expected_results = expected_results.dropna()
-    generated_results = generated_results.dropna()
-
-    # Check if the lengths match after dropping missing values
-    if len(expected_results) != len(generated_results):
-        print(f"Warning: Mismatched row counts. Expected: {len(expected_results)}, Generated: {len(generated_results)}")
-        return 0
-
-    # Flatten both results to compare as arrays
-    expected = expected_results.values.flatten()
-    predicted = generated_results.values.flatten()
-
-    # Ensure arrays have the same length after flattening
-    if len(expected) != len(predicted):
-        print(f"Warning: Mismatched flattened lengths. Expected: {len(expected)}, Predicted: {len(predicted)}")
-        return 0
-
-    # Calculate True Positives, False Positives, and False Negatives
-    TP = sum((expected == 1) & (predicted == 1))  # Correctly predicted positive
-    FP = sum((expected == 0) & (predicted == 1))  # Incorrectly predicted positive
-    FN = sum((expected == 1) & (predicted == 0))  # Incorrectly predicted negative
-
-    # Avoid division by zero
-    if TP + FP == 0:
-        return 0
-    precision = TP / (TP + FP) * 100
-    return precision
-
-
-def evaluate_recall(expected_results, generated_results):
-    """Calculate the recall of the generated query's results."""
-    if expected_results is None or generated_results is None or expected_results.empty or generated_results.empty:
-        return 0
-    
-    # Ensure both DataFrames have the same number of rows by aligning them
-    expected_results = expected_results.dropna()
-    generated_results = generated_results.dropna()
-
-    # Check if the lengths match after dropping missing values
-    if len(expected_results) != len(generated_results):
-        print(f"Warning: Mismatched row counts. Expected: {len(expected_results)}, Generated: {len(generated_results)}")
-        return 0
-
-    # Flatten both results to compare as arrays
-    expected = expected_results.values.flatten()
-    predicted = generated_results.values.flatten()
-
-    # Ensure arrays have the same length after flattening
-    if len(expected) != len(predicted):
-        print(f"Warning: Mismatched flattened lengths. Expected: {len(expected)}, Predicted: {len(predicted)}")
-        return 0
-
-    # Calculate True Positives and False Negatives
-    TP = sum((expected == 1) & (predicted == 1))  # Correctly predicted positive
-    FN = sum((expected == 1) & (predicted == 0))  # Incorrectly predicted negative
-
-    # Avoid division by zero
-    if TP + FN == 0:
-        return 0
-    recall = TP / (TP + FN) * 100
-    return recall
-
-def evaluate_column_accuracy(expected_results, generated_results):
-    """Calculate the column accuracy of the generated query's results."""
-    if expected_results is None or generated_results is None or expected_results.empty or generated_results.empty:
-        return 0
-    expected_columns = set(expected_results.columns)
-    generated_columns = set(generated_results.columns)
-    correct_columns = expected_columns.intersection(generated_columns)
-    return (len(correct_columns) / len(expected_columns)) * 100 if len(expected_columns) > 0 else 0
-
-def evaluate_extra_missing_columns(expected_results, generated_results):
-    """Evaluate the number of extra and missing columns in the generated result."""
-    if expected_results is None or generated_results is None or expected_results.empty or generated_results.empty:
-        return 0, 0
-    expected_columns = set(expected_results.columns)
-    generated_columns = set(generated_results.columns)
-    extra_columns = len(generated_columns - expected_columns)
-    missing_columns = len(expected_columns - generated_columns)
-    return extra_columns, missing_columns
-
-def run_evaluation(expected_sql, generated_sql, expected_results, generated_results, query_index):
-    """Evaluate a pair of queries and generate a result summary."""
-    execution_accuracy = evaluate_execution_accuracy(expected_results, generated_results)
-    # exact_accuracy = evaluate_exact_accuracy(expected_sql, generated_sql)
-    precision = evaluate_precision(expected_results, generated_results)
-    recall = evaluate_recall(expected_results, generated_results)
-    column_accuracy = evaluate_column_accuracy(expected_results, generated_results)
-    extra_columns, missing_columns = evaluate_extra_missing_columns(expected_results, generated_results)
-    
-    # Print results for the query pair
-    print(f"\nResults for Query Pair {query_index + 1}:")
-    print(f"  Execution Accuracy: {execution_accuracy}")
-    # print(f"  Exact Accuracy: {exact_accuracy}")
-    print(f"  Precision: {precision:.2f}")
-    print(f"  Recall: {recall:.2f}")
-    print(f"  Column Accuracy: {column_accuracy:.2f}%")
-    print(f"  Extra Columns: {extra_columns}")
-    print(f"  Missing Columns: {missing_columns}")
-    
-    return execution_accuracy, precision, recall, column_accuracy, extra_columns, missing_columns
-
-def evaluate_overall(accuracies):
-    """Calculate overall evaluation metrics."""
-    total_pairs = len(accuracies)
-    execution_accuracy = np.mean([acc[0] for acc in accuracies]) * 100
-    exact_accuracy = np.mean([acc[1] for acc in accuracies]) * 100
-    precision = np.mean([acc[2] for acc in accuracies])
-    recall = np.mean([acc[3] for acc in accuracies])
-    column_accuracy = np.mean([acc[4] for acc in accuracies])
-    avg_extra_columns = np.mean([acc[5] for acc in accuracies])
-    avg_missing_columns = np.mean([acc[6] for acc in accuracies])
-    
-    print("\nOverall Accuracy Percentages:")
-    print(f"  Execution Accuracy: {execution_accuracy:.2f}%")
-    print(f"  Exact Accuracy: {exact_accuracy:.2f}%")
-    print(f"  Precision: {precision:.2f}%")
-    print(f"  Recall: {recall:.2f}%")
-    print(f"  Column Accuracy: {column_accuracy:.2f}%")
-    print(f"  Average Extra Columns per Query Pair: {avg_extra_columns:.2f}")
-    print(f"  Average Missing Columns per Query Pair: {avg_missing_columns:.2f}")
-    
-    return execution_accuracy, exact_accuracy, precision, recall, column_accuracy, avg_extra_columns, avg_missing_columns
 
 def run_test_set():
     conn = connect_to_db()
@@ -251,8 +111,6 @@ def run_test_set():
     training_data_sample = "\n".join([f"Q: {row['Natural Language Query']}\nA: {row['SQL']}" for _, row in training_data.iterrows()])
     schema_str = generate_schema_string(schema)
     schema_context = [initialize_schema_context(schema_str, training_data_sample)]
-    
-    accuracies = []
 
     for index, row in test_data.iterrows():
         nlq = row['Natural Language Query']
@@ -274,14 +132,7 @@ def run_test_set():
         print("\nGenerated SQL Results:")
         print(generated_results if generated_results is not None else "Error executing generated SQL.")
 
-        # Evaluate the results
-        acc = run_evaluation(expected_sql, generated_sql, expected_results, generated_results, index)
-        accuracies.append(acc)
-
     conn.close()
-
-    # Calculate overall accuracy
-    evaluate_overall(accuracies)
 
 if __name__ == "__main__":
     run_test_set()
