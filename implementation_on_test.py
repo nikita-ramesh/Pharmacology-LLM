@@ -39,7 +39,7 @@ def load_and_split_training_data(file_path, split_ratio=0.5, random_seed=42):
             print("Error: Required columns not found in the dataset.")
             return None, None
 
-        df = df[['Natural Language Query', 'SQL', 'Training/test set']].dropna()
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
         df = df.sample(frac=1, random_state=random_seed).reset_index(drop=True)
         split_index = int(len(df) * split_ratio)
         return df.iloc[:split_index], df.iloc[split_index:]
@@ -56,8 +56,13 @@ def generate_schema_string(schema):
 def initialize_schema_context(schema_str, training_data_sample):
     return {
         "role": "system",
-        "content": f"You have the following database schema:\n{schema_str}\n"
-                   f"Here are some examples of natural language queries and their corresponding PostgreSQL queries:\n{training_data_sample}\n"
+        "content": (
+            f"You have the following PostgreSQL database schema:\n{schema_str}\n"
+            f"Here are some examples of natural language queries and their corresponding PostgreSQL queries:\n{training_data_sample}\n"
+            "Your task is to generate valid, executable PostgreSQL queries based on natural language questions.\n"
+            "If one asks for a writeup generate SQL queries that retrieve relevant comments or info on those topics"
+            "Generate only **fully functional SQL queries** without placeholders or missing clauses."
+        )
     }
 
 def process_user_query(question, schema_context):
@@ -109,7 +114,13 @@ def run_test_set():
     schema_str = generate_schema_string(schema)
     schema_context = [initialize_schema_context(schema_str, training_data_sample)]
 
+    success_count = 0
+    total_count = 0
+    none_set = set()
+    empty_set = set()
+
     for index, row in test_data.iterrows():
+        total_count += 1
         nlq = row['Natural Language Query']
         expected_sql = row['SQL']
 
@@ -123,6 +134,14 @@ def run_test_set():
         expected_results = execute_query(conn, expected_sql) if expected_sql else None
         generated_results = execute_query(conn, generated_sql) if generated_sql else None
 
+        if generated_results is not None and not generated_results.empty:
+            success_count += 1
+        
+        if generated_results is None:
+            none_set.add(int(row['ID']))
+        elif generated_results.empty:
+            empty_set.add(int(row['ID']))
+
         print("\nExpected SQL Results:")
         print(expected_results if expected_results is not None else "Error executing expected SQL.")
 
@@ -130,6 +149,11 @@ def run_test_set():
         print(generated_results if generated_results is not None else "Error executing generated SQL.")
 
     conn.close()
+
+    print("Total test queries executed:", total_count)
+    print("Successful test queries:", success_count)
+    print("None count:", len(none_set), none_set)
+    print("Empty count:", len(empty_set), empty_set)
 
 if __name__ == "__main__":
     run_test_set()
