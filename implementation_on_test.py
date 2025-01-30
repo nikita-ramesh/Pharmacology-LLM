@@ -4,13 +4,10 @@ import requests
 import psycopg2
 import pandas as pd
 import json
+import getpass
 
 def pwd():
-    s1 = ''.join([chr(int(i)) for i in ['120', '65', '103', '108', '101', '116', '116', '55']])
-    s2 = base64.b64encode(s1.encode('utf-8')).decode('utf-8')
-    s3 = codecs.encode(s2[::-1], 'rot_13')
-    s4 = codecs.decode(s3[::-1], 'rot_13')
-    return base64.b64decode(s4).decode('utf-8')
+    return getpass.getpass(prompt="Enter the database password: ")
 
 db_config = {
     'host': 'localhost',
