@@ -57,6 +57,7 @@ def initialize_schema_context(schema_str, training_data_sample):
     return {
         "role": "system",
         "content": (
+            f"You have the following PostgreSQL database schema:\n{schema_str}\n"
             "Your task is to generate valid, executable PostgreSQL queries based on natural language questions.\n"
             "Generate only **fully functional SQL queries** without placeholders or missing clauses.\n"
         )
