@@ -57,7 +57,7 @@ def initialize_schema_context(schema_str, training_data_sample):
     return {
         "role": "system",
         "content": f"You have the following database schema:\n{schema_str}\n"
-                   f"Here are some examples of natural language queries and their corresponding SQL queries:\n{training_data_sample}\n"
+                   f"Here are some examples of natural language queries and their corresponding PostgreSQL queries:\n{training_data_sample}\n"
     }
 
 def process_user_query(question, schema_context):
