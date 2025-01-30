@@ -57,7 +57,7 @@ def initialize_schema_context(schema_str, training_data_sample):
     return {
         "role": "system",
         "content": (
-            f"You have the following PostgreSQL database schema:\n{schema_str}\n"
+            f"Here are some examples of natural language queries and their corresponding PostgreSQL queries:\n{training_data_sample}\n"
             "Follow these strict rules:\n"
             "1. Always define `WITH RECURSIVE` at the **beginning** of the query if needed.\n"
             "2. Ensure all subqueries are correctly nested and avoid placing `WITH RECURSIVE` inside `IN (...)` clauses.\n"
