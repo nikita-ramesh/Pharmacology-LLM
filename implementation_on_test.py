@@ -58,18 +58,6 @@ def initialize_schema_context(schema_str, training_data_sample):
         "role": "system",
         "content": (
             f"Here are some examples of natural language queries and their corresponding PostgreSQL queries:\n{training_data_sample}\n"
-            "Follow these strict rules:\n"
-            "1. Always define `WITH RECURSIVE` at the **beginning** of the query if needed.\n"
-            "2. Ensure all subqueries are correctly nested and avoid placing `WITH RECURSIVE` inside `IN (...)` clauses.\n"
-            "3. Always use `EXPLAIN` to verify the structure before finalizing the query.\n"
-            "4. Avoid unnecessary parentheses that can cause syntax errors.\n"
-            "5. Make sure column names match the provided schema exactly.\n"
-            "6. When using `ILIKE`, ensure it applies to a valid text column and make the match **more flexible**:\n"
-            "   - If filtering for a **single word** (e.g., 'delta'), use `ILIKE '%delta%'`.\n"
-            "   - If filtering for **multi-word terms** (e.g., 'GABA B1' or 'GABA<sub>B1</sub>'), try **multiple formats**:\n"
-            "     - `ILIKE '%GABAB1%' OR ILIKE '%GABA B1%' OR ILIKE '%GABA<sub>B1</sub>%'`.\n"
-            "7. Use table aliases to make queries cleaner and ensure correct joins.\n"
-            "8. When asked to do a writeup or essay, only generate PostgreSQL queries to gather as much relevant data as possible.\n"
             "Your task is to generate valid, executable PostgreSQL queries based on natural language questions.\n"
             "Generate only **fully functional SQL queries** without placeholders or missing clauses.\n"
         )
