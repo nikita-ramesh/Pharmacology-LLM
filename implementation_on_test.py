@@ -119,41 +119,60 @@ def run_test_set():
     none_set = set()
     empty_set = set()
 
-    for index, row in test_data.iterrows():
-        total_count += 1
-        nlq = row['Natural Language Query']
-        expected_sql = row['SQL']
+    # Open a file to write results
+    with open("query_results.txt", "w") as result_file:
+        result_file.write("Test Set Evaluation Results\n")
+        result_file.write("="*50 + "\n")
+        result_file.write(f"Total test queries executed: {total_count}\n")
+        result_file.write(f"Successful test queries: {success_count}\n")
+        result_file.write(f"None count: {len(none_set)}\n")
+        result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
+        result_file.write(f"Empty count: {len(empty_set)}\n")
+        result_file.write(f"Empty IDs: {', '.join(map(str, empty_set))}\n")
+        result_file.write("="*50 + "\n")
 
-        print(f"\n--- Processing Test Case {index + 1} ---")
-        print(f"Natural Language Query: {nlq}")
-        print(f"Expected SQL: {expected_sql}")
+        # Loop over test data to process each query
+        for index, row in test_data.iterrows():
+            total_count += 1
+            nlq = row['Natural Language Query']
+            expected_sql = row['SQL']
 
-        generated_sql = process_user_query(nlq, schema_context)
-        print(f"Generated SQL: {generated_sql}")
+            result_file.write(f"\n--- Processing Test Case {index + 1} ---\n")
+            result_file.write(f"Natural Language Query: {nlq}\n")
+            result_file.write(f"Expected SQL: {expected_sql}\n")
 
-        expected_results = execute_query(conn, expected_sql) if expected_sql else None
-        generated_results = execute_query(conn, generated_sql) if generated_sql else None
+            generated_sql = process_user_query(nlq, schema_context)
+            result_file.write(f"Generated SQL: {generated_sql}\n")
 
-        if generated_results is not None and not generated_results.empty:
-            success_count += 1
-        
-        if generated_results is None:
-            none_set.add(int(row['ID']))
-        elif generated_results.empty:
-            empty_set.add(int(row['ID']))
+            expected_results = execute_query(conn, expected_sql) if expected_sql else None
+            generated_results = execute_query(conn, generated_sql) if generated_sql else None
 
-        print("\nExpected SQL Results:")
-        print(expected_results if expected_results is not None else "Error executing expected SQL.")
+            if generated_results is not None and not generated_results.empty:
+                success_count += 1
 
-        print("\nGenerated SQL Results:")
-        print(generated_results if generated_results is not None else "Error executing generated SQL.")
+            if generated_results is None:
+                none_set.add(int(row['ID']))
+            elif generated_results.empty:
+                empty_set.add(int(row['ID']))
+
+            result_file.write("\nExpected SQL Results:\n")
+            result_file.write(f"{expected_results if expected_results is not None else 'Error executing expected SQL.'}\n")
+
+            result_file.write("\nGenerated SQL Results:\n")
+            result_file.write(f"{generated_results if generated_results is not None else 'Error executing generated SQL.'}\n")
+
+        # Final statistics
+        result_file.write("="*50 + "\n")
+        result_file.write(f"Total test queries executed: {total_count}\n")
+        result_file.write(f"Successful test queries: {success_count}\n")
+        result_file.write(f"None count: {len(none_set)}\n")
+        result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
+        result_file.write(f"Empty count: {len(empty_set)}\n")
+        result_file.write(f"Empty IDs: {', '.join(map(str, empty_set))}\n")
+        result_file.write("="*50 + "\n")
 
     conn.close()
-
-    print("Total test queries executed:", total_count)
-    print("Successful test queries:", success_count)
-    print("None count:", len(none_set), none_set)
-    print("Empty count:", len(empty_set), empty_set)
-
+    print("Results have been written to 'query_results.txt'.")
+    
 if __name__ == "__main__":
     run_test_set()
