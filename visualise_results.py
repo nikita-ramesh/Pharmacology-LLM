@@ -15,20 +15,18 @@ results_75 = np.array([np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 1
 
 # Set up x-axis positions
 x = np.arange(len(conditions))
-bar_width = 0.4  # Adjust bar width
 
-# Create figure and axis object
+# Create figure and axis
 fig, ax = plt.subplots(figsize=(12, 6))
 
-# Plot all 50% bars centered
-ax.bar(x, results_50, width=bar_width, label="50% Training Set", color='skyblue', zorder=3)
+# Plot 50% training results with a line and dots
+ax.plot(x, results_50, marker='o', linestyle='-', color='skyblue', label="50% Training Set", zorder=3)
 
-# Plot 75% Training Set only for the last condition, side by side
-ax.bar(x[-1] - bar_width/2, results_50[-1], width=bar_width, color='skyblue', zorder=3)  # Replot last 50% bar slightly left
-ax.bar(x[-1] + bar_width/2, results_75[-1], width=bar_width, label="75% Training Set", color='orange', zorder=3)  # 75% bar right
+# Plot 75% training results with a different marker
+ax.scatter(x, results_75, color='orange', label="75% Training Set", zorder=3, s=80, edgecolors='black')
 
-# Add subtle grey grid behind the bars (zorder=0 ensures it's behind the bars)
-ax.grid(axis='y', color='grey', linestyle='-', linewidth=0.7, alpha=0.7, zorder=0)
+# Add horizontal gridlines for readability
+ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
 
 # Formatting
 ax.set_xticks(x)
