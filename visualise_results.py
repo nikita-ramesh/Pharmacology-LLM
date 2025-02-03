@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Labels for different conditions
@@ -13,28 +15,39 @@ conditions = [
 results_50 = np.array([0, 7, 10, 10, 10, 15, 15, 18]) * 100 / 26
 results_75 = np.array([np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 10]) * 100 / 13
 
-# Set up x-axis positions
-x = np.arange(len(conditions))
+# Define structured factors
+schema = np.array([0, 0, 1, 1, 0, 1, 1, 1])  # 1 = Schema Present, 0 = No Schema
+rules = np.array([0, 0, 0, 1, 1, 1, 0, 1])  # 1 = Rules Present, 0 = No Rules
+training = np.array([0, 1, 0, 0, 1, 1, 1, 1])  # 1 = Training Present, 0 = No Training
 
-# Create figure and axis
-fig, ax = plt.subplots(figsize=(12, 6))
+# Create DataFrame
+df = pd.DataFrame({
+    "Schema": schema,
+    "Rules": rules,
+    "Training": training,
+    "50% Training Set": results_50,
+    "75% Training Set": results_75
+})
 
-# Plot 50% training results with a line and dots
-ax.plot(x, results_50, marker='o', linestyle='-', color='skyblue', label="50% Training Set", zorder=3)
+# Pivot tables separately for heatmaps
+heatmap_data_50 = df.pivot_table(values="50% Training Set", index=["Schema", "Rules"], columns="Training")
+heatmap_data_75 = df.pivot_table(values="75% Training Set", index=["Schema", "Rules"], columns="Training")
 
-# Plot 75% training results with a different marker
-ax.scatter(x, results_75, color='orange', label="75% Training Set", zorder=3, s=80, edgecolors='black')
+# Create subplots for side-by-side comparison
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
-# Add horizontal gridlines for readability
-ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+# Heatmap for 50% Training Set
+sns.heatmap(heatmap_data_50, annot=True, cmap="Blues", fmt=".1f", linewidths=0.5, cbar=True, ax=axes[0])
+axes[0].set_title("50% Training Set Performance")
+axes[0].set_xlabel("Training Presence (0 = No, 1 = Yes)")
+axes[0].set_ylabel("Schema & Rules (Index = Schema, Rules)")
 
-# Formatting
-ax.set_xticks(x)
-ax.set_xticklabels(conditions, rotation=45, ha="right")
-ax.set_ylabel("Correct SQL Queries (%)")
-ax.set_title("SQL Query Performance with Different Conditions")
-ax.legend()
+# Heatmap for 75% Training Set
+sns.heatmap(heatmap_data_75, annot=True, cmap="Oranges", fmt=".1f", linewidths=0.5, cbar=True, ax=axes[1])
+axes[1].set_title("75% Training Set Performance")
+axes[1].set_xlabel("Training Presence (0 = No, 1 = Yes)")
+axes[1].set_ylabel("Schema & Rules (Index = Schema, Rules)")
+
+# Adjust layout and show plot
 plt.tight_layout()
-
-# Show plot
 plt.show()
