@@ -66,7 +66,7 @@ def initialize_schema_context(schema_str, training_data_sample):
             "4. Avoid unnecessary parentheses that can cause syntax errors.\n"
             "5. Make sure column names match the provided schema exactly.\n"
             "6. When using `ILIKE`, ensure it applies to a valid text column and make the match **more flexible**:\n"
-            "   - If filtering for a **single word** (e.g., 'delta'), use `ILIKE '%delta%'`.\n"
+            "   - If filtering for a **single word** (e.g., 'delta'), use `ILIKE '%delta%' OR ILIKE '%Delta%'`.\n"
             "   - If filtering for **multi-word terms** (e.g., 'GABA B1' or 'GABA<sub>B1</sub>'), try **multiple formats**:\n"
             "     - `ILIKE '%GABAB1%' OR ILIKE '%GABA B1%' OR ILIKE '%GABA<sub>B1</sub>%'`.\n"
             "7. Use table aliases to make queries cleaner and ensure correct joins.\n"
