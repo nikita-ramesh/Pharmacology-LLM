@@ -91,7 +91,8 @@ def process_user_query(question, schema_context):
     if response.status_code == 200:
         try:
             message_content = response.json()['choices'][0]['message']['content']
-            return message_content.split('```sql')[1].split('```')[0].strip() if '```sql' in message_content else None
+            generated_sql = message_content.split('```sql')[1].split('```')[0].strip() if '```sql' in message_content else None
+            return generated_sql
         except Exception as e:
             print(f"Error extracting SQL query: {e}")
             return None
@@ -152,19 +153,29 @@ def run_test_set():
             result_file.write(f"Natural Language Query: {nlq}\n")
             result_file.write(f"Expected SQL: {expected_sql}\n")
 
-            generated_sql = process_user_query(nlq, schema_context)
+            generated_sql = None
+            retries = 0
+            while retries <= 2:
+                generated_sql = process_user_query(nlq, schema_context)
+                if generated_sql is not None:
+                    generated_results = execute_query(conn, generated_sql)
+                    if generated_results is not None and not generated_results.empty:
+                        break
+                retries += 1
+                if retries > 2:
+                    generated_results = None  # If retries exceeded, set results to None
+
             result_file.write(f"Generated SQL: {generated_sql}\n")
 
             expected_results = execute_query(conn, expected_sql) if expected_sql else None
-            generated_results = execute_query(conn, generated_sql) if generated_sql else None
 
-            if generated_results is not None and not generated_results.empty:
-                success_count += 1
-
+            # Add to sets based on execution results
             if generated_results is None:
                 none_set.add(int(row['ID']))
             elif generated_results.empty:
                 empty_set.add(int(row['ID']))
+            else:
+                success_count += 1
 
             result_file.write("\nExpected SQL Results:\n")
             result_file.write(f"{expected_results if expected_results is not None else 'Error executing expected SQL.'}\n")
