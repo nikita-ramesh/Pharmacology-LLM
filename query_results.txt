@@ -11,24 +11,16 @@ Empty IDs:
 --- Processing Test Case 1 ---
 Natural Language Query: Find enzymes with endogenous substrates that have no pharmacology to speak of?
 Expected SQL: select o.object_id, o.name from object o where o.object_id in (select distinct object_id from enzyme) and o.object_id in (select distinct object_id from endo_ligand_pairings) and o.object_id not in (select distinct object_id from interaction where object_id is not null and ((affinity_units != '-' and affinity_units is not null) or (original_affinity_units is not null and original_affinity_units != '-') or (concentration_range is not null and concentration_range != '-' and concentration_range != '')));
-Generated SQL: SELECT o.object_id, o.name 
-FROM object o 
-WHERE o.object_id IN (
-    SELECT DISTINCT object_id 
-    FROM enzyme
-) AND o.object_id IN (
-    SELECT DISTINCT object_id 
-    FROM endo_ligand_pairings
-) AND o.object_id NOT IN (
-    SELECT DISTINCT object_id 
-    FROM interaction 
-    WHERE object_id IS NOT NULL 
-    AND (
-        (affinity_units IS NOT NULL AND affinity_units != '-') 
-        OR (original_affinity_units IS NOT NULL AND original_affinity_units != '-') 
-        OR (concentration_range IS NOT NULL AND concentration_range != '-' AND concentration_range != '')
-    )
-);
+Generated SQL: SELECT e.object_id, o.name
+FROM enzyme e
+JOIN substrate s ON e.object_id = s.object_id
+JOIN object o ON e.object_id = o.object_id
+LEFT JOIN interaction i ON s.ligand_id = i.ligand_id
+LEFT JOIN ligand l ON s.ligand_id = l.ligand_id
+WHERE s.endogenous = true
+AND i.interaction_id IS NULL
+AND (l.approved IS NULL OR l.approved = false)
+AND (l.type IS NULL OR l.type NOT IN ('Drug', 'Metabolite'));
 
 Expected SQL Results:
    object_id                           name
@@ -39,21 +31,56 @@ Expected SQL Results:
 4       1285             adenylyl cyclase 8
 
 Generated SQL Results:
-   object_id                           name
-0       3201  chymotrypsin like elastase 2A
-1       1409                    PLC&delta;1
-2       1404                     PLC&beta;2
-3       1280             adenylyl cyclase 3
-4       1285             adenylyl cyclase 8
+    object_id                          name
+0        1268  &gamma;-Glutamyl carboxylase
+1        1617                     Caspase 1
+2        1617                     Caspase 1
+3        1617                     Caspase 1
+4        1619                     Caspase 3
+5        1619                     Caspase 3
+6        1619                     Caspase 3
+7        1619                     Caspase 3
+8        1619                     Caspase 3
+9        1620                     Caspase 4
+10       1623                     Caspase 7
+11       1623                     Caspase 7
+12       1623                     Caspase 7
+13       1623                     Caspase 7
+14       1623                     Caspase 7
+15       1624                     Caspase 8
+16       1624                     Caspase 8
+17       1624                     Caspase 8
+18       1624                     Caspase 8
+19       1625                     Caspase 9
+20       1625                     Caspase 9
+21       1611         Neutral endopeptidase
+22       1617                     Caspase 1
+23       1619                     Caspase 3
+24       1619                     Caspase 3
+25       1623                     Caspase 7
+26       1623                     Caspase 7
+27       1624                     Caspase 8
+28       1624                     Caspase 8
+29       1625                     Caspase 9
+30       1625                     Caspase 9
+31       1625                     Caspase 9
+32       1626                    Caspase 10
+33       1626                    Caspase 10
+34       1626                    Caspase 10
+35       1626                    Caspase 10
+36       1612        dipeptidyl peptidase 4
+37       2356        dipeptidyl peptidase 8
+38       2356        dipeptidyl peptidase 8
+39       2357        dipeptidyl peptidase 9
+40       2357        dipeptidyl peptidase 9
+41       3262     kelch domain containing 2
 
 --- Processing Test Case 2 ---
 Natural Language Query: Write an essay on endothelian receptors antagonists
 Expected SQL: select f.family_id, f.name, g.overview, g.comments, i.text from family f left join grac_family_text g on g.family_id=f.family_id left join introduction i on i.family_id=f.family_id where f.name ilike ('%endothelin%');
-Generated SQL: SELECT f.family_id, f.name, g.overview, g.comments, i.text 
-FROM family f 
-LEFT JOIN grac_family_text g ON g.family_id=f.family_id 
-LEFT JOIN introduction i ON i.family_id=f.family_id 
-WHERE f.name ILIKE ('%endothelin%');
+Generated SQL: SELECT o.object_id, o.name
+FROM object o
+WHERE o.name ILIKE '%endothelin%';
 
 Expected SQL Results:
    family_id  ...                                               text
@@ -62,32 +89,34 @@ Expected SQL Results:
 [1 rows x 5 columns]
 
 Generated SQL Results:
-   family_id  ...                                               text
-0         21  ...  <heading>General</heading><p>In mammals, the e...
-
-[1 rows x 5 columns]
+   object_id                            name
+0       1616  Endothelin-converting enzyme 2
+1       1615  Endothelin-converting enzyme 1
 
 --- Processing Test Case 3 ---
 Natural Language Query: Find GPCR agnonists with pKi affinities greater than 10
 Expected SQL: select distinct ligand_id from interaction where object_id in (select distinct object_id from object where object_id in (select distinct object_id from receptor2family rf where family_id in (select family_id from family where type in ('gpcr')))) and type ='Agonist' and affinity_units ='pKi' and affinity_median >10;
-Generated SQL: SELECT DISTINCT ligand_id 
-FROM interaction 
-WHERE object_id IN (
-    SELECT DISTINCT object_id 
-    FROM object 
-    WHERE object_id IN (
-        SELECT DISTINCT object_id 
-        FROM receptor2family rf 
-        WHERE family_id IN (
-            SELECT family_id 
-            FROM family 
-            WHERE type ILIKE '%gpcr%'
-        )
-    )
-) 
-AND type = 'Agonist' 
-AND affinity_units = 'pKi' 
-AND affinity_median > 10;
+Generated SQL: SELECT 
+    l.ligand_id, 
+    l.name AS ligand_name, 
+    i.object_id, 
+    o.name AS target_name, 
+    i.affinity_high, 
+    i.affinity_units, 
+    i.type
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
+JOIN 
+    object o ON i.object_id = o.object_id
+WHERE 
+    i.type = 'Agonist' 
+    AND i.affinity_high > 10 
+    AND i.affinity_units = 'pKi'
+    AND i.object_id IN (
+        SELECT object_id FROM gpcr
+    );
 
 Expected SQL Results:
     ligand_id
@@ -132,53 +161,59 @@ Expected SQL Results:
 38      12419
 
 Generated SQL Results:
-    ligand_id
-0          19
-1         292
-2         693
-3         859
-4         941
-5        1141
-6        1350
-7        1351
-8        1356
-9        1469
-10       1489
-11       1504
-12       1512
-13       1513
-14       1515
-15       1527
-16       1545
-17       1551
-18       1603
-19       1683
-20       2044
-21       2046
-22       2050
-23       2052
-24       7393
-25       7671
-26       7774
-27       7775
-28       7776
-29       7780
-30       7781
-31       7923
-32       8865
-33       9006
-34       9226
-35      10040
-36      10178
-37      11691
-38      12419
+    ligand_id                                       ligand_name  ...  affinity_units     type
+0         682                                       &beta;-CGRP  ...             pKi  Agonist
+1        1600                              &alpha;-neoendorphin  ...             pKi  Agonist
+2        1619                                dynorphin A-(1-13)  ...             pKi  Agonist
+3        1620                                       dynorphin A  ...             pKi  Agonist
+4        1620                                       dynorphin A  ...             pKi  Agonist
+5        2098                                       substance P  ...             pKi  Agonist
+6        2087                                       hemokinin 1  ...             pKi  Agonist
+7         731                                            HU-210  ...             pKi  Agonist
+8         613                                      neuromedin B  ...             pKi  Agonist
+9         756                                              CCL3  ...             pKi  Agonist
+10       1681                            nociceptin/orphanin FQ  ...             pKi  Agonist
+11       1686  [(pF)Phe<sup>4</sup>]N/OFQ-(1-13)-NH<sub>2</sub>  ...             pKi  Agonist
+12       1682                       N/OFQ-(1-13)-NH<sub>2</sub>  ...             pKi  Agonist
+13          4                                              5-CT  ...             pKi  Agonist
+14         25                                           S-14671  ...             pKi  Agonist
+15       1294                                            S36057  ...             pKi  Agonist
+16       1294                                            S36057  ...             pKi  Agonist
+17       1298                     melanin-concentrating hormone  ...             pKi  Agonist
+18       3592                                           galanin  ...             pKi  Agonist
+19       3593                                           galanin  ...             pKi  Agonist
+20       3593                                           galanin  ...             pKi  Agonist
+21       3593                                           galanin  ...             pKi  Agonist
+22       6129                                           galanin  ...             pKi  Agonist
+23       1283                                     kisspeptin-10  ...             pKi  Agonist
+24       1512                            pancreatic polypeptide  ...             pKi  Agonist
+25       1511                            pancreatic polypeptide  ...             pKi  Agonist
+26       1512                            pancreatic polypeptide  ...             pKi  Agonist
+27       1513                            pancreatic polypeptide  ...             pKi  Agonist
+28       1545            [Leu<sup>31</sup>,Pro<sup>34</sup>]NPY  ...             pKi  Agonist
+29       2054                                        vapreotide  ...             pKi  Agonist
+30       2051                                         seglitide  ...             pKi  Agonist
+31       2019                                           SRIF-14  ...             pKi  Agonist
+32       2020                                           SRIF-28  ...             pKi  Agonist
+33       2008                                            CST-17  ...             pKi  Agonist
+34       2020                                           SRIF-28  ...             pKi  Agonist
+35       2051                                         seglitide  ...             pKi  Agonist
+36       1343                                  2-iodo-melatonin  ...             pKi  Agonist
+37        198                                       agomelatine  ...             pKi  Agonist
+38       1343                                  2-iodo-melatonin  ...             pKi  Agonist
+39        198                                       agomelatine  ...             pKi  Agonist
+40        670                                           JMV1116  ...             pKi  Agonist
+41       1989                                           relaxin  ...             pKi  Agonist
+42        836                                            CXCL11  ...             pKi  Agonist
+
+[43 rows x 7 columns]
 
 --- Processing Test Case 4 ---
 Natural Language Query: Find all approved drugs
 Expected SQL: select ligand_id, name from ligand where approved is true;
-Generated SQL: SELECT ligand_id, name 
-FROM ligand 
-WHERE approved IS TRUE;
+Generated SQL: SELECT l.ligand_id, l.name
+FROM ligand l
+WHERE l.approved = TRUE;
 
 Expected SQL Results:
       ligand_id              name
@@ -215,18 +250,11 @@ Generated SQL Results:
 --- Processing Test Case 5 ---
 Natural Language Query: Find approved drugs that have quantitative interaction data
 Expected SQL: select ligand_id, name from ligand where approved is true and ligand_id in (select distinct ligand_id from interaction where ((affinity_units != '-' and affinity_units is not null) or (original_affinity_units is not null and original_affinity_units != '-') or (concentration_range is not null and concentration_range != '-' and concentration_range != '')));
-Generated SQL: SELECT ligand_id, name 
-FROM ligand 
-WHERE approved IS TRUE 
-AND ligand_id IN (
-    SELECT DISTINCT ligand_id 
-    FROM interaction 
-    WHERE (
-        (affinity_units IS NOT NULL AND affinity_units != '-') 
-        OR (original_affinity_units IS NOT NULL AND original_affinity_units != '-') 
-        OR (concentration_range IS NOT NULL AND concentration_range NOT IN ('-', ''))
-    )
-);
+Generated SQL: SELECT DISTINCT l.ligand_id, l.name, l.approved, i.affinity_high, i.affinity_median, i.affinity_low, i.affinity_units
+FROM ligand l
+JOIN interaction i ON l.ligand_id = i.ligand_id
+WHERE l.approved = TRUE
+  AND (i.affinity_high IS NOT NULL OR i.affinity_median IS NOT NULL OR i.affinity_low IS NOT NULL);
 
 Expected SQL Results:
       ligand_id           name
@@ -245,29 +273,36 @@ Expected SQL Results:
 [1133 rows x 2 columns]
 
 Generated SQL Results:
-      ligand_id           name
-0          4790     paroxetine
-1          5697      nilotinib
-2          5230       naproxen
-3          6373  perindoprilat
-4          7499  pembrolizumab
-...         ...            ...
-1128       8708   gilteritinib
-1129       6741     idelalisib
-1130        570        bunolol
-1131        536   isoprenaline
-1132       7227   mesoridazine
+      ligand_id                     name  approved  ...  affinity_median  affinity_low  affinity_units
+0          7555                modafinil      True  ...             5.42           NaN             pKi
+1          2430              (-)-menthol      True  ...              NaN           4.0           pEC50
+2          9039              erdafitinib      True  ...             8.25           NaN           pIC50
+3          7297                  sotalol      True  ...              NaN           6.5             pKi
+4          2510                  quinine      True  ...             6.86           NaN             pKi
+...         ...                      ...       ...  ...              ...           ...             ...
+3564       2863             bicalutamide      True  ...             7.72           NaN             pKi
+3565       1882          PGE<sub>1</sub>      True  ...             9.20           NaN             pKi
+3566         43                 lisuride      True  ...             9.00           NaN             pKi
+3567       5692                lapatinib      True  ...             8.00           NaN           pIC50
+3568       2867  triamcinolone acetonide      True  ...             8.20           NaN           pIC50
 
-[1133 rows x 2 columns]
+[3569 rows x 7 columns]
 
 --- Processing Test Case 6 ---
 Natural Language Query: Find synthetic organic ligands with a molecular weight less than 500
 Expected SQL: select l.ligand_id, l.name, l.type, lp.molecular_weight from ligand l, ligand_physchem lp where l.ligand_id=lp.ligand_id and lp.molecular_weight < 500;
-Generated SQL: SELECT l.ligand_id, l.name, l.type, lp.molecular_weight 
-FROM ligand l, ligand_physchem lp 
-WHERE l.ligand_id = lp.ligand_id 
-AND lp.molecular_weight < 500 
-AND l.type = 'Synthetic organic';
+Generated SQL: SELECT 
+    l.ligand_id, 
+    l.name, 
+    l.type, 
+    lp.molecular_weight
+FROM 
+    ligand l
+JOIN 
+    ligand_physchem lp ON l.ligand_id = lp.ligand_id
+WHERE 
+    lp.molecular_weight < 500
+    AND l.type = 'Synthetic organic';
 
 Expected SQL Results:
       ligand_id           name               type  molecular_weight
