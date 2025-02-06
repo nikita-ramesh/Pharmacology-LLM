@@ -32,20 +32,38 @@ def load_schema_from_file(file_path):
         print(f"Error loading schema: {e}")
         return None
 
-def load_and_split_training_data(file_path, split_ratio=0.5, random_seed=42):
+def load_training_data(file_path):
     try:
         df = pd.read_csv(file_path)
+        
+        # Ensure required columns are present
         if 'Natural Language Query' not in df.columns or 'SQL' not in df.columns or 'Training/test set' not in df.columns:
             print("Error: Required columns not found in the dataset.")
-            return None, None
+            return None
 
+        # Filter relevant columns and drop rows with any missing values
         df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
-        df = df.sample(frac=1, random_state=random_seed).reset_index(drop=True)
-        split_index = int(len(df) * split_ratio)
-        return df.iloc[:split_index], df.iloc[split_index:]
+        return df
     except Exception as e:
         print(f"Error loading training data: {e}")
-        return None, None
+        return None
+
+def load_test_data(test_file_path):
+    try:
+        # Load the test data from the given file path
+        df_test = pd.read_csv(test_file_path)
+        
+        # Ensure required columns are present
+        if 'Natural Language Query' not in df_test.columns or 'SQL' not in df_test.columns:
+            print("Error: Required columns not found in the test dataset.")
+            return None
+
+        # Filter relevant columns and drop rows with any missing values
+        df_test = df_test[['ID', 'Natural Language Query', 'SQL']].dropna()
+        return df_test
+    except Exception as e:
+        print(f"Error loading test data: {e}")
+        return None
 
 def generate_schema_string(schema):
     schema_str = "The database consists of the following tables:\n"
@@ -117,7 +135,9 @@ def run_test_set():
         print("Failed to load schema.")
         return
 
-    training_data, test_data = load_and_split_training_data('Training/all_queries_categorised_train.csv', split_ratio=0.5)
+    training_data = load_training_data('Training/all_queries_categorised_train.csv')
+    test_data = load_test_data('Training/all_queries_categorised_train.csv')
+
     if training_data is None or training_data.empty or test_data is None or test_data.empty:
         print("Error: Training or test data unavailable.")
         return
