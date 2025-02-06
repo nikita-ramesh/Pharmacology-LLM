@@ -155,6 +155,7 @@ def run_test_set():
 
             generated_sql = None
             retries = 0
+            error_message = None
             while retries <= 2:
                 generated_sql = process_user_query(nlq, schema_context)
                 if generated_sql is not None:
@@ -164,6 +165,14 @@ def run_test_set():
                 retries += 1
                 if retries > 2:
                     generated_results = None  # If retries exceeded, set results to None
+                # Capture error message if query execution fails
+                error_message = f"Error executing generated SQL: {generated_sql}"
+
+                # Append the error message to the context for retrying
+                schema_context.append({
+                    "role": "system",
+                    "content": f"Previous error: {error_message}\n\nPlease retry the query with this context."
+                })
 
             result_file.write(f"Generated SQL: {generated_sql}\n")
 
