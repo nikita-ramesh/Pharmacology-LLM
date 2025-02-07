@@ -14,6 +14,7 @@ db_config = {
     'database': 'guide_to_pharmacology',
     'user': 'postgres',
     'password': pwd(),
+    'options': '-c client_encoding=UTF8',
 }
 
 def connect_to_db():
@@ -26,7 +27,7 @@ def connect_to_db():
 
 def load_schema_from_file(file_path):
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             return json.load(file)
     except Exception as e:
         print(f"Error loading schema: {e}")
@@ -34,7 +35,7 @@ def load_schema_from_file(file_path):
 
 def load_training_data(file_path):
     try:
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, encoding='utf-8')
         
         # Ensure required columns are present
         if 'Natural Language Query' not in df.columns or 'SQL' not in df.columns or 'Training/test set' not in df.columns:
@@ -51,7 +52,7 @@ def load_training_data(file_path):
 def load_test_data(test_file_path):
     try:
         # Load the test data from the given file path
-        df_test = pd.read_csv(test_file_path)
+        df_test = pd.read_csv(test_file_path, encoding='utf-8')
         
         # Ensure required columns are present
         if 'Natural Language Query' not in df_test.columns or 'SQL' not in df_test.columns:
