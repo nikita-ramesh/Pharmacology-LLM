@@ -59,7 +59,7 @@ def load_test_data(test_file_path):
             return None
 
         # Filter relevant columns and drop rows with any missing values
-        df_test = df_test[['ID', 'Natural Language Query', 'SQL']].dropna()
+        df_test = df_test[['ID', 'Natural Language Query', 'SQL']]
         return df_test
     except Exception as e:
         print(f"Error loading test data: {e}")
@@ -136,12 +136,16 @@ def run_test_set():
         return
 
     training_data = load_training_data('Training/all_queries_categorised_train.csv')
-    test_data = load_test_data('Training/all_queries_categorised_train.csv')
+    test_data = load_test_data('Training/all_queries_categorised_test.csv')
 
-    if training_data is None or training_data.empty or test_data is None or test_data.empty:
-        print("Error: Training or test data unavailable.")
+    if training_data is None or training_data.empty:
+        print("Error: Training data unavailable.")
         return
-
+    
+    if test_data is None or test_data.empty:
+        print("Error: Testing data unavailable.")
+        return
+    
     training_data_sample = "\n".join([f"Q: {row['Natural Language Query']}\nA: {row['SQL']}\nAlternative A: {row['2nd SQL']}" for _, row in training_data.iterrows()])
     schema_str = generate_schema_string(schema)
     schema_context = [initialize_schema_context(schema_str, training_data_sample)]
