@@ -19,6 +19,7 @@ db_config = {
 def connect_to_db():
     try:
         conn = psycopg2.connect(**db_config)
+        conn.set_client_encoding('UTF8')  # Ensure UTF-8 encoding
         return conn
     except Exception as e:
         print(f"Error connecting to the database: {e}")
@@ -59,7 +60,7 @@ def load_test_data(test_file_path):
             return None
 
         # Filter relevant columns and drop rows with any missing values
-        df_test = df_test[['ID', 'Natural Language Query', 'SQL']]
+        df_test = df_test[['ID', 'Natural Language Query']]
         return df_test
     except Exception as e:
         print(f"Error loading test data: {e}")
@@ -120,7 +121,9 @@ def process_user_query(question, schema_context):
 
 def execute_query(conn, query):
     try:
-        return pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, conn)
+        df = df.applymap(lambda x: x.encode('utf-8').decode('utf-8') if isinstance(x, str) else x)
+        return df
     except Exception as e:
         print(f"Error executing query: {e}")
         return None
@@ -156,7 +159,7 @@ def run_test_set():
     empty_set = set()
 
     # Open a file to write results
-    with open("query_results.txt", "w") as result_file:
+    with open("query_results.txt", "w", encoding="utf-8") as result_file:
         result_file.write("Test Set Evaluation Results\n")
         result_file.write("="*50 + "\n")
         result_file.write(f"Total test queries executed: {total_count}\n")
@@ -171,28 +174,24 @@ def run_test_set():
         for index, row in test_data.iterrows():
             total_count += 1
             nlq = row['Natural Language Query']
-            expected_sql = row['SQL']
 
             result_file.write(f"\n--- Processing Test Case {index + 1} ---\n")
             result_file.write(f"Natural Language Query: {nlq}\n")
-            result_file.write(f"Expected SQL: {expected_sql}\n")
 
             generated_sql = None
             retries = 0
             error_message = None
-            while retries <= 2:
+            while retries <= 1:
                 generated_sql = process_user_query(nlq, schema_context)
                 if generated_sql is not None:
                     generated_results = execute_query(conn, generated_sql)
                     if generated_results is not None and not generated_results.empty:
                         break
                 retries += 1
-                if retries > 2:
+                if retries > 1:
                     generated_results = None  # If retries exceeded, set results to None
 
             result_file.write(f"Generated SQL: {generated_sql}\n")
-
-            expected_results = execute_query(conn, expected_sql) if expected_sql else None
 
             # Add to sets based on execution results
             if generated_results is None:
@@ -201,9 +200,6 @@ def run_test_set():
                 empty_set.add(int(row['ID']))
             else:
                 success_count += 1
-
-            result_file.write("\nExpected SQL Results:\n")
-            result_file.write(f"{expected_results if expected_results is not None else 'Error executing expected SQL.'}\n")
 
             result_file.write("\nGenerated SQL Results:\n")
             result_file.write(f"{generated_results if generated_results is not None else 'Error executing generated SQL.'}\n")
