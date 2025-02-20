@@ -39,7 +39,7 @@ def load_training_data(file_path):
             print("Error: Required columns not found in the dataset.")
             return None
 
-        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set', 'Notes for student', '2nd SQL']]
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set', 'Notes for student', '2nd SQL', 'Minimum output columns']]
         return df
     except Exception as e:
         print(f"Error loading training data: {e}")
@@ -204,6 +204,7 @@ def run_test_set():
         f"Notes: {row['Notes for student']}\n"
         f"A: {row['SQL']}\n"
         f"Alternative A: {row['2nd SQL']}"
+        f"Min required cols: {row['Minimum output columns']}"
         for _, row in training_data.iterrows()
     ])
     schema_str = generate_schema_string(schema)
@@ -282,7 +283,7 @@ def run_test_set():
         # Successful Statistics
         result_file.write("SUCCESSFUL STATISTICS:\n")
         result_file.write(f"Total test queries executed: {total_count}\n")
-        result_file.write(f"None empty output rate: {success_count/total_count}\n")
+        result_file.write(f"Non empty output rate: {success_count/total_count}\n")
         result_file.write(f"Successful execution rate: {(success_count+len(empty_set))/total_count}\n")
         result_file.write(f"Non empty test queries: {success_count}\n\n")
 
