@@ -189,7 +189,10 @@ def run_test_set():
         # Final statistics
         result_file.write("="*50 + "\n")
         result_file.write(f"Total test queries executed: {total_count}\n")
-        result_file.write(f"Successful test queries: {success_count}\n")
+        result_file.write(f"None empty output rate: {success_count/total_count}\n")
+        result_file.write(f"Successful execution rate: {(success_count+len(empty_set))/total_count}\n")
+        result_file.write(f"Non empty test queries: {success_count}\n\n")
+
         result_file.write(f"None count: {len(none_set)}\n")
         result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
         result_file.write(f"Empty count: {len(empty_set)}\n")
