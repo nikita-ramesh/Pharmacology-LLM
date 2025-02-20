@@ -39,7 +39,7 @@ def load_training_data(file_path):
             print("Error: Required columns not found in the dataset.")
             return None
 
-        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set', 'Notes for student', '2nd SQL']]
         return df
     except Exception as e:
         print(f"Error loading training data: {e}")
@@ -199,7 +199,13 @@ def run_test_set():
         print("Error: Training or test data unavailable.")
         return
 
-    training_data_sample = "\n".join([f"Q: {row['Natural Language Query']}\nA: {row['SQL']}" for _, row in training_data.iterrows()])
+    training_data_sample = "\n".join([
+        f"Q: {row['Natural Language Query']}\n"
+        f"Notes: {row['Notes for student']}\n"
+        f"A: {row['SQL']}\n"
+        f"Alternative A: {row['2nd SQL']}"
+        for _, row in training_data.iterrows()
+    ])
     schema_str = generate_schema_string(schema)
     schema_context = [initialize_schema_context(schema_str, training_data_sample)]
 

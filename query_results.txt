@@ -3,18 +3,31 @@ Test Set Evaluation Results
 --- Processing Test Case 1 ---
 Natural Language Query: What pharmacology data is there for UniProtKB ID Q8NEC5 and Q96P56?
 Expected SQL: select l.ligand_id, l.name, l.type, o.object_id, o.name, i.type, i.action, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units from interaction i, ligand l, object o where i.object_id in (select dl.object_id from database_link dl where dl.placeholder = 'Q8NEC5' or dl. placeholder =  'Q96P56' and dl.database_id in (select database_id from database where name ilike '%Uniprot%')) and i.ligand_id=l.ligand_id and i.object_id=o.object_id;
-Generated SQL: WITH RECURSIVE subfamilies AS (
-    SELECT group_id, family_id from grouping 
-    WHERE group_id in (SELECT family_id from receptor2family WHERE object_id in (SELECT object_id from database_link WHERE object_id IN (SELECT object_id FROM database_link dl JOIN database d ON dl.database_id = d.database_id WHERE d.name = 'UniProtKB' AND (dl.placeholder = 'Q8NEC5' OR dl.placeholder = 'Q96P56'))))
-    UNION SELECT e.group_id, e.family_id from grouping e 
-    INNER JOIN subfamilies s ON s.family_id=e.group_id
-)
-SELECT i.* 
-FROM interaction i, database_link dl, database d
-WHERE i.object_id = dl.object_id 
-AND dl.database_id = d.database_id 
-AND d.name = 'UniProtKB'
-AND (dl.placeholder = 'Q8NEC5' OR dl.placeholder = 'Q96P56');
+Generated SQL: SELECT 
+    i.ligand_id, 
+    l.name AS ligand_name, 
+    i.object_id, 
+    o.name AS object_name, 
+    i.type, 
+    i.action, 
+    i.affinity_units, 
+    i.affinity_high, 
+    i.affinity_median, 
+    i.affinity_low
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
+JOIN 
+    object o ON i.object_id = o.object_id
+WHERE 
+    i.object_id IN (
+        SELECT DISTINCT dl.object_id 
+        FROM database_link dl 
+        JOIN database d ON dl.database_id = d.database_id 
+        WHERE d.name = 'UniProtKB' 
+        AND dl.placeholder IN ('Q8NEC5', 'Q96P56')
+    );
 
 Expected SQL Results:
     ligand_id                    name               type  ...        action affinity affinity_units
@@ -43,30 +56,30 @@ Expected SQL Results:
 [21 rows x 9 columns]
 
 Generated SQL Results:
-    interaction_id  ligand_id  object_id  ... whole_organism_assay   hide              type_vector
-0            77843       4269        388  ...                 None  False  'blocker':2 'channel':1
-1            77836       1882        388  ...                 None  False                'activ':1
-2            77837       5412        388  ...                 None  False                'activ':1
-3            77838       1883        388  ...                 None  False                'activ':1
-4            12356       4212        388  ...                 None  False  'blocker':2 'channel':1
-5            77841       2432        388  ...                 None  False  'blocker':2 'channel':1
-6            77844       2522        388  ...                 None  False  'blocker':2 'channel':1
-7            77839       2440        388  ...                 None  False  'blocker':2 'channel':1
-8            77842       4269        388  ...                 None  False  'blocker':2 'channel':1
-9            77840       2476        388  ...                 None  False  'blocker':2 'channel':1
-10           77835       2377        388  ...                 None  False                'activ':1
-11           77859       4269        389  ...                 None  False  'blocker':2 'channel':1
-12           77860       2522        389  ...                 None  False  'blocker':2 'channel':1
-13           77853       5412        389  ...                 None  False                'activ':1
-14           77854       1883        389  ...                 None  False                'activ':1
-15           77852       1882        389  ...                 None  False                'activ':1
-16           77851       2377        389  ...                 None  False                'activ':1
-17           77857       2432        389  ...                 None  False  'blocker':2 'channel':1
-18           77858       4269        389  ...                 None  False  'blocker':2 'channel':1
-19           77855       2440        389  ...                 None  False  'blocker':2 'channel':1
-20           77856       2476        389  ...                 None  False  'blocker':2 'channel':1
+    ligand_id             ligand_name  object_id object_name  ... affinity_units affinity_high affinity_median  affinity_low
+0        4269              NNC55-0396        388    CatSper1  ...          pIC50           NaN            5.60           NaN
+1        1882         PGE<sub>1</sub>        388    CatSper1  ...          pEC50           NaN            6.30           NaN
+2        5412  PGF<sub>1&alpha;</sub>        388    CatSper1  ...          pEC50           NaN            6.30           NaN
+3        1883         PGE<sub>2</sub>        388    CatSper1  ...          pEC50           NaN            6.30           NaN
+4        4212               HC-056456        388    CatSper1  ...          pIC50           NaN            4.70           NaN
+5        2432           ruthenium red        388    CatSper1  ...          pIC50           NaN            5.00           NaN
+6        2522              mibefradil        388    CatSper1  ...          pIC50          4.50             NaN           4.4
+7        2440         Cd<sup>2+</sup>        388    CatSper1  ...          pIC50           NaN            3.70           NaN
+8        4269              NNC55-0396        388    CatSper1  ...          pIC50           NaN            5.70           NaN
+9        2476         Ni<sup>2+</sup>        388    CatSper1  ...          pIC50           NaN            3.50           NaN
+10       2377            progesterone        388    CatSper1  ...          pEC50          8.11             NaN           8.0
+11       4269              NNC55-0396        389    CatSper2  ...          pIC50           NaN            4.60           NaN
+12       2522              mibefradil        389    CatSper2  ...          pIC50          4.50             NaN           4.4
+13       5412  PGF<sub>1&alpha;</sub>        389    CatSper2  ...          pEC50           NaN            6.30           NaN
+14       1883         PGE<sub>2</sub>        389    CatSper2  ...          pEC50           NaN            6.30           NaN
+15       1882         PGE<sub>1</sub>        389    CatSper2  ...          pEC50           NaN            6.30           NaN
+16       2377            progesterone        389    CatSper2  ...          pEC50           NaN            8.11           NaN
+17       2432           ruthenium red        389    CatSper2  ...          pIC50           NaN            5.00           NaN
+18       4269              NNC55-0396        389    CatSper2  ...          pIC50           NaN            5.70           NaN
+19       2440         Cd<sup>2+</sup>        389    CatSper2  ...          pIC50           NaN            3.70           NaN
+20       2476         Ni<sup>2+</sup>        389    CatSper2  ...          pIC50           NaN            3.50           NaN
 
-[21 rows x 40 columns]
+[21 rows x 10 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: False
@@ -76,51 +89,46 @@ Partial Column Accuracy: True
 Natural Language Query: What selective agonists are there for chemokine receptors family members?
 Expected SQL: select l.ligand_id, l.name, l.type, i.type, i.action, i.selective from interaction i, ligand l where i.object_id in (select object_id from object where object_id in (select object_id from receptor2family where family_id in ((WITH RECURSIVE subfamilies AS ( SELECT group_id, family_id from grouping where group_id in (select family_id from family where name ilike '%chemokine receptor%') UNION SELECT e.group_id, e.family_id from grouping e INNER JOIN subfamilies s ON s.family_id=e.group_id) SELECT family_id FROM subfamilies order by family_id) union select family_id from family where family_id in (select family_id from family where name ilike '%chemokine receptor%')))) and i.selective is true and i.type='Agonist' and i.ligand_id=l.ligand_id;
 Generated SQL: WITH RECURSIVE subfamilies AS (
-    SELECT group_id, family_id
-    FROM grouping
-    WHERE group_id IN (
-        SELECT family_id
-        FROM family
-        WHERE name ILIKE '%chemokine receptors%'
-    )
-    UNION
-    SELECT e.group_id, e.family_id
-    FROM grouping e
+    SELECT group_id, family_id 
+    FROM grouping 
+    WHERE group_id IN (SELECT family_id FROM family WHERE name ILIKE '%Chemokine receptors%')
+    UNION 
+    SELECT e.group_id, e.family_id 
+    FROM grouping e 
     INNER JOIN subfamilies s ON s.family_id = e.group_id
-)
+) 
 SELECT 
-    l.ligand_id, 
-    l.name, 
+    o.object_id, 
+    o.name AS receptor_name, 
+    i.ligand_id, 
+    l.name AS ligand_name, 
     i.affinity_units, 
-    i.type, 
-    i.selective, 
-    CASE 
-        WHEN i.affinity_median IS NULL THEN 
-            CASE 
-                WHEN i.affinity_high IS NULL THEN i.affinity_low 
-                ELSE i.affinity_high 
-            END 
-        ELSE i.affinity_median 
-    END AS affinity
+    i.type AS interaction_type, 
+    i.action, 
+    CASE WHEN i.affinity_median IS NULL THEN 
+        CASE WHEN i.affinity_high IS NULL THEN i.affinity_low 
+        ELSE i.affinity_high 
+        END 
+    ELSE i.affinity_median 
+    END AS affinity_value
 FROM 
-    interaction i 
-    JOIN ligand l ON i.ligand_id = l.ligand_id
-    JOIN object o ON i.object_id = o.object_id
+    object o
+JOIN 
+    interaction i ON o.object_id = i.object_id
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
 WHERE 
-    i.object_id IN (
-        SELECT object_id
-        FROM receptor2family
-        WHERE family_id IN (
-            SELECT family_id
-            FROM subfamilies
+    o.object_id IN (
+        SELECT object_id FROM receptor2family WHERE family_id IN (
+            SELECT family_id FROM subfamilies 
             UNION 
-            SELECT family_id
-            FROM family
-            WHERE name ILIKE '%chemokine receptors%'
+            SELECT family_id FROM family WHERE name ILIKE '%Chemokine receptors%'
         )
-    )
-    AND i.type = 'Agonist'
-    AND i.selective = 'Selective';
+    ) 
+    AND i.type = 'Agonist' 
+    AND i.selectivity = 'Selective' 
+    AND ((i.affinity_units IS NOT NULL AND i.affinity_units != '-') 
+    OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-'));
 
 Expected SQL Results:
     ligand_id     name     type     type        action  selective
@@ -139,31 +147,74 @@ Expected SQL Results:
 [77 rows x 6 columns]
 
 Generated SQL Results:
-Error executing generated SQL.
+    object_id      receptor_name  ligand_id  ... interaction_type           action affinity_value
+0          66               CCR9        817  ...          Agonist     Full agonist            NaN
+1          60               CCR3        769  ...          Agonist     Full agonist           9.00
+2          60               CCR3        776  ...          Agonist     Full agonist           8.90
+3          61               CCR4        798  ...          Agonist     Full agonist           9.20
+4          69              CXCR2        827  ...          Agonist     Full agonist           9.10
+5          70              CXCR3        835  ...          Agonist     Full agonist           9.80
+6          60               CCR3        775  ...          Agonist     Full agonist           9.40
+7          58               CCR1        754  ...          Agonist     Full agonist           7.90
+8          58               CCR1        755  ...          Agonist     Full agonist           8.90
+9          62               CCR5        757  ...          Agonist     Full agonist           9.60
+10         69              CXCR2        819  ...          Agonist     Full agonist           9.70
+11         69              CXCR2        829  ...          Agonist     Full agonist           9.00
+12         70              CXCR3        837  ...          Agonist     Full agonist           8.30
+13         70              CXCR3        836  ...          Agonist     Full agonist          10.50
+14         64               CCR7        811  ...          Agonist          Agonist           9.30
+15         71              CXCR4        607  ...          Agonist  Partial agonist           6.10
+16         64               CCR7        810  ...          Agonist          Agonist           9.00
+17         69              CXCR2        830  ...          Agonist     Full agonist           9.30
+18         69              CXCR2        828  ...          Agonist     Full agonist           9.20
+19         74  CX<sub>3</sub>CR1        856  ...          Agonist     Full agonist           8.90
+20         73              CXCR6        855  ...          Agonist     Full agonist           9.00
+21         61               CCR4        797  ...          Agonist     Full agonist           8.70
+22         65               CCR8        812  ...          Agonist     Full agonist           9.80
+23         63               CCR6       3648  ...          Agonist     Full agonist            NaN
+24         75               XCR1       3647  ...          Agonist          Agonist           7.30
+25         72              CXCR5       3645  ...          Agonist     Full agonist           7.30
+26         67              CCR10       3646  ...          Agonist     Full agonist            NaN
+27         71              CXCR4       3919  ...          Agonist          Agonist            NaN
+28         70              CXCR3       4358  ...          Agonist     Full agonist           6.40
+29         71              CXCR4       4358  ...          Agonist     Full agonist           8.20
+30         71              CXCR4        845  ...          Agonist     Full agonist           7.86
+31         75               XCR1       4370  ...          Agonist          Agonist           7.30
+32         67              CCR10       3649  ...          Agonist     Full agonist            NaN
+
+[33 rows x 8 columns]
 
 Execution Accuracy: False
-Partial Execution Accuracy: False
-Partial Column Accuracy: False
+Partial Execution Accuracy: True
+Partial Column Accuracy: True
 
 --- Processing Test Case 3 ---
 Natural Language Query: Which Lipinski compounds target Coronavirus proteins?
 Expected SQL: select * from ligand where ligand_id in (select ligand_id from ligand_physchem where lipinski_s_rule_of_five = 0) and ligand_id in (select ligand_id from interaction where object_id in (select object_id from receptor2family rf where family_id in (select family_id from family where name = 'Coronavirus (CoV) proteins')));
-Generated SQL: WITH RECURSIVE coronavirus_proteins AS (
-    SELECT object_id 
-    FROM object 
-    WHERE name ILIKE '%Coronavirus%' OR name ILIKE '%coronavirus%'
-    UNION
-    SELECT distinct rf.object_id 
-    FROM receptor2family rf 
-    JOIN family f ON rf.family_id = f.family_id 
-    WHERE f.name ILIKE '%Coronavirus%' OR f.name ILIKE '%coronavirus%'
-)
-SELECT l.ligand_id, l.name 
+Generated SQL: SELECT l.ligand_id, l.name, lp.lipinski_s_rule_of_five, i.object_id, o.name AS protein_name
 FROM ligand l
 JOIN ligand_physchem lp ON l.ligand_id = lp.ligand_id
-JOIN interaction i ON i.ligand_id = l.ligand_id
+JOIN interaction i ON l.ligand_id = i.ligand_id
+JOIN object o ON i.object_id = o.object_id
 WHERE lp.lipinski_s_rule_of_five = 0
-AND i.object_id IN (SELECT object_id FROM coronavirus_proteins);
+AND o.object_id IN (
+    SELECT object_id
+    FROM receptor2family
+    WHERE family_id IN (
+        WITH RECURSIVE subfamilies AS (
+            SELECT group_id, family_id FROM grouping
+            WHERE group_id IN (
+                SELECT family_id FROM family WHERE name ILIKE '%Coronavirus%'
+            )
+            UNION
+            SELECT e.group_id, e.family_id FROM grouping e
+            INNER JOIN subfamilies s ON s.family_id = e.group_id
+        )
+        SELECT family_id FROM subfamilies
+        UNION
+        SELECT family_id FROM family WHERE name ILIKE '%Coronavirus%'
+    )
+);
 
 Expected SQL Results:
     ligand_id                          name  ...                             immuno_comments_vector  gtmp_comments_vector
@@ -182,20 +233,20 @@ Expected SQL Results:
 [68 rows x 46 columns]
 
 Generated SQL Results:
-    ligand_id                                      name
-0        7876                                boceprevir
-1       11071             compound 11b [PMID: 32321856]
-2        7876                                boceprevir
-3       11173                                  GRL-0496
-4       11173                                  GRL-0496
-..        ...                                       ...
-88      13022  compound 4b [Ramsey <i>et al</i>., 2023]
-89      13028              compound 1b [PMID: 37562607]
-90      13028              compound 1b [PMID: 37562607]
-91      13318                                      RS-1
-92      13319                                      RS-2
+    ligand_id                           name  lipinski_s_rule_of_five  object_id                 protein_name
+0        7876                     boceprevir                        0       3111  CoV 3C-like (main) protease
+1       11071  compound 11b [PMID: 32321856]                        0       3111  CoV 3C-like (main) protease
+2       10583                        ebselen                        0       3132     CoV Papain-like protease
+3       11078                       GRL-0617                        0       3132     CoV Papain-like protease
+4        7876                     boceprevir                        0       3111  CoV 3C-like (main) protease
+..        ...                            ...                      ...        ...                          ...
+88      13098                      withanone                        0       3111  CoV 3C-like (main) protease
+89      13285                    PF-07957472                        0       3132     CoV Papain-like protease
+90      13318                           RS-1                        0       3277   CoV 2'-O-methyltransferase
+91      13319                           RS-2                        0       3277   CoV 2'-O-methyltransferase
+92      13365   compound 4d [PMID: 38746883]                        0       3111  CoV 3C-like (main) protease
 
-[93 rows x 2 columns]
+[93 rows x 5 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -204,11 +255,19 @@ Partial Column Accuracy: True
 --- Processing Test Case 4 ---
 Natural Language Query: Find all of the pharmacological agents that are active in humans but not rats and mice
 Expected SQL: select distinct i.ligand_id, (select name from ligand l where l.ligand_id=i.ligand_id) from interaction i where i.species_id in (select species_id from species where name = 'Human') and i.ligand_id not in (select ligand_id from interaction i where species_id in (select species_id from species where name = 'Rat')) and i.ligand_id not in (select ligand_id from interaction i where species_id in (select species_id from species where name = 'Mouse')) and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != ''));
-Generated SQL: SELECT DISTINCT l.ligand_id, l.name
-FROM interaction i
-JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE i.species_id IN (SELECT species_id FROM species WHERE name = 'Human')
-AND i.species_id NOT IN (SELECT species_id FROM species WHERE name IN ('Mouse', 'Rat'));
+Generated SQL: SELECT DISTINCT l.ligand_id, l.name, l.type 
+FROM interaction i 
+JOIN ligand l ON i.ligand_id = l.ligand_id 
+WHERE i.species_id IN (SELECT species_id FROM species WHERE name = 'Human') 
+AND i.ligand_id NOT IN (
+    SELECT DISTINCT i2.ligand_id 
+    FROM interaction i2 
+    WHERE i2.species_id IN (
+        SELECT species_id 
+        FROM species 
+        WHERE name IN ('Rat', 'Mouse')
+    )
+);
 
 Expected SQL Results:
       ligand_id                               name
@@ -227,20 +286,20 @@ Expected SQL Results:
 [6865 rows x 2 columns]
 
 Generated SQL Results:
-      ligand_id                               name
-0             1                         flesinoxan
-1             2                         quinpirole
-2             3               1-naphthylpiperazine
-3             4                               5-CT
-4             5                5-hydroxytryptamine
-...         ...                                ...
-9091      13422  P2Y<sub>14</sub>R antagonist I-17
-9092      13423      compound XVI [PMID: 38863440]
-9093      13424                         PSB-KK1445
-9094      13425                         PSB-KK1415
-9095      13429   TYK2 inhibitor 18 [WO2023227946]
+      ligand_id                               name               type
+0             1                         flesinoxan  Synthetic organic
+1             6     7-methoxy-1-naphthylpiperazine  Synthetic organic
+2             8                          BMY-14802  Synthetic organic
+3            10                          BRL-15572  Synthetic organic
+4            11                           CP 93129  Synthetic organic
+...         ...                                ...                ...
+7856      13422  P2Y<sub>14</sub>R antagonist I-17  Synthetic organic
+7857      13423      compound XVI [PMID: 38863440]  Synthetic organic
+7858      13424                         PSB-KK1445  Synthetic organic
+7859      13425                         PSB-KK1415  Synthetic organic
+7860      13429   TYK2 inhibitor 18 [WO2023227946]  Synthetic organic
 
-[9096 rows x 2 columns]
+[7861 rows x 3 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -249,8 +308,10 @@ Partial Column Accuracy: True
 --- Processing Test Case 5 ---
 Natural Language Query: Find all patent references in the Guide that are post-2021?
 Expected SQL: select article_title, year, url, patent_number, authors from reference where type='Patent' and year >= 2022;
-Generated SQL: SELECT * FROM reference 
-WHERE type = 'Patent' AND year > 2021;
+Generated SQL: SELECT * 
+FROM reference 
+WHERE type ILIKE '%patent%' 
+AND year > 2021;
 
 Expected SQL Results:
                                         article_title  ...                                            authors
@@ -375,27 +436,30 @@ Partial Column Accuracy: True
 --- Processing Test Case 6 ---
 Natural Language Query: What fraction of all targets with clinically approved drugs are targeted by a drug on the WHO essential medicines list?
 Expected SQL: select (select count(distinct i.object_id)::decimal from interaction i where i.ligand_id in (select l.ligand_id from ligand l where l.who_essential is true and approved is true) and i.object_id is not null) / (select count(distinct i.object_id)::decimal from interaction i where i.ligand_id in (select l.ligand_id from ligand l where approved is true) and i.object_id is not null);
-Generated SQL: WITH all_targets_with_approved_drugs AS (
+Generated SQL: WITH approved_targets AS (
     SELECT DISTINCT i.object_id
     FROM interaction i
-    WHERE i.ligand_id IN (SELECT ligand_id FROM ligand WHERE approved IS TRUE)
+    JOIN ligand l ON i.ligand_id = l.ligand_id
+    WHERE l.approved = true
 ),
-targets_with_who_essential_drugs AS (
+who_essential_targets AS (
     SELECT DISTINCT i.object_id
     FROM interaction i
-    WHERE i.ligand_id IN (SELECT ligand_id FROM ligand WHERE who_essential IS TRUE)
+    JOIN ligand l ON i.ligand_id = l.ligand_id
+    WHERE l.who_essential = true
 )
 SELECT 
-    (SELECT COUNT(*) FROM targets_with_who_essential_drugs)::float / 
-    (SELECT COUNT(*) FROM all_targets_with_approved_drugs) AS fraction_of_targets_with_who_essential_drugs;
+    (SELECT COUNT(*) FROM who_essential_targets) :: FLOAT /
+    (SELECT COUNT(*) FROM approved_targets) AS fraction
+;
 
 Expected SQL Results:
    ?column?
 0  0.403646
 
 Generated SQL Results:
-   fraction_of_targets_with_who_essential_drugs
-0                                      0.410923
+   fraction
+0  0.410923
 
 Execution Accuracy: False
 Partial Execution Accuracy: False
@@ -403,37 +467,49 @@ Partial Column Accuracy: False
 
 --- Processing Test Case 7 ---
 Natural Language Query: Which compounds have a role in acute lymphocytic leukemia?
-Expected SQL: select idl.ligand_id, l.name, idl.comment, d.name from immuno_disease2ligand idl, ligand l, disease d where idl.disease_id in (select disease_id, name from disease where (name ilike '%acute lymphocytic leukemia%') or (name ilike 'ALL') union select disease_id, synonym from disease2synonym where (synonym ilike '%acute lymphocytic leukemia%') or (synonym ilike 'ALL')) and idl.ligand_id=l.ligand_id and d.disease_id=idl.disease_id;
-Generated SQL: SELECT idl.ligand_id, l.name, idl.comment, d.name 
+Expected SQL: select idl.ligand_id, l.name, idl.comment, d.name from immuno_disease2ligand idl, ligand l, disease d where idl.disease_id in (select disease_id from disease where (name ilike '%acute lymphocytic leukemia%') or (name ilike 'ALL') union select disease_id from disease2synonym where (synonym ilike '%acute lymphocytic leukemia%') or (synonym ilike 'ALL')) and idl.ligand_id=l.ligand_id and d.disease_id=idl.disease_id;
+Generated SQL: SELECT idl.ligand_id, l.name, idl.comment, d.name
 FROM immuno_disease2ligand idl
 JOIN ligand l ON idl.ligand_id = l.ligand_id
-JOIN disease d ON d.disease_id = idl.disease_id
+JOIN disease d ON idl.disease_id = d.disease_id
 WHERE idl.disease_id IN (
-    SELECT disease_id FROM disease WHERE name ILIKE '%acute lymphocytic leukemia%'
+    SELECT disease_id
+    FROM disease
+    WHERE name ILIKE '%acute lymphocytic leukemia%'
     UNION
-    SELECT disease_id FROM disease2synonym WHERE synonym ILIKE '%acute lymphocytic leukemia%'
+    SELECT disease_id
+    FROM disease2synonym
+    WHERE synonym ILIKE '%acute lymphocytic leukemia%'
 );
 
 Expected SQL Results:
-Error executing expected SQL.
+   ligand_id                   name                                            comment                              name
+0       8266  inotuzumab ozogamicin                          Approved therapy for ALL.  Acute lymphocytic leukemia (ALL)
+1       7384           blinatumomab  Approved specifically for Philadelphia chromos...  Acute lymphocytic leukemia (ALL)
 
 Generated SQL Results:
    ligand_id                   name                                            comment                              name
 0       8266  inotuzumab ozogamicin                          Approved therapy for ALL.  Acute lymphocytic leukemia (ALL)
 1       7384           blinatumomab  Approved specifically for Philadelphia chromos...  Acute lymphocytic leukemia (ALL)
 
-Execution Accuracy: False
-Partial Execution Accuracy: False
-Partial Column Accuracy: False
+Execution Accuracy: True
+Partial Execution Accuracy: True
+Partial Column Accuracy: True
 
 --- Processing Test Case 8 ---
 Natural Language Query: What peptides, that have pharmacology in humans, also have amino-acid sequence data in the Guide?
 Expected SQL: select * from grac_family_text gft where gft.family_id in (select family_id from family where name ilike '%Voltage-gated ion channels%');
 Generated SQL: SELECT p.ligand_id, l.name, p.one_letter_seq, p.three_letter_seq
 FROM peptide p
-JOIN interaction i ON p.ligand_id = i.ligand_id
 JOIN ligand l ON p.ligand_id = l.ligand_id
-WHERE i.species_id IN (SELECT species_id FROM species WHERE name = 'Human');
+WHERE p.one_letter_seq IS NOT NULL
+  AND p.ligand_id IN (
+    SELECT DISTINCT i.ligand_id
+    FROM interaction i
+    WHERE i.species_id IN (
+      SELECT species_id FROM species WHERE name = 'Human'
+    )
+  );
 
 Expected SQL Results:
    family_id  ...                                    comments_vector
@@ -442,20 +518,20 @@ Expected SQL Results:
 [1 rows x 6 columns]
 
 Generated SQL Results:
-      ligand_id  ...                                   three_letter_seq
-0           137  ...                                    Leu-Ser-Ala-Leu
-1           137  ...                                    Leu-Ser-Ala-Leu
-2           311  ...  Leu-Thr-Cys-Val-Thr-Ser-Lys-Ser-Ile-Phe-Gly-Il...
-3           311  ...  Leu-Thr-Cys-Val-Thr-Ser-Lys-Ser-Ile-Phe-Gly-Il...
-4           312  ...  Leu-Thr-Cys-Val-Thr-Thr-Lys-Ser-Ile-Gly-Gly-Va...
-...         ...  ...                                                ...
-3103      13383  ...                                                   
-3104      13383  ...                                                   
-3105      13396  ...                                                   
-3106      13402  ...                                                   
-3107      13403  ...                                                   
+      ligand_id          name                         one_letter_seq                                   three_letter_seq
+0          2005     CGP 23996                             KNFFWKTYTS  c[<i>Aha</i>-Lys-Asn-Phe-Phe-Trp-Lys-Thr-Tyr-T...
+1         10588    peptide 5A  DWLKAFYDKVAEKLKEAFPDWAKAAYDKAAEKAKEAA  Asp-Trp-Leu-Lys-Ala-Phe-Tyr-Asp-Lys-Val-Ala-Gl...
+2         10609   mezagitamab                                                                                          
+3         10684   davalintide       KCNTATCVLGRLSQELHRLQTYPRTNTGSNTY  Lys-Cys-Asn-Thr-Ala-Thr-Cys-Val-Leu-Gly-Arg-Le...
+4         11026    meplazumab                                                                                          
+...         ...           ...                                    ...                                                ...
+1729      13330  prasinezumab                                                                                          
+1730      13331    cinpanemab                                                                                          
+1731      13403   marstacimab                                                                                          
+1732      13381        MG-101                                    LLX                                  Ac-Leu-Leu-Nle-al
+1733      13383   survodutide                                                                                          
 
-[3108 rows x 4 columns]
+[1734 rows x 4 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: False
@@ -464,26 +540,36 @@ Partial Column Accuracy: False
 --- Processing Test Case 9 ---
 Natural Language Query: What should I use to inhibit TLR7 in cultured cells, and at what concentration?  
 Expected SQL: select l.ligand_id, l.name, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units, i.type, i.action from ligand l, interaction i where i.object_id in (select object_id from object where object_id in (select object_id from receptor2family where family_id in (select family_id from family where name ilike '%TLR7%')) union select object_id from object where name ilike '%TLR7%') and l.ligand_id=i.ligand_id and i.type in ('Channel blocker','Gating inhibitor','Inhibitor','Antagonist') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != ''));
-Generated SQL: SELECT l.ligand_id, l.name, 
-       CASE 
-           WHEN i.affinity_median IS NULL THEN 
-               CASE 
-                   WHEN i.affinity_high IS NULL THEN i.affinity_low 
-                   ELSE i.affinity_high 
-               END 
-           ELSE i.affinity_median 
-       END AS affinity, 
-       i.affinity_units, i.type, i.action 
-FROM ligand l 
-JOIN interaction i ON l.ligand_id = i.ligand_id 
-WHERE i.object_id IN (
-    SELECT object_id FROM object WHERE name ILIKE '%TLR7%' OR name ILIKE '%Toll-like receptor 7%'
-) 
-AND i.type IN ('Channel blocker', 'Gating inhibitor', 'Inhibitor', 'Antagonist') 
-AND (
-    (i.affinity_units IS NOT NULL AND i.affinity_units != '-' AND i.affinity_units != '') 
-    OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != '')
-);
+Generated SQL: SELECT 
+    l.ligand_id, 
+    l.name, 
+    CASE 
+        WHEN i.affinity_median IS NULL THEN 
+            CASE 
+                WHEN i.affinity_high IS NULL THEN i.affinity_low 
+                ELSE i.affinity_high 
+            END 
+        ELSE i.affinity_median 
+    END AS affinity, 
+    i.affinity_units, 
+    i.type, 
+    i.action 
+FROM 
+    ligand l 
+JOIN 
+    interaction i ON l.ligand_id = i.ligand_id 
+WHERE 
+    i.object_id IN (
+        SELECT object_id 
+        FROM object 
+        WHERE name ILIKE '%TLR7%' OR abbreviation ILIKE '%TLR7%' OR name ILIKE '%Toll-like receptor 7%'
+    ) 
+    AND i.type IN ('Channel blocker', 'Gating inhibitor', 'Inhibitor', 'Antagonist') 
+    AND (
+        (i.affinity_units IS NOT NULL AND i.affinity_units != '-' AND i.affinity_units != '') 
+        OR 
+        (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != '')
+    );
 
 Expected SQL Results:
    ligand_id                           name  affinity affinity_units        type      action
@@ -504,7 +590,9 @@ Partial Column Accuracy: True
 --- Processing Test Case 10 ---
 Natural Language Query: What antibacterial compounds are in the database?
 Expected SQL: select ligand_id, name, gtmp_comments  from ligand where antibacterial is true;
-Generated SQL: SELECT ligand_id, name FROM ligand WHERE antibacterial IS TRUE;
+Generated SQL: SELECT ligand_id, name 
+FROM ligand 
+WHERE antibacterial IS TRUE;
 
 Expected SQL Results:
      ligand_id                 name gtmp_comments
@@ -545,13 +633,10 @@ Partial Column Accuracy: True
 --- Processing Test Case 11 ---
 Natural Language Query: Which antibodies have clinical trials data in GtoPdb?
 Expected SQL: select l.ligand_id, l.name, l.approved, ct.title, ct.accession from ligand l right join ligand2clinical_trial lct2 on l.ligand_id=lct2.ligand_id left join clinical_trial ct on lct2.clinical_trial_id=ct.clinical_trial_id  where l.type = 'Antibody';
-Generated SQL: SELECT l.ligand_id, l.name, l.type 
+Generated SQL: SELECT l.ligand_id, l.name 
 FROM ligand l 
-WHERE l.type = 'Antibody' 
-AND l.ligand_id IN (
-    SELECT distinct ligand_id 
-    FROM ligand2clinical_trial
-);
+JOIN ligand2clinical_trial lct ON l.ligand_id = lct.ligand_id 
+WHERE l.type = 'Antibody';
 
 Expected SQL Results:
      ligand_id         name  approved                                              title    accession
@@ -570,20 +655,20 @@ Expected SQL Results:
 [578 rows x 5 columns]
 
 Generated SQL Results:
-     ligand_id               name      type
-0        11719  tisotumab vedotin  Antibody
-1        10168        ravulizumab  Antibody
-2         9596          oleclumab  Antibody
-3         7499      pembrolizumab  Antibody
-4        12964        tozorakimab  Antibody
-..         ...                ...       ...
-225       9756    bifikafusp alfa  Antibody
-226      12966        cadonilimab  Antibody
-227      13362        tosatoxumab  Antibody
-228       9296        vunakizumab  Antibody
-229      11366           osocimab  Antibody
+     ligand_id         name
+0         6773  canakinumab
+1         6771  bevacizumab
+2         6771  bevacizumab
+3         6771  bevacizumab
+4         6771  bevacizumab
+..         ...          ...
+573      12790   crovalimab
+574      12790   crovalimab
+575      12790   crovalimab
+576      12790   crovalimab
+577      13362  tosatoxumab
 
-[230 rows x 3 columns]
+[578 rows x 2 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -592,21 +677,59 @@ Partial Column Accuracy: True
 --- Processing Test Case 12 ---
 Natural Language Query: List chemical structures for SARS Cov2 MPro that have pAct > 7 and order these high to low
 Expected SQL: select l.ligand_id, l.name, l.type, o.object_id, o.name, i.type, i.action, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units, ls.isomeric_smiles, ls.isomeric_standard_inchi_key  from interaction i, ligand l, object o, ligand_structure ls where i.object_id in (select object_id from object where name ilike '%SARS-CoV-2%' or abbreviation ilike '%SARS-CoV-2%' union select object_id from synonym where synonym ilike '%SARS-CoV-2%') and i.ligand_id=l.ligand_id and i.object_id=o.object_id and case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low > 7 else i.affinity_high >7  end else i.affinity_median > 7 end and l.ligand_id=ls.ligand_id order by affinity desc;
-Generated SQL: SELECT l.ligand_id, l.name, l.type, o.object_id, o.name AS object_name, i.type AS interaction_type, i.action, 
-       COALESCE(i.affinity_median, COALESCE(i.affinity_high, i.affinity_low)) AS affinity, 
-       i.affinity_units 
-FROM interaction i 
-JOIN ligand l ON i.ligand_id = l.ligand_id 
-JOIN object o ON i.object_id = o.object_id 
-WHERE i.object_id IN (
-    SELECT object_id 
-    FROM object 
-    WHERE name ILIKE '%SARS-CoV-2%' 
-       OR abbreviation ILIKE '%SARS-CoV-2%' 
-       OR object_id IN (SELECT object_id FROM synonym WHERE synonym ILIKE '%SARS-CoV-2%')
-) 
-AND COALESCE(i.affinity_median, COALESCE(i.affinity_high, i.affinity_low)) > 7 
-ORDER BY affinity DESC;
+Generated SQL: SELECT 
+    l.ligand_id, 
+    l.name, 
+    l.type, 
+    ls.isomeric_smiles, 
+    ls.isomeric_standard_inchi_key, 
+    i.type, 
+    i.action, 
+    CASE 
+        WHEN i.affinity_median IS NULL THEN 
+            CASE 
+                WHEN i.affinity_high IS NULL THEN i.affinity_low 
+                ELSE i.affinity_high 
+            END 
+        ELSE i.affinity_median 
+    END AS affinity, 
+    i.affinity_units 
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id 
+JOIN 
+    object o ON i.object_id = o.object_id 
+JOIN 
+    ligand_structure ls ON i.ligand_id = ls.ligand_id 
+WHERE 
+    i.object_id IN (
+        SELECT 
+            object_id 
+        FROM 
+            object 
+        WHERE 
+            name ILIKE '%SARS-CoV-2%' 
+            OR abbreviation ILIKE '%SARS-CoV-2%'
+        UNION 
+        SELECT 
+            object_id 
+        FROM 
+            synonym 
+        WHERE 
+            synonym ILIKE '%SARS-CoV-2%'
+    )
+AND 
+    CASE 
+        WHEN i.affinity_median IS NULL THEN 
+            CASE 
+                WHEN i.affinity_high IS NULL THEN i.affinity_low > 7 
+                ELSE i.affinity_high > 7 
+            END 
+        ELSE i.affinity_median > 7 
+    END 
+ORDER BY 
+    affinity DESC;
 
 Expected SQL Results:
     ligand_id  ...  isomeric_standard_inchi_key
@@ -627,18 +750,18 @@ Expected SQL Results:
 Generated SQL Results:
     ligand_id                          name               type  ...      action affinity affinity_units
 0       11503                  nirmatrelvir  Synthetic organic  ...  Inhibition     9.57            pKi
-1       11712                    Z-AVLD-FMK            Peptide  ...  Inhibition     9.10          pIC50
-2       12593     compound 6 [WO2022133588]  Synthetic organic  ...  Inhibition     9.00          pIC50
-3       12590     example 18 [WO2022013684]  Synthetic organic  ...  Inhibition     8.81          pIC50
-4       12958                   pomotrelvir  Synthetic organic  ...  Inhibition     8.57            pKi
+1       12593     compound 6 [WO2022133588]  Synthetic organic  ...  Inhibition     9.00          pIC50
+2       12590     example 18 [WO2022013684]  Synthetic organic  ...  Inhibition     8.81          pIC50
+3       12958                   pomotrelvir  Synthetic organic  ...  Inhibition     8.57            pKi
+4       12897                  ibuzatrelvir  Synthetic organic  ...  Inhibition     8.52            pKi
 ..        ...                           ...                ...  ...         ...      ...            ...
+87      10883                        GC-376  Synthetic organic  ...  Inhibition     7.14          pIC50
 88      12602                         WU-04  Synthetic organic  ...  Inhibition     7.14          pIC50
-89      12841  compound 15 [PMID: 34438124]  Synthetic organic  ...  Inhibition     7.14          pIC50
-90      11903  compound 19 [PMID: 35142215]  Synthetic organic  ...  Inhibition     7.11          pIC50
-91      12227            PET-UNK-29afea89-2  Synthetic organic  ...  Inhibition     7.10          pIC50
-92      11630  compound 2i [PMID: 23245752]  Synthetic organic  ...  Inhibition     7.03          pIC50
+89      11903  compound 19 [PMID: 35142215]  Synthetic organic  ...  Inhibition     7.11          pIC50
+90      12227            PET-UNK-29afea89-2  Synthetic organic  ...  Inhibition     7.10          pIC50
+91      11630  compound 2i [PMID: 23245752]  Synthetic organic  ...  Inhibition     7.03          pIC50
 
-[93 rows x 9 columns]
+[92 rows x 9 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: False
@@ -647,28 +770,19 @@ Partial Column Accuracy: True
 --- Processing Test Case 13 ---
 Natural Language Query: Find all immune checkpoint ligands
 Expected SQL: select ligand_id, name, type from ligand where ligand_id in (select ligand_id from ligand2family lf where lf.family_id in (select family_id from family where name ilike '%immune checkpoint modulators%' and type='ligand')); 
-Generated SQL: WITH RECURSIVE subfamilies AS (
-    SELECT group_id, family_id 
-    FROM grouping 
-    WHERE group_id IN (
-        SELECT family_id 
-        FROM family 
-        WHERE name ILIKE '%immune checkpoint%'
-    )
-    UNION
-    SELECT e.group_id, e.family_id 
-    FROM grouping e 
-    INNER JOIN subfamilies s ON s.family_id = e.group_id
-)
-SELECT DISTINCT l.ligand_id, l.name
-FROM interaction i
-JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE i.object_id IN (
-    SELECT object_id 
-    FROM receptor2family 
-    WHERE family_id IN (
-        SELECT family_id FROM subfamilies
-    )
+Generated SQL: SELECT l.ligand_id, l.name, l.type
+FROM ligand l
+WHERE l.ligand_id IN (
+    SELECT distinct i.ligand_id
+    FROM interaction i
+    JOIN object o ON i.object_id = o.object_id
+    WHERE o.name ILIKE '%checkpoint%'
+    OR o.name ILIKE '%immune checkpoint%'
+    OR o.name ILIKE '%PD-1%'
+    OR o.name ILIKE '%PD-L1%'
+    OR o.name ILIKE '%CTLA-4%'
+    OR o.name ILIKE '%TIM-3%'
+    OR o.name ILIKE '%LAG-3%'
 );
 
 Expected SQL Results:
@@ -700,61 +814,50 @@ Expected SQL Results:
 24       7675             moxetumomab pasudotox  Antibody
 
 Generated SQL Results:
-    ligand_id                              name
-0        9592                      tislelizumab
-1       12992                         nurulimab
-2        6891                         abatacept
-3       12349                      zimberelimab
-4        9536                        relatlimab
-5       11649                       feladilimab
-6       10140                     spartalizumab
-7       12989                       toripalimab
-8        9606  programmed cell death 1 ligand 1
-9       10117                           AUNP-12
-10      12586                      obrindatamab
-11       9434             vadastuximab talirine
-12      12990                        sintilimab
-13      12991                       prolgolimab
-14       6775             gemtuzumab ozogamicin
-15       8460                   lulizumab pegol
-16       9802                            CFZ533
-17      11583                      retifanlimab
-18       7983                        lintuzumab
-19       8462                      tremelimumab
-20       7335                         nivolumab
-21       5064               lymphotoxin-&alpha;
-22      12347                        penpulimab
-23       4891     B and T lymphocyte attenuator
-24       7499                     pembrolizumab
-25       9589                     enoblituzumab
-26       8266             inotuzumab ozogamicin
-27      12361                       sabatolimab
-28       5070                             LIGHT
-29      12966                       cadonilimab
-30       6892                        belatacept
-31       5077                       CD40 ligand
-32      11518                       dostarlimab
-33       6888                        ipilimumab
-34      13396                       ivonescimab
-35      10090                        cemiplimab
-36       7675             moxetumomab pasudotox
+    ligand_id                              name               type
+0        5954                 Chk2 inhibitor II  Synthetic organic
+1        5991                  isogranulatimide  Synthetic organic
+2        6037                         SB 218078  Synthetic organic
+3        7702                       adavosertib  Synthetic organic
+4        7713                           AZD7762  Synthetic organic
+5        7907            7-hydroxystaurosporine  Synthetic organic
+6        7943                           MK-8776  Synthetic organic
+7        7960                        rabusertib  Synthetic organic
+8        8006                            BX-795  Synthetic organic
+9        8007                            BX-912  Synthetic organic
+10       8043                         PF-477736  Synthetic organic
+11       8044                         CCT241533  Synthetic organic
+12       8109   compound 2-1-1 [PMID: 24900824]  Synthetic organic
+13       8110   compound 2-3-2 [PMID: 24900824]  Synthetic organic
+14       8111   compound 2-3-1 [PMID: 24900824]  Synthetic organic
+15       8112  compound 2-13-1 [PMID: 24900824]  Synthetic organic
+16       8122      compound 25 [PMID: 17935989]  Synthetic organic
+17       8139     compound 25b [PMID: 22564207]  Synthetic organic
+18       8159      compound 25 [PMID: 20855207]  Synthetic organic
+19       8163      compound 33 [PMID: 19364658]  Synthetic organic
+20       8183                          PD166285  Synthetic organic
+21       8215                         CCT244747  Synthetic organic
+22       9126                           BAY-320  Synthetic organic
+23       9127                           BAY-524  Synthetic organic
+24       9187                         CCT245737  Synthetic organic
+25       9365                          CHIR-124  Synthetic organic
+26       9549                       prexasertib  Synthetic organic
+27      10357                CDK inhibitor 4.35  Synthetic organic
+28      11731                       azenosertib  Synthetic organic
 
 Execution Accuracy: False
-Partial Execution Accuracy: True
+Partial Execution Accuracy: False
 Partial Column Accuracy: True
 
 --- Processing Test Case 14 ---
 Natural Language Query: Which ligands have interaction data in the plasmodium asexual blood stage 
 Expected SQL: select ligand_id, l.name from ligand l where l.ligand_id in (select i.ligand_id from interaction i, malaria_stage2interaction msi where msi.interaction_id=i.interaction_id and msi.malaria_stage_id in (select malaria_stage_id from malaria_stage where name ilike '%asexual blood stage%'));
-Generated SQL: SELECT DISTINCT l.ligand_id, l.name
+Generated SQL: SELECT DISTINCT i.ligand_id, l.name
 FROM interaction i
+JOIN malaria_stage2interaction msi ON i.interaction_id = msi.interaction_id
 JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE i.interaction_id IN (
-    SELECT malaria_stage2interaction.interaction_id
-    FROM malaria_stage2interaction
-    JOIN malaria_stage ON malaria_stage2interaction.malaria_stage_id = malaria_stage.malaria_stage_id
-    WHERE malaria_stage.name ILIKE '%asexual blood stage%'
-);
+JOIN malaria_stage ms ON msi.malaria_stage_id = ms.malaria_stage_id
+WHERE ms.name ILIKE '%asexual blood stage%';
 
 Expected SQL Results:
      ligand_id                           name
@@ -795,19 +898,12 @@ Partial Column Accuracy: True
 --- Processing Test Case 15 ---
 Natural Language Query: Find NHRs that have quantitiative interaction data?
 Expected SQL: select o.object_id, o.name as name from object o  where o.object_id in (select object_id from receptor2family where family_id in (WITH RECURSIVE subfamilies AS ( SELECT group_id, family_id from grouping where group_id in (select family_id from family where name ilike '%Nuclear hormone receptors%') UNION SELECT e.group_id, e.family_id from grouping e INNER JOIN subfamilies s ON s.family_id=e.group_id) SELECT family_id FROM subfamilies order by family_id)) and o.object_id in (select i.object_id from interaction i where ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')))group by o.object_id;
-Generated SQL: SELECT o.object_id, o.name
-FROM object o
-WHERE o.object_id IN (
-    SELECT DISTINCT i.object_id
-    FROM interaction i
-    WHERE i.object_id IN (
-        SELECT object_id FROM nhr
-    )
-    AND (
-        (i.affinity_units IS NOT NULL AND i.affinity_units != '-')
-        OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != '')
-    )
-);
+Generated SQL: SELECT DISTINCT o.object_id, o.name 
+FROM object o 
+JOIN interaction i ON o.object_id = i.object_id 
+WHERE o.object_id IN (SELECT object_id FROM nhr) 
+AND ((i.affinity_units IS NOT NULL AND i.affinity_units != '-' AND i.affinity_units != '') 
+     OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != ''));
 
 Expected SQL Results:
     object_id                                               name
@@ -854,46 +950,46 @@ Expected SQL Results:
 
 Generated SQL Results:
     object_id                                               name
-0         592                     Retinoic acid receptor-&gamma;
-1         632                             Steroidogenic factor 1
-2         593  Peroxisome proliferator-activated receptor-&al...
+0         595  Peroxisome proliferator-activated receptor-&ga...
+1         605                                 Vitamin D receptor
+2         622                  Estrogen-related receptor-&alpha;
 3         596                                    Rev-Erb-&alpha;
-4         630                         Nuclear receptor related 1
-5         636                                                SHP
-6         633                           Liver receptor homolog-1
-7         594  Peroxisome proliferator-activated receptor-&be...
-8         590                     Retinoic acid receptor-&alpha;
-9         597                                     Rev-Erb-&beta;
-10        629                             Nerve Growth factor IB
-11        631                   Neuron-derived orphan receptor 1
-12        624                  Estrogen-related receptor-&gamma;
-13        615                                                TLX
-14        612                        Retinoid X receptor-&gamma;
-15        622                  Estrogen-related receptor-&alpha;
-16        598                RAR-related orphan receptor-&alpha;
-17        614                              Testicular receptor 4
-18        611                         Retinoid X receptor-&beta;
-19        610                        Retinoid X receptor-&alpha;
-20        623                   Estrogen-related receptor-&beta;
-21        628                                  Androgen receptor
-22        599                 RAR-related orphan receptor-&beta;
-23        601                            Liver X receptor-&beta;
-24        604                        Farnesoid X receptor-&beta;
-25        605                                 Vitamin D receptor
+4         590                     Retinoic acid receptor-&alpha;
+5         603                               Farnesoid X receptor
+6         601                            Liver X receptor-&beta;
+7         630                         Nuclear receptor related 1
+8         632                             Steroidogenic factor 1
+9         614                              Testicular receptor 4
+10        588                   Thyroid hormone receptor-&alpha;
+11        624                  Estrogen-related receptor-&gamma;
+12        611                         Retinoid X receptor-&beta;
+13        625                            Glucocorticoid receptor
+14        593  Peroxisome proliferator-activated receptor-&al...
+15        627                              Progesterone receptor
+16        633                           Liver receptor homolog-1
+17        621                           Estrogen receptor-&beta;
+18        631                   Neuron-derived orphan receptor 1
+19        600                RAR-related orphan receptor-&gamma;
+20        602                           Liver X receptor-&alpha;
+21        589                    Thyroid hormone receptor-&beta;
+22        620                          Estrogen receptor-&alpha;
+23        612                        Retinoid X receptor-&gamma;
+24        636                                                SHP
+25        604                        Farnesoid X receptor-&beta;
 26        607                   Constitutive androstane receptor
-27        606                                Pregnane X receptor
-28        626                         Mineralocorticoid receptor
-29        627                              Progesterone receptor
-30        589                    Thyroid hormone receptor-&beta;
-31        588                   Thyroid hormone receptor-&alpha;
-32        595  Peroxisome proliferator-activated receptor-&ga...
-33        625                            Glucocorticoid receptor
-34        621                           Estrogen receptor-&beta;
-35        620                          Estrogen receptor-&alpha;
-36        600                RAR-related orphan receptor-&gamma;
-37        591                      Retinoic acid receptor-&beta;
-38        603                               Farnesoid X receptor
-39        602                           Liver X receptor-&alpha;
+27        615                                                TLX
+28        591                      Retinoic acid receptor-&beta;
+29        628                                  Androgen receptor
+30        606                                Pregnane X receptor
+31        598                RAR-related orphan receptor-&alpha;
+32        597                                     Rev-Erb-&beta;
+33        610                        Retinoid X receptor-&alpha;
+34        592                     Retinoic acid receptor-&gamma;
+35        599                 RAR-related orphan receptor-&beta;
+36        594  Peroxisome proliferator-activated receptor-&be...
+37        626                         Mineralocorticoid receptor
+38        629                             Nerve Growth factor IB
+39        623                   Estrogen-related receptor-&beta;
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -902,20 +998,14 @@ Partial Column Accuracy: True
 --- Processing Test Case 16 ---
 Natural Language Query: Which compounds act as both agonists and antagonists against GPCRs?
 Expected SQL: select l.ligand_id, l.name from ligand l, interaction i where i.object_id in (select object_id from gpcr) and l.ligand_id=i.ligand_id and i.type in ('Antagonist') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')) intersect select l.ligand_id, l.name from ligand l, interaction i where i.object_id in (select object_id from gpcr) and l.ligand_id=i.ligand_id and i.type in ('Agonist') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != ''));
-Generated SQL: SELECT i1.ligand_id, l.name
-FROM interaction i1
-JOIN ligand l ON i1.ligand_id = l.ligand_id
-WHERE i1.object_id IN (
-    SELECT object_id FROM gpcr
-)
-AND i1.type = 'Agonist'
-AND EXISTS (
-    SELECT 1
-    FROM interaction i2
-    WHERE i2.ligand_id = i1.ligand_id
-    AND i2.object_id = i1.object_id
-    AND i2.type = 'Antagonist'
-);
+Generated SQL: SELECT DISTINCT l.ligand_id, l.name
+FROM ligand l
+JOIN interaction i_agonist ON l.ligand_id = i_agonist.ligand_id
+JOIN interaction i_antagonist ON l.ligand_id = i_antagonist.ligand_id
+WHERE i_agonist.type = 'Agonist'
+  AND i_antagonist.type = 'Antagonist'
+  AND i_agonist.object_id IN (SELECT object_id FROM gpcr)
+  AND i_antagonist.object_id IN (SELECT object_id FROM gpcr);
 
 Expected SQL Results:
      ligand_id          name
@@ -934,65 +1024,20 @@ Expected SQL Results:
 [130 rows x 2 columns]
 
 Generated SQL Results:
-    ligand_id                                             name
-0        1229                                       burimamide
-1         974                                          FAUC213
-2         641  [Leu<sup>8</sup>,des-Arg<sup>9</sup>]bradykinin
-3        3907           R3(B&Delta;23-27)R/I5 chimeric peptide
-4        3907           R3(B&Delta;23-27)R/I5 chimeric peptide
-5        2013                                           KE 108
-6        2013                                           KE 108
-7        2013                                           KE 108
-8         502                                     phentolamine
-9        1252                                      impentamine
-10       7346                                          MK-0249
-11         91                                         pindolol
-12       1399                          [<sup>3</sup>H]LY341495
-13       2018                                      pasireotide
-14       2018                                      pasireotide
-15       2018                                      pasireotide
-16         36                                        buspirone
-17       1026                                       spinorphin
-18       1921                                         ONO-8713
-19         52                                        roxindole
-20         91                                         pindolol
-21       1255                                         proxyfan
-22       1255                                         proxyfan
-23       1255                                         proxyfan
-24       6905          [Sar<sup>1</sup>,Ile<sup>8</sup>]Ang-II
-25       3381                                         BAYu9773
-26       3381                                         BAYu9773
-27       3381                                         BAYu9773
-28         56                                        terguride
-29       1713                                              ATP
-30        239                          [<sup>3</sup>H]RS 57639
-31        134                                     methysergide
-32         14                                        GR 127935
-33       6155                                        CP-195543
-34        134                                     methysergide
-35       2916                 dioctanoylglycerol pyrophosphate
-36         91                                         pindolol
-37       2036                                        BIM 23056
-38       2036                                        BIM 23056
-39       2036                                        BIM 23056
-40        532                                        CGP 12177
-41         14                                        GR 127935
-42         50                                       quetiapine
-43       5387                          [<sup>3</sup>H]CGP12177
-44       1713                                              ATP
-45       1713                                              ATP
-46       1711                                          2MeSATP
-47       1529                                         GR231118
-48       1529                                         GR231118
-49       1529                                         GR231118
-50         91                                         pindolol
-51       3932                                         L-748337
-52        115                                            TFMPP
-53       2272                                        PG 99-465
-54       2272                                        PG 99-465
-55       2272                                        PG 99-465
-56        459                                      MRE 3008F20
-57        531                      [<sup>3</sup>H](-)CGP 12177
+     ligand_id                     name
+0            3     1-naphthylpiperazine
+1            9                 BMY-7378
+2           14                GR 127935
+3           16                L-772,405
+4           22                asenapine
+..         ...                      ...
+134      11614                 LY395756
+135      12165                 CHF-6366
+136      12570                  ST-1505
+137      12571                  ST-1478
+138      13316  maridebart cafraglutide
+
+[139 rows x 2 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -1005,21 +1050,24 @@ Generated SQL: WITH RECURSIVE subfamilies AS (
     SELECT group_id, family_id 
     FROM grouping 
     WHERE group_id IN (SELECT family_id FROM family WHERE name ILIKE '%Ryanodine receptors%')
-    UNION 
+    UNION
     SELECT e.group_id, e.family_id 
     FROM grouping e 
     INNER JOIN subfamilies s ON s.family_id = e.group_id
 )
-SELECT l.ligand_id, l.name
-FROM interaction i
+SELECT l.ligand_id, l.name, i.type, i.action 
+FROM interaction i 
 JOIN ligand l ON i.ligand_id = l.ligand_id
 WHERE i.object_id IN (
     SELECT object_id 
     FROM receptor2family 
     WHERE family_id IN (
-        SELECT family_id FROM subfamilies 
+        SELECT family_id 
+        FROM subfamilies 
         UNION 
-        SELECT family_id FROM family WHERE name ILIKE '%Ryanodine receptors%'
+        SELECT family_id 
+        FROM family 
+        WHERE family_id IN (SELECT family_id FROM family WHERE name ILIKE '%Ryanodine receptors%')
     )
 ) AND i.type = 'Channel blocker';
 
@@ -1034,14 +1082,14 @@ Expected SQL Results:
 6       2432  ruthenium red     None              -  Channel blocker   None
 
 Generated SQL Results:
-   ligand_id           name
-0       2432  ruthenium red
-1       2432  ruthenium red
-2       4291       procaine
-3       4291       procaine
-4       4303      ryanodine
-5       4303      ryanodine
-6       2432  ruthenium red
+   ligand_id           name             type action
+0       2432  ruthenium red  Channel blocker   None
+1       2432  ruthenium red  Channel blocker   None
+2       4291       procaine  Channel blocker   None
+3       4291       procaine  Channel blocker   None
+4       4303      ryanodine  Channel blocker   None
+5       4303      ryanodine  Channel blocker   None
+6       2432  ruthenium red  Channel blocker   None
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -1052,24 +1100,39 @@ Natural Language Query: Find pKi value, above 6, for Ion Channel approved drugs
 Expected SQL: select l.ligand_id, l.name, l.type, o.object_id, o.name, i.type, i.action, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units from interaction i, ligand l, object o where i.object_id in (select object_id from object where object_id in (select object_id from receptor2family where family_id in ((WITH RECURSIVE subfamilies AS ( SELECT group_id, family_id from grouping where group_id in (select family_id from family where name ilike 'Ion channels') UNION SELECT e.group_id, e.family_id from grouping e INNER JOIN subfamilies s ON s.family_id=e.group_id) SELECT family_id FROM subfamilies order by family_id) union select family_id from family where family_id in (select family_id from family where name ilike 'Ion channels')))) and i.ligand_id=l.ligand_id and i.object_id=o.object_id and case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low > 6 else i.affinity_high >6  end else i.affinity_median > 6  end and i.affinity_units = 'pKi' and l.approved is true order by affinity desc;
 Generated SQL: SELECT 
     i.ligand_id, 
-    (SELECT name FROM ligand l WHERE l.ligand_id = i.ligand_id) AS ligand_name,
-    i.affinity_median AS pKi_value
+    l.name, 
+    i.affinity_units, 
+    CASE 
+        WHEN i.affinity_median IS NULL 
+        THEN 
+            CASE 
+                WHEN i.affinity_high IS NULL 
+                THEN i.affinity_low 
+                ELSE i.affinity_high 
+            END 
+        ELSE i.affinity_median 
+    END AS affinity
 FROM 
     interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
 WHERE 
-    i.affinity_units = 'pKi'
-    AND i.affinity_median > 6
-    AND i.object_id IN (SELECT object_id FROM object WHERE object_id IN (SELECT object_id FROM receptor2family WHERE family_id IN
-    (WITH RECURSIVE subfamilies AS (
-        SELECT group_id, family_id 
-        FROM grouping 
-        WHERE group_id IN (SELECT family_id FROM family WHERE name ILIKE '%Ion Channel%')
-        UNION 
-        SELECT e.group_id, e.family_id 
-        FROM grouping e 
-        INNER JOIN subfamilies s ON s.family_id = e.group_id)
-    SELECT family_id FROM subfamilies)))
-    AND i.ligand_id IN (SELECT ligand_id FROM ligand WHERE approved = true);
+    i.affinity_units = 'pKi' 
+    AND 
+    (CASE 
+        WHEN i.affinity_median IS NULL 
+        THEN 
+            CASE 
+                WHEN i.affinity_high IS NULL 
+                THEN i.affinity_low 
+                ELSE i.affinity_high 
+            END 
+        ELSE i.affinity_median 
+     END) > 6
+    AND 
+    l.approved IS TRUE
+    AND 
+    i.object_id IN (SELECT object_id FROM vw_interaction_ion_channel_dwld);
 
 Expected SQL Results:
     ligand_id            name               type  ...           action affinity affinity_units
@@ -1117,58 +1180,37 @@ Expected SQL Results:
 [40 rows x 9 columns]
 
 Generated SQL Results:
-    ligand_id    ligand_name  pki_value
-0        2290    ondansetron       7.80
-1        7313      triazolam       8.84
-2        7313      triazolam       9.10
-3        7313      triazolam       9.23
-4        7313      triazolam       8.81
-5        4348       zolpidem       6.12
-6        5459    varenicline      10.40
-7        2585       nicotine       8.66
-8        5459    varenicline       7.40
-9        4253      memantine       6.15
-10       2285      azasetron       8.40
-11       4190     felodipine       8.40
-12       2296      alosetron       9.50
-13       2285      azasetron       8.50
-14       2604     dofetilide       8.19
-15       4193  flunitrazepam       7.80
-16       4192     flumazenil       8.98
-17       3364       diazepam       7.77
-18       4193  flunitrazepam       8.28
-19       6963     clonazepam       8.70
-20       3364       diazepam       7.77
-21       4193  flunitrazepam       8.26
-22       4193  flunitrazepam       8.28
-23       3364       diazepam       7.79
-24       6963     clonazepam       8.77
-25       7486   palonosetron      10.49
-26       7351   vortioxetine       8.43
-27       4192     flumazenil       6.83
-28       5459    varenicline       9.96
-29       4192     flumazenil       7.03
-30       6963     clonazepam       8.90
-31       4192     flumazenil       9.10
-32       4192     flumazenil       9.05
-33       4192     flumazenil       9.22
+      ligand_id           name affinity_units  affinity
+0          4252     mefloquine            pKi      6.98
+1          4252     mefloquine            pKi      6.17
+2         10102    mizolastine            pKi      8.57
+3           103       zotepine            pKi      8.60
+4          2031     lanreotide            pKi      9.60
+...         ...            ...            ...       ...
+1441        200  amitriptyline            pKi      8.20
+1442        551     carvedilol            pKi      9.40
+1443         91       pindolol            pKi      7.10
+1444       3465     formoterol            pKi      6.50
+1445        570        bunolol            pKi      8.40
+
+[1446 rows x 4 columns]
 
 Execution Accuracy: False
-Partial Execution Accuracy: True
+Partial Execution Accuracy: False
 Partial Column Accuracy: True
 
 --- Processing Test Case 19 ---
 Natural Language Query: Find drugs for which calcitonin receptors are a primary target?
 Expected SQL: select l.ligand_id, l.name, l.type, i.type, i.action, i.primary_target, i.object_id, o.name from interaction i, ligand l, object o where i.object_id in (select object_id from object where object_id in (select object_id from receptor2family where family_id in ((WITH RECURSIVE subfamilies AS ( SELECT group_id, family_id from grouping where group_id in (select family_id from family where name ilike '%calcitonin receptor%') UNION SELECT e.group_id, e.family_id from grouping e INNER JOIN subfamilies s ON s.family_id=e.group_id) SELECT family_id FROM subfamilies order by family_id) union select family_id from family where family_id in (select family_id from family where name ilike '%calcitonin receptor%')))) and i.primary_target is true and i.ligand_id=l.ligand_id and i.object_id=o.object_id;
 Generated SQL: SELECT l.ligand_id, l.name
-FROM interaction i
-JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE i.object_id IN (
-    SELECT object_id 
-    FROM object 
-    WHERE name ILIKE '%calcitonin receptor%' OR abbreviation ILIKE '%calcitonin receptor%'
-)
-AND i.primary_target = TRUE;
+FROM ligand l
+JOIN interaction i ON l.ligand_id = i.ligand_id
+WHERE i.primary_target IS TRUE
+AND i.object_id IN (
+    SELECT object_id
+    FROM object
+    WHERE name ILIKE '%calcitonin receptor%'
+);
 
 Expected SQL Results:
    ligand_id                 name               type        type        action  primary_target  object_id           name
@@ -1194,25 +1236,33 @@ Generated SQL: WITH RECURSIVE subfamilies AS (
     UNION 
     SELECT e.group_id, e.family_id 
     FROM grouping e 
-    INNER JOIN subfamilies s ON s.family_id=e.group_id
-) 
+    INNER JOIN subfamilies s ON s.family_id = e.group_id
+)
 SELECT DISTINCT l.ligand_id, l.name 
-FROM interaction i 
-JOIN ligand l ON i.ligand_id = l.ligand_id 
-JOIN ligand_database_link ldl ON l.ligand_id = ldl.ligand_id
-WHERE i.object_id IN (
-    SELECT object_id 
-    FROM receptor2family 
+FROM ligand l 
+JOIN interaction i ON l.ligand_id = i.ligand_id 
+JOIN receptor2family r2f ON i.object_id = r2f.object_id 
+WHERE r2f.family_id IN (
+    SELECT family_id 
+    FROM subfamilies 
+    UNION 
+    SELECT family_id 
+    FROM family 
     WHERE family_id IN (
         SELECT family_id 
-        FROM subfamilies
-        UNION 
-        SELECT family_id 
         FROM family 
-        WHERE family_id IN (SELECT family_id FROM family WHERE name ILIKE '%Dopamine receptors%')
+        WHERE name ILIKE '%Dopamine receptors%'
     )
 ) 
-AND ldl.database_id IN (SELECT database_id FROM database WHERE name ILIKE '%ChEMBL%');
+AND l.ligand_id IN (
+    SELECT DISTINCT ligand_id 
+    FROM ligand_database_link 
+    WHERE database_id IN (
+        SELECT database_id 
+        FROM database 
+        WHERE name ILIKE '%ChEMBL%'
+    )
+);
 
 Expected SQL Results:
      ligand_id                     name    placeholder               type
@@ -1253,11 +1303,11 @@ Partial Column Accuracy: True
 --- Processing Test Case 21 ---
 Natural Language Query: Are there any approved drugs with unclear bioactivity or molecular mechanisms of action?
 Expected SQL: select distinct l.ligand_id, l.name, l.approved, l.comments, l.bioactivity_comments, l.mechanism_of_action, l.clinical_use from ligand l where l.approved is true and ((l.mechanism_of_action is null or l.mechanism_of_action = '') AND (l.bioactivity_comments  is null or l.bioactivity_comments = ''));
-Generated SQL: SELECT l.ligand_id, l.name 
-FROM ligand l 
-WHERE l.approved IS TRUE 
-AND (l.bioactivity_comments IS NULL OR l.bioactivity_comments = '') 
-AND (l.mechanism_of_action IS NULL OR l.mechanism_of_action = '');
+Generated SQL: SELECT ligand_id, name 
+FROM ligand 
+WHERE approved IS TRUE 
+AND (bioactivity_comments IS NULL OR bioactivity_comments = '')
+AND (mechanism_of_action IS NULL OR mechanism_of_action = '');
 
 Expected SQL Results:
      ligand_id           name  ...  mechanism_of_action                                       clinical_use
@@ -1301,25 +1351,19 @@ Expected SQL: select o.object_id, o.name as name, string_agg(f.name, ' | ') as f
 Generated SQL: WITH RECURSIVE subfamilies AS (
     SELECT group_id, family_id 
     FROM grouping 
-    WHERE group_id IN (
-        SELECT family_id 
-        FROM family 
-        WHERE name ILIKE '%potassium channels%' OR name ILIKE '%Potassium Channels%'
-    )
-    UNION 
+    WHERE group_id IN (SELECT family_id FROM family WHERE name ILIKE '%potassium channels%')
+    UNION
     SELECT e.group_id, e.family_id 
     FROM grouping e 
     INNER JOIN subfamilies s ON s.family_id = e.group_id
-) 
+)
 SELECT o.object_id, o.name 
 FROM object o 
 JOIN receptor2family rf ON o.object_id = rf.object_id 
 WHERE rf.family_id IN (
     SELECT family_id FROM subfamilies
     UNION 
-    SELECT family_id 
-    FROM family 
-    WHERE name ILIKE '%potassium channels%' OR name ILIKE '%Potassium Channels%'
+    SELECT family_id FROM family WHERE family_id IN (SELECT family_id FROM family WHERE name ILIKE '%potassium channels%')
 );
 
 Expected SQL Results:
@@ -1368,11 +1412,31 @@ WHERE iar.interaction_id IN (
     SELECT interaction_id
     FROM interaction
     WHERE type = 'Agonist'
-      AND object_id IN (
-          SELECT object_id
-          FROM object
-          WHERE name ILIKE '%Somatostatin receptor%'
-      )
+    AND object_id IN (
+        SELECT object_id
+        FROM receptor2family
+        WHERE family_id IN (
+            WITH RECURSIVE subfamilies AS (
+                SELECT group_id, family_id
+                FROM grouping
+                WHERE group_id IN (
+                    SELECT family_id
+                    FROM family
+                    WHERE name ILIKE '%Somatostatin receptor%'
+                )
+                UNION
+                SELECT e.group_id, e.family_id
+                FROM grouping e
+                INNER JOIN subfamilies s ON s.family_id = e.group_id
+            )
+            SELECT family_id
+            FROM subfamilies
+            UNION
+            SELECT family_id
+            FROM family
+            WHERE name ILIKE '%Somatostatin receptor%'
+        )
+    )
 );
 
 Expected SQL Results:
@@ -1427,32 +1491,58 @@ Expected SQL Results:
 [46 rows x 5 columns]
 
 Generated SQL Results:
-Error executing generated SQL.
+     reference_id                                      article_title  ...                                title   pubmed_id
+0           18594  Receptor signaling and endocytosis are differe...  ...                        Mol Pharmacol  15855408.0
+1            6649  The elucidation of somatostatin receptor funct...  ...        Rev Physiol Biochem Pharmacol   9600011.0
+2            6649  The elucidation of somatostatin receptor funct...  ...        Rev Physiol Biochem Pharmacol   9600011.0
+3            6649  The elucidation of somatostatin receptor funct...  ...        Rev Physiol Biochem Pharmacol   9600011.0
+4            6649  The elucidation of somatostatin receptor funct...  ...        Rev Physiol Biochem Pharmacol   9600011.0
+..            ...                                                ...  ...                                  ...         ...
+491          6648  Characterisation of human recombinant somatost...  ...  Naunyn Schmiedebergs Arch Pharmacol  10598788.0
+492          6647  [125I]Tyr10-cortistatin14 labels all five soma...  ...  Naunyn Schmiedebergs Arch Pharmacol   9650799.0
+493          6690  [125I][Tyr3]octreotide labels human somatostat...  ...                      Eur J Pharmacol   9652348.0
+494          6648  Characterisation of human recombinant somatost...  ...  Naunyn Schmiedebergs Arch Pharmacol  10598788.0
+495          6704  Cloning, expression and pharmacological charac...  ...                    Neuropharmacology  10818261.0
+
+[496 rows x 5 columns]
 
 Execution Accuracy: False
-Partial Execution Accuracy: False
-Partial Column Accuracy: False
+Partial Execution Accuracy: True
+Partial Column Accuracy: True
 
 --- Processing Test Case 24 ---
 Natural Language Query: What are the SMILES and InChI Keys for compounds that interact with Nicotinic acetylcholine receptors (nACh)
 Expected SQL: select l.ligand_id, l.name, ls.isomeric_smiles, ls.isomeric_standard_inchi_key  from ligand l left join ligand_structure ls on l.ligand_id=ls.ligand_id where l.ligand_id in (select i.ligand_id from interaction i where i.object_id in (select object_id from receptor2family where family_id in((WITH RECURSIVE subfamilies AS ( SELECT group_id, family_id from grouping where group_id in (select family_id from family where name ilike '%Nicotinic acetylcholine receptors%') UNION SELECT e.group_id, e.family_id from grouping e INNER JOIN subfamilies s ON s.family_id=e.group_id) SELECT family_id FROM subfamilies order by family_id) union select family_id from family where family_id in (select family_id from family where name ilike '%Nicotinic acetylcholine receptors%'))));
-Generated SQL: WITH RECURSIVE subfamilies AS (
-    SELECT group_id, family_id FROM grouping 
-    WHERE group_id IN (
-        SELECT family_id FROM family WHERE name ILIKE '%Nicotinic acetylcholine receptors%' OR name ILIKE '%nACh%'
-    )
-    UNION
-    SELECT e.group_id, e.family_id FROM grouping e
-    INNER JOIN subfamilies s ON s.family_id = e.group_id
-)
-SELECT l.ligand_id, l.name, ls.isomeric_smiles, ls.isomeric_standard_inchi_key
-FROM ligand l
-JOIN interaction i ON l.ligand_id = i.ligand_id
-JOIN ligand_structure ls ON l.ligand_id = ls.ligand_id
+Generated SQL: SELECT ls.isomeric_smiles, ls.isomeric_standard_inchi_key
+FROM ligand_structure ls
+JOIN interaction i ON ls.ligand_id = i.ligand_id
 WHERE i.object_id IN (
-    SELECT object_id FROM receptor2family 
+    WITH RECURSIVE subfamilies AS (
+        SELECT group_id, family_id 
+        FROM grouping 
+        WHERE group_id IN (
+            SELECT family_id 
+            FROM family 
+            WHERE name ILIKE '%Nicotinic acetylcholine receptors%'
+        )
+        UNION
+        SELECT e.group_id, e.family_id 
+        FROM grouping e 
+        INNER JOIN subfamilies s ON s.family_id = e.group_id
+    )
+    SELECT object_id 
+    FROM receptor2family 
     WHERE family_id IN (
-        SELECT family_id FROM subfamilies
+        SELECT family_id 
+        FROM subfamilies 
+        UNION 
+        SELECT family_id 
+        FROM family 
+        WHERE family_id IN (
+            SELECT family_id 
+            FROM family 
+            WHERE name ILIKE '%Nicotinic acetylcholine receptors%'
+        )
     )
 );
 
@@ -1473,105 +1563,59 @@ Expected SQL Results:
 [63 rows x 4 columns]
 
 Generated SQL Results:
-Error executing generated SQL.
+                                   isomeric_smiles  isomeric_standard_inchi_key
+0    c1([3H])cc([3H])c(=O)n2c1[C@H]1CNC[C@H](C1)C2  ANJTVLIZGCUXLD-ZIAKYUPESA-N
+1    c1([3H])cc([3H])c(=O)n2c1[C@H]1CNC[C@H](C1)C2  ANJTVLIZGCUXLD-ZIAKYUPESA-N
+2                          Clc1ccc(cn1)C1CC2NC1CC2  NLPRAJRHRHZCQQ-UHFFFAOYSA-N
+3                          Clc1ccc(cn1)C1CC2NC1CC2  NLPRAJRHRHZCQQ-UHFFFAOYSA-N
+4                          Clc1ccc(cn1)C1CC2NC1CC2  NLPRAJRHRHZCQQ-UHFFFAOYSA-N
+..                                             ...                          ...
+109                              CNCC/C=C/c1cccnc1  JUOSGGQXEBBCJB-GORDUTHDSA-N
+110                              CNCC/C=C/c1cccnc1  JUOSGGQXEBBCJB-GORDUTHDSA-N
+111          FC(c1ccc2c(c1)[C@H]1CNC[C@@H]2C1)(F)F  RNOBTWYQAWEZHH-JGVFFNPUSA-N
+112                         CNC1(C)C2CCC(C1(C)C)C2  IMYZQPCYWPFTAG-UHFFFAOYSA-N
+113                   C[N+](CCCCCC[N+](C)(C)C)(C)C  VZJFGSRCJCXDSG-UHFFFAOYSA-N
+
+[114 rows x 2 columns]
 
 Execution Accuracy: False
-Partial Execution Accuracy: False
-Partial Column Accuracy: False
+Partial Execution Accuracy: True
+Partial Column Accuracy: True
 
 --- Processing Test Case 25 ---
 Natural Language Query: What ligands and structures have a pKi values > 8 when interacting with transporter targets?
 Expected SQL: select l.ligand_id, l.name, l.type, ls.isomeric_smiles, ls.isomeric_standard_inchi_key, i.type, i.action, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units from ligand l, interaction i join ligand_structure ls on i.ligand_id=ls.ligand_id where i.object_id in (select object_id from transporter) and i.ligand_id=l.ligand_id  and case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low >= 8 else i.affinity_high >= 8  end else i.affinity_median >= 8 end and i.affinity_units = 'pKi' order by affinity desc;
-Generated SQL: SELECT 
-    l.ligand_id, 
-    l.name, 
-    l.type, 
-    ls.isomeric_smiles, 
-    ls.isomeric_standard_inchi_key, 
-    i.type, 
-    i.action, 
-    CASE 
-        WHEN i.affinity_median IS NULL THEN 
-            CASE 
-                WHEN i.affinity_high IS NULL THEN i.affinity_low 
-                ELSE i.affinity_high 
-            END 
-        ELSE i.affinity_median 
-    END AS affinity, 
-    i.affinity_units 
-FROM 
-    interaction i 
-JOIN 
-    ligand l ON i.ligand_id = l.ligand_id 
-JOIN 
-    ligand_structure ls ON i.ligand_id = ls.ligand_id 
-WHERE 
-    i.object_id IN (
-        SELECT 
-            object_id 
-        FROM 
-            receptor2family 
-        WHERE 
-            family_id IN (
-                WITH RECURSIVE subfamilies AS (
-                    SELECT 
-                        group_id, 
-                        family_id 
-                    FROM 
-                        grouping 
-                    WHERE 
-                        group_id IN (
-                            SELECT 
-                                family_id 
-                            FROM 
-                                family 
-                            WHERE 
-                                name ILIKE '%Transporters%'
-                        ) 
-                    UNION 
-                    SELECT 
-                        e.group_id, 
-                        e.family_id 
-                    FROM 
-                        grouping e 
-                    INNER JOIN 
-                        subfamilies s ON s.family_id = e.group_id
-                ) 
-                SELECT 
-                    family_id 
-                FROM 
-                    subfamilies 
-                ORDER BY 
-                    family_id
-            )
-        UNION 
-        SELECT 
-            family_id 
-        FROM 
-            family 
-        WHERE 
-            family_id IN (
-                SELECT 
-                    family_id 
-                FROM 
-                    family 
-                WHERE 
-                    name ILIKE '%Transporters%'
-            )
-    ) 
-AND 
-    i.affinity_units = 'pKi' 
-AND 
-    CASE 
-        WHEN i.affinity_median IS NULL THEN 
-            CASE 
-                WHEN i.affinity_high IS NULL THEN i.affinity_low > 8 
-                ELSE i.affinity_high > 8 
-            END 
-        ELSE i.affinity_median > 8 
-    END 
-ORDER BY 
-    affinity DESC;
+Generated SQL: SELECT l.ligand_id, l.name, ls.isomeric_smiles, ls.isomeric_standard_inchi_key, i.affinity_median, i.affinity_units 
+FROM ligand l
+JOIN interaction i ON l.ligand_id = i.ligand_id
+JOIN ligand_structure ls ON l.ligand_id = ls.ligand_id
+WHERE i.object_id IN (
+    SELECT object_id 
+    FROM receptor2family 
+    WHERE family_id IN (
+        WITH RECURSIVE subfamilies AS (
+            SELECT group_id, family_id 
+            FROM grouping 
+            WHERE group_id IN (
+                SELECT family_id 
+                FROM family 
+                WHERE name ILIKE 'Transporters'
+            ) 
+            UNION 
+            SELECT e.group_id, e.family_id 
+            FROM grouping e 
+            INNER JOIN subfamilies s ON s.family_id = e.group_id
+        ) 
+        SELECT family_id 
+        FROM subfamilies
+    )
+)
+AND i.affinity_units = 'pKi'
+AND (CASE 
+    WHEN i.affinity_median IS NOT NULL THEN i.affinity_median 
+    WHEN i.affinity_high IS NOT NULL THEN i.affinity_high 
+    ELSE i.affinity_low 
+END) > 8;
 
 Expected SQL Results:
     ligand_id                                           name               type  ...      action affinity affinity_units
@@ -1616,58 +1660,42 @@ Expected SQL Results:
 [37 rows x 9 columns]
 
 Generated SQL Results:
-    ligand_id                                      name               type  ...           action affinity affinity_units
-0        4768                       aminobenzovesamicol  Synthetic organic  ...       Inhibition    10.90            pKi
-1        4512  nitrobenzylmercaptopurine ribonucleoside  Synthetic organic  ...       Inhibition     9.70            pKi
-2        2398                              clomipramine  Synthetic organic  ...       Inhibition     9.68            pKi
-3        4790                                paroxetine  Synthetic organic  ...       Inhibition     9.60            pKi
-4        4590                                draflazine  Synthetic organic  ...       Inhibition     9.60            pKi
-5         943                                 SCH-23390  Synthetic organic  ...       Antagonist     9.50            pKi
-6         943                                 SCH-23390  Synthetic organic  ...       Antagonist     9.50            pKi
-7         944                                 SKF-83566  Synthetic organic  ...       Antagonist     9.50            pKi
-8        4734                                   KF24345  Synthetic organic  ...       Inhibition     9.40            pKi
-9         944                                 SKF-83566  Synthetic organic  ...       Antagonist     9.40            pKi
-10       4513                                    NBTGR   Synthetic organic  ...       Inhibition     9.30            pKi
-11       4798                                sertraline  Synthetic organic  ...       Inhibition     9.10            pKi
-12      10064                       GlyT1 inhibitor 27a  Synthetic organic  ...       Inhibition     9.10            pKi
-13       9983                                vanoxerine  Synthetic organic  ...       Inhibition     9.00            pKi
-14       4717                                   dilazep  Synthetic organic  ...       Inhibition     9.00            pKi
-15       4797                                  mazindol  Synthetic organic  ...       Inhibition     8.90            pKi
-16       4807                              dipyridamole  Synthetic organic  ...       Inhibition     8.80            pKi
-17       7351                              vortioxetine  Synthetic organic  ...       Inhibition     8.80            pKi
-18       9637                                    A77636  Synthetic organic  ...     Full agonist     8.74            pKi
-19       4759                                 vesamicol  Synthetic organic  ...       Inhibition     8.70            pKi
-20        936                                 SKF-75670  Synthetic organic  ...     Full agonist     8.70            pKi
-21        938                                 SKF-81297  Synthetic organic  ...     Full agonist     8.70            pKi
-22       2399                               desipramine  Synthetic organic  ...       Inhibition     8.68            pKi
-23        203                                fluoxetine  Synthetic organic  ...       Inhibition     8.50            pKi
-24         43                                  lisuride  Synthetic organic  ...  Partial agonist     8.50            pKi
-25         62                            (+)-butaclamol  Synthetic organic  ...       Antagonist     8.50            pKi
-26       1013                        17&beta;-estradiol         Metabolite  ...     Full agonist     8.50            pKi
-27      10605                                   AZD3965  Synthetic organic  ...       Inhibition     8.49            pKi
-28        948                               flupentixol  Synthetic organic  ...       Antagonist     8.40            pKi
-29       4637                                nisoxetine  Synthetic organic  ...       Inhibition     8.40            pKi
-30       7547                                citalopram  Synthetic organic  ...       Inhibition     8.36            pKi
-31       8813              compound 30 [PMID: 16455256]  Synthetic organic  ...       Inhibition     8.32            pKi
-32       9880                                       H05  Synthetic organic  ...       Inhibition     8.32            pKi
-33        202                                duloxetine  Synthetic organic  ...       Inhibition     8.30            pKi
-34      10405                                  BAY-8002  Synthetic organic  ...             None     8.30            pKi
-35       3304                                  ecopipam  Synthetic organic  ...       Antagonist     8.30            pKi
-36       3304                                  ecopipam  Synthetic organic  ...       Antagonist     8.30            pKi
-37       7551                               lofepramine  Synthetic organic  ...       Inhibition     8.27            pKi
-38        202                                duloxetine  Synthetic organic  ...       Inhibition     8.22            pKi
-39       2404                             nortriptyline  Synthetic organic  ...       Inhibition     8.20            pKi
-40         86                               haloperidol  Synthetic organic  ...       Antagonist     8.20            pKi
-41       7189                               fluvoxamine  Synthetic organic  ...       Inhibition     8.19            pKi
-42       7285                             protriptyline  Synthetic organic  ...       Inhibition     8.17            pKi
-43       9880                                       H05  Synthetic organic  ...       Inhibition     8.17            pKi
-44       2404                             nortriptyline  Synthetic organic  ...       Inhibition     8.16            pKi
-45       4792                               nomifensine  Synthetic organic  ...       Inhibition     8.10            pKi
-46        948                               flupentixol  Synthetic organic  ...       Antagonist     8.10            pKi
-47       7549                                 dosulepin  Synthetic organic  ...       Inhibition     8.07            pKi
-48      13372                                 tavapadon  Synthetic organic  ...  Partial agonist     8.07            pKi
+    ligand_id                                      name  ... affinity_median affinity_units
+0        7189                               fluvoxamine  ...            8.19            pKi
+1         202                                duloxetine  ...            8.22            pKi
+2         202                                duloxetine  ...            8.30            pKi
+3        7551                               lofepramine  ...            8.27            pKi
+4        8813              compound 30 [PMID: 16455256]  ...            8.32            pKi
+5        9880                                       H05  ...            8.32            pKi
+6        9880                                       H05  ...            8.17            pKi
+7        9983                                vanoxerine  ...            9.00            pKi
+8       10405                                  BAY-8002  ...            8.30            pKi
+9       10605                                   AZD3965  ...            8.49            pKi
+10      10064                       GlyT1 inhibitor 27a  ...            9.10            pKi
+11       4759                                 vesamicol  ...            8.70            pKi
+12       4768                       aminobenzovesamicol  ...           10.90            pKi
+13       4734                                   KF24345  ...            9.40            pKi
+14        203                                fluoxetine  ...            8.50            pKi
+15       4790                                paroxetine  ...            9.60            pKi
+16       4717                                   dilazep  ...            9.00            pKi
+17       4797                                  mazindol  ...            8.90            pKi
+18       4637                                nisoxetine  ...            8.40            pKi
+19       4792                               nomifensine  ...            8.10            pKi
+20       4807                              dipyridamole  ...            8.80            pKi
+21       4590                                draflazine  ...            9.60            pKi
+22       4513                                    NBTGR   ...            9.30            pKi
+23       4512  nitrobenzylmercaptopurine ribonucleoside  ...            9.70            pKi
+24       4798                                sertraline  ...            9.10            pKi
+25       2398                              clomipramine  ...            9.68            pKi
+26       2399                               desipramine  ...            8.68            pKi
+27       2404                             nortriptyline  ...            8.20            pKi
+28       2404                             nortriptyline  ...            8.16            pKi
+29       7285                             protriptyline  ...            8.17            pKi
+30       7351                              vortioxetine  ...            8.80            pKi
+31       7547                                citalopram  ...            8.36            pKi
+32       7549                                 dosulepin  ...            8.07            pKi
 
-[49 rows x 9 columns]
+[33 rows x 6 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -1677,11 +1705,11 @@ Partial Column Accuracy: True
 Natural Language Query: What range of affinity values does α-MSH have for MC3 receptor?
 Expected SQL: select l.ligand_id, l.name, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units, i.type, i.action from ligand l, interaction i where i.object_id in (select object_id from object where name ilike '%MC<sub>3</sub> receptor%') and i.ligand_id in (select ligand_id from ligand where name ilike '%&alpha;-MSH%') and l.ligand_id=i.ligand_id and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != ''));
 Generated SQL: SELECT 
-    l.ligand_id, 
+    i.ligand_id, 
     l.name, 
     o.object_id, 
     o.name, 
-    i.affinity_units,
+    i.affinity_units, 
     i.affinity_low, 
     i.affinity_median, 
     i.affinity_high
@@ -1693,8 +1721,7 @@ JOIN
     object o ON i.object_id = o.object_id
 WHERE 
     l.name ILIKE '%α-MSH%' 
-    AND o.name ILIKE '%MC3%'
-    AND (i.affinity_low IS NOT NULL OR i.affinity_median IS NOT NULL OR i.affinity_high IS NOT NULL);
+    AND o.name ILIKE '%MC3 receptor%';
 
 Expected SQL Results:
    ligand_id         name  affinity affinity_units     type        action
@@ -1710,23 +1737,34 @@ Partial Column Accuracy: False
 --- Processing Test Case 27 ---
 Natural Language Query: What is the average pKi value for natural products compared to the average pIC50 values?
 Expected SQL: select 'pKi', (select avg(case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end) as affinity from interaction i where i.ligand_id in (select ligand_id from ligand where type='Natural product') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')) and i.affinity_units = 'pKi'), (select avg(case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end) as affinity from interaction i where i.ligand_id in (select ligand_id from ligand where type='Natural product') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')) and i.affinity_units = 'pIC50'), 'pIC50';
-Generated SQL: SELECT 
-    AVG(CASE WHEN i.affinity_units = 'pKi' THEN 
-            CASE WHEN i.affinity_median IS NULL THEN 
-                CASE WHEN i.affinity_high IS NULL THEN i.affinity_low ELSE i.affinity_high END 
-            ELSE i.affinity_median END 
-        END) AS avg_pKi,
-    AVG(CASE WHEN i.affinity_units = 'pIC50' THEN 
-            CASE WHEN i.affinity_median IS NULL THEN 
-                CASE WHEN i.affinity_high IS NULL THEN i.affinity_low ELSE i.affinity_high END 
-            ELSE i.affinity_median END 
-        END) AS avg_pIC50
-FROM 
-    interaction i
-JOIN 
-    ligand l ON i.ligand_id = l.ligand_id
-WHERE 
-    l.type = 'Natural product';
+Generated SQL: WITH natural_product_pki AS (
+    SELECT avg(case 
+                when affinity_median is null then 
+                    case when affinity_high is null then affinity_low 
+                         else affinity_high 
+                    end 
+                else affinity_median 
+              end) as avg_pki
+    FROM interaction i
+    JOIN ligand l ON i.ligand_id = l.ligand_id
+    WHERE l.type = 'Natural product' 
+      AND i.affinity_units = 'pKi'
+), 
+natural_product_pic50 AS (
+    SELECT avg(case 
+                when affinity_median is null then 
+                    case when affinity_high is null then affinity_low 
+                         else affinity_high 
+                    end 
+                else affinity_median 
+              end) as avg_pic50
+    FROM interaction i
+    JOIN ligand l ON i.ligand_id = l.ligand_id
+    WHERE l.type = 'Natural product' 
+      AND i.affinity_units = 'pIC50'
+)
+SELECT np_pki.avg_pki, np_pic50.avg_pic50
+FROM natural_product_pki np_pki, natural_product_pic50 np_pic50;
 
 Expected SQL Results:
   ?column?  affinity  affinity ?column?
@@ -1743,43 +1781,29 @@ Partial Column Accuracy: False
 --- Processing Test Case 28 ---
 Natural Language Query: List endogenous activators of Adenyl cyclases, with their affinities
 Expected SQL: select o.object_id, o.name, glrp.description, glrp.rank_potency from grac_ligand_rank_potency glrp, object o where glrp.object_id in (select object_id from object where object_id in (select object_id from receptor2family where family_id in (select family_id from family where name ilike '%Adenylyl cyclases%')) union select object_id from object where name ilike '%Adenylyl cyclases%') and glrp.description = 'Endogenous activators' and glrp.object_id=o.object_id;
-Generated SQL: WITH RECURSIVE subfamilies AS (
-    SELECT group_id, family_id 
-    FROM grouping 
-    WHERE group_id IN (
-        SELECT family_id 
-        FROM family 
-        WHERE name ILIKE '%Adenyl cyclases%'
+Generated SQL: SELECT 
+    l.ligand_id, 
+    l.name, 
+    i.type, 
+    i.affinity_units, 
+    COALESCE(i.affinity_median, COALESCE(i.affinity_high, i.affinity_low)) AS affinity
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
+WHERE 
+    i.object_id IN (
+        SELECT object_id 
+        FROM object 
+        WHERE name ILIKE '%Adenylyl cyclase%' OR name ILIKE '%Adenyl cyclase%'
     )
-    UNION 
-    SELECT e.group_id, e.family_id 
-    FROM grouping e 
-    INNER JOIN subfamilies s ON s.family_id = e.group_id
-)
-SELECT o.object_id, o.name AS target_name, i.ligand_id, l.name AS ligand_name, 
-       i.affinity_units, 
-       CASE 
-           WHEN i.affinity_median IS NULL THEN 
-               CASE 
-                   WHEN i.affinity_high IS NULL THEN i.affinity_low 
-                   ELSE i.affinity_high 
-               END 
-           ELSE i.affinity_median 
-       END AS affinity
-FROM interaction i
-JOIN object o ON i.object_id = o.object_id
-JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE i.object_id IN (
-    SELECT object_id 
-    FROM receptor2family 
-    WHERE family_id IN (
-        SELECT family_id 
-        FROM subfamilies
-    )
-)
-AND l.type = 'Endogenous' 
-AND i.type = 'Activator'
-AND i.endogenous = true;
+    AND i.type = 'Activator'
+    AND i.endogenous IS TRUE
+    AND (
+        i.affinity_units IS NOT NULL 
+        AND i.affinity_units != '-' 
+        AND i.affinity_units != ''
+    );
 
 Expected SQL Results:
    object_id                 name            description                                       rank_potency
@@ -1803,11 +1827,27 @@ Partial Column Accuracy: False
 --- Processing Test Case 29 ---
 Natural Language Query: What concentration/s should be used in isolated tissue experiments?  
 Expected SQL: select i.ligand_id, l.name, i.assay_description, case when i.affinity_median is null then case when i.affinity_high is null then i.affinity_low else i.affinity_high end else i.affinity_median end as affinity, i.affinity_units, i.type, i.action from interaction i, ligand l where i.ligand_id=l.ligand_id and (i.assay_description ilike '%human%' or i.assay_description ilike '%rat%' or i.assay_description ilike '%mouse%');
-Generated SQL: SELECT l.ligand_id, l.name, i.affinity_units, i.affinity_high, i.affinity_median, i.affinity_low
-FROM interaction i
-JOIN ligand l ON i.ligand_id = l.ligand_id
-WHERE ((i.affinity_units IS NOT NULL AND i.affinity_units != '-' AND i.affinity_units != '') 
-  OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != ''));
+Generated SQL: SELECT 
+    l.name AS ligand_name,
+    i.object_id,
+    o.name AS target_name,
+    i.affinity_units,
+    CASE 
+        WHEN i.affinity_median IS NOT NULL THEN i.affinity_median
+        WHEN i.affinity_high IS NOT NULL THEN i.affinity_high
+        ELSE i.affinity_low
+    END AS concentration
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
+JOIN 
+    object o ON i.object_id = o.object_id
+WHERE 
+    ((i.affinity_units IS NOT NULL AND i.affinity_units != '-' AND i.affinity_units != '') 
+     OR (i.concentration_range IS NOT NULL AND i.concentration_range != '-' AND i.concentration_range != ''))
+ORDER BY 
+    l.name, o.name, concentration;
 
 Expected SQL Results:
       ligand_id                  name  ...        type           action
@@ -1826,20 +1866,20 @@ Expected SQL Results:
 [1036 rows x 7 columns]
 
 Generated SQL Results:
-       ligand_id                                 name affinity_units  affinity_high  affinity_median  affinity_low
-0           9604                              OSE-127          pEC50            NaN            11.40           NaN
-1          10080                           diflapolin          pIC50            NaN             7.70           NaN
-2          10081  kinase inhibitor 2 [PMID: 30199702]          pIC50            NaN             7.17           NaN
-3          10081  kinase inhibitor 2 [PMID: 30199702]          pIC50            NaN             7.30           NaN
-4          10081  kinase inhibitor 2 [PMID: 30199702]          pIC50            NaN             7.31           NaN
-...          ...                                  ...            ...            ...              ...           ...
-21018       8608                               ABL127          pIC50            NaN             8.00           NaN
-21019        697                       adrenomedullin          pEC50            NaN             8.15           NaN
-21020       2923                 mocravimod-phosphate          pEC50            NaN             8.76           NaN
-21021       2923                 mocravimod-phosphate          pEC50            NaN             6.00           NaN
-21022      13429     TYK2 inhibitor 18 [WO2023227946]          pIC50            NaN             7.52           NaN
+        ligand_name  object_id                    target_name affinity_units  concentration
+0             '1988       3198  CoV Non-structural protein 14          pIC50           5.66
+1             '2882       3198  CoV Non-structural protein 14          pIC50           5.22
+2             '9213       3198  CoV Non-structural protein 14          pIC50           4.70
+3      &alpha;-CGRP         80                          ACKR3          pEC50           8.52
+4      &alpha;-CGRP         49        AM<sub>1</sub> receptor            pKd           6.00
+...             ...        ...                            ...            ...            ...
+20573         ZYBT1       2238    tec protein tyrosine kinase          pIC50           7.60
+20574     zyklophin        317               &delta; receptor            pKi           5.00
+20575     zyklophin        318               &kappa; receptor            pKB           7.08
+20576     zyklophin        318               &kappa; receptor            pKi           7.52
+20577     zyklophin        319                  &mu; receptor            pKi           5.23
 
-[21023 rows x 6 columns]
+[20578 rows x 5 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -1848,12 +1888,20 @@ Partial Column Accuracy: True
 --- Processing Test Case 30 ---
 Natural Language Query: Are the compounds active in rats and mice as well as humans?  
 Expected SQL: select distinct i.ligand_id, l.name from interaction i, ligand l where i.ligand_id=l.ligand_id and i.species_id in (select species_id from species where name = 'Mouse') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')) intersect select distinct i.ligand_id, l.name from interaction i, ligand l where i.ligand_id=l.ligand_id and i.species_id in (select species_id from species where name = 'Rat') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != '')) intersect select distinct i.ligand_id, l.name from interaction i, ligand l where i.ligand_id=l.ligand_id and i.species_id in (select species_id from species where name = 'Human') and ((i.affinity_units is not null and i.affinity_units != '-' and i.affinity_units != '') or (i.concentration_range is not null and i.concentration_range != '-' and i.concentration_range != ''));
-Generated SQL: SELECT DISTINCT l.ligand_id, l.name
-FROM interaction i
-JOIN ligand l ON i.ligand_id = l.ligand_id 
-WHERE i.species_id IN (
-    SELECT species_id FROM species WHERE name IN ('Human', 'Mouse', 'Rat')
-);
+Generated SQL: SELECT DISTINCT 
+    l.ligand_id, 
+    l.name, 
+    s.name AS species_name
+FROM 
+    interaction i
+JOIN 
+    ligand l ON i.ligand_id = l.ligand_id
+JOIN 
+    species s ON i.species_id = s.species_id
+WHERE 
+    s.name IN ('Human', 'Rat', 'Mouse')
+ORDER BY 
+    l.ligand_id, s.name;
 
 Expected SQL Results:
      ligand_id        name
@@ -1872,20 +1920,20 @@ Expected SQL Results:
 [278 rows x 2 columns]
 
 Generated SQL Results:
-      ligand_id                           name
-0          1944           1-OH-PGE<sub>1</sub>
-1          4316                       SR57227A
-2           215                norfenfluramine
-3         12906  compound 77A [PMID: 37639383]
-4         12555                      cimifugin
-...         ...                            ...
-9989       7038                           MBP7
-9990       6450   compound 10 [PMID: 15482906]
-9991       7695                        AZD4017
-9992       4122                        A839977
-9993       3341                          MMPIP
+       ligand_id                               name species_name
+0              1                         flesinoxan        Human
+1              2                         quinpirole        Human
+2              2                         quinpirole          Rat
+3              3               1-naphthylpiperazine        Human
+4              3               1-naphthylpiperazine          Rat
+...          ...                                ...          ...
+11548      13422  P2Y<sub>14</sub>R antagonist I-17        Human
+11549      13423      compound XVI [PMID: 38863440]        Human
+11550      13424                         PSB-KK1445        Human
+11551      13425                         PSB-KK1415        Human
+11552      13429   TYK2 inhibitor 18 [WO2023227946]        Human
 
-[9994 rows x 2 columns]
+[11553 rows x 3 columns]
 
 Execution Accuracy: False
 Partial Execution Accuracy: True
@@ -1894,18 +1942,18 @@ Partial Column Accuracy: True
 ==================================================
 SUCCESSFUL STATISTICS:
 Total test queries executed: 30
-None empty output rate: 0.8
-Successful execution rate: 0.8
-Non empty test queries: 24
+None empty output rate: 0.9
+Successful execution rate: 0.9
+Non empty test queries: 27
 
 DETAILED EXECUTION STATISTICS:
-Execution Accuracy: 0.03333333333333333
-Partial Execution Accuracy: 0.6
-Partial Column Accuracy: 0.6666666666666666
+Execution Accuracy: 0.06666666666666667
+Partial Execution Accuracy: 0.6666666666666666
+Partial Column Accuracy: 0.8
 
 FAILURE STATISTICS:
-None count: 6
-None IDs: 66, 67, 73, 13, 78, 59
+None count: 3
+None IDs: 73, 59, 78
 Empty count: 0
 Empty IDs: 
 ==================================================
