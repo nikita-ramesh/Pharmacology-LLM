@@ -119,6 +119,66 @@ def execute_query(conn, query):
         print(f"Error executing query: {e}")
         return None
 
+def execution_accuracy(predicted_df, gold_df):
+    """
+    Checks if two DataFrames are exactly equal.
+    """
+    if predicted_df is not None and gold_df is not None:
+        try:
+            return predicted_df.equals(gold_df)
+        except Exception as e:
+            print(f"Error comparing DataFrames: {e}")
+            return False
+    return False
+
+def partial_execution_accuracy(predicted_df, gold_df):
+    """
+    Checks if there is at least one common column between predicted_df and gold_df,
+    and whether they share at least one common row in those intersected columns.
+    """
+    if predicted_df is not None and gold_df is not None:
+        try:
+            # Find common columns
+            common_columns = set(predicted_df.columns) & set(gold_df.columns)
+
+            # If no common columns exist, return False
+            if not common_columns:
+                return False
+
+            # Filter both DataFrames to only include the common columns
+            filtered_predicted_df = predicted_df[list(common_columns)]
+            filtered_gold_df = gold_df[list(common_columns)]
+
+            # Convert rows in the filtered DataFrames to sets for comparison
+            predicted_rows = {tuple(row) for row in filtered_predicted_df.itertuples(index=False, name=None)}
+            gold_rows = {tuple(row) for row in filtered_gold_df.itertuples(index=False, name=None)}
+
+            # Check if there is at least one row in common
+            return bool(predicted_rows & gold_rows)  # True if there's an intersection
+
+        except Exception as e:
+            print(f"Error during partial execution accuracy check: {e}")
+            return False
+
+    return False
+    
+def partial_col_accuracy(predicted_df, gold_df):
+    """
+    Checks if there is at least one common column between the predicted DataFrame and the gold DataFrame.
+    """
+    if predicted_df is not None and gold_df is not None:
+        try:
+            # Get the sets of column names.
+            predicted_columns = set(predicted_df.columns)
+            gold_columns = set(gold_df.columns)
+
+            # Check if there is any intersection between the columns.
+            return bool(predicted_columns & gold_columns)  # Returns True if intersection is not empty
+        except Exception as e:
+            print(f"Error during partial column accuracy check: {e}")
+            return False
+    return False
+
 def run_test_set():
     conn = connect_to_db()
     if not conn:
@@ -145,6 +205,9 @@ def run_test_set():
 
     success_count = 0
     total_count = 0
+    exec_accurate_count = 0
+    partial_exec_accurate_count = 0
+    partial_cols_accurate_count = 0
     none_set = set()
     empty_set = set()
 
@@ -185,6 +248,17 @@ def run_test_set():
                 empty_set.add(int(row['ID']))
             else:
                 success_count += 1
+            
+            execution_accuracy_bool = execution_accuracy(generated_results, expected_results)
+            partial_execution_accuracy_bool = partial_execution_accuracy(generated_results, expected_results)
+            partial_col_accuracy_bool = partial_col_accuracy(generated_results, expected_results)
+
+            if execution_accuracy_bool:
+                exec_accurate_count += 1
+            if partial_execution_accuracy_bool:
+                partial_exec_accurate_count += 1
+            if partial_col_accuracy_bool:
+                partial_cols_accurate_count += 1
 
             result_file.write("\nExpected SQL Results:\n")
             result_file.write(f"{expected_results if expected_results is not None else 'Error executing expected SQL.'}\n")
@@ -192,13 +266,31 @@ def run_test_set():
             result_file.write("\nGenerated SQL Results:\n")
             result_file.write(f"{generated_results if generated_results is not None else 'Error executing generated SQL.'}\n")
 
+            result_file.write("\nExecution Accuracy:\n")
+            result_file.write(f"{execution_accuracy_bool}\n")
+            result_file.write("Partial Execution Accuracy:\n")
+            result_file.write(f"{partial_execution_accuracy_bool}\n")
+            result_file.write("Partial Column Accuracy:\n")
+            result_file.write(f"{partial_col_accuracy_bool}\n")
+
         # Final statistics
         result_file.write("="*50 + "\n")
+
+        # Successful Statistics
+        result_file.write("SUCCESSFUL STATISTICS:\n")
         result_file.write(f"Total test queries executed: {total_count}\n")
         result_file.write(f"None empty output rate: {success_count/total_count}\n")
         result_file.write(f"Successful execution rate: {(success_count+len(empty_set))/total_count}\n")
         result_file.write(f"Non empty test queries: {success_count}\n\n")
 
+        # Detailed Execution Statistics
+        result_file.write("DETAILED EXECUTION STATISTICS:\n")
+        result_file.write(f"Execution Accuracy: {exec_accurate_count/total_count}\n")
+        result_file.write(f"Partial Execution Accuracy: {partial_exec_accurate_count/total_count}\n")
+        result_file.write(f"Partial Column Accuracy: {partial_cols_accurate_count/total_count}\n\n")
+
+        # Failure Statistics
+        result_file.write("FAILURE STATISTICS:\n")
         result_file.write(f"None count: {len(none_set)}\n")
         result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
         result_file.write(f"Empty count: {len(empty_set)}\n")
