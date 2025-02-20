@@ -266,15 +266,12 @@ def run_test_set():
             result_file.write("\nGenerated SQL Results:\n")
             result_file.write(f"{generated_results if generated_results is not None else 'Error executing generated SQL.'}\n")
 
-            result_file.write("\nExecution Accuracy:\n")
-            result_file.write(f"{execution_accuracy_bool}\n")
-            result_file.write("Partial Execution Accuracy:\n")
-            result_file.write(f"{partial_execution_accuracy_bool}\n")
-            result_file.write("Partial Column Accuracy:\n")
-            result_file.write(f"{partial_col_accuracy_bool}\n")
+            result_file.write(f"\nExecution Accuracy: {execution_accuracy_bool}\n")
+            result_file.write(f"Partial Execution Accuracy: {partial_execution_accuracy_bool}\n")
+            result_file.write(f"Partial Column Accuracy: {partial_col_accuracy_bool}\n")
 
         # Final statistics
-        result_file.write("="*50 + "\n")
+        result_file.write("\n" + "="*50 + "\n")
 
         # Successful Statistics
         result_file.write("SUCCESSFUL STATISTICS:\n")
