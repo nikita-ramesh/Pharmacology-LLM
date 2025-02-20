@@ -156,9 +156,11 @@ def run_test_set():
         for index, row in test_data.iterrows():
             total_count += 1
             nlq = row['Natural Language Query']
+            expected_sql = row['SQL']
 
             result_file.write(f"\n--- Processing Test Case {index + 1} ---\n")
             result_file.write(f"Natural Language Query: {nlq}\n")
+            result_file.write(f"Expected SQL: {expected_sql}\n")
 
             generated_sql = None
             retries = 0
@@ -174,6 +176,7 @@ def run_test_set():
                     generated_results = None  # If retries exceeded, set results to None
 
             result_file.write(f"Generated SQL: {generated_sql}\n")
+            expected_results = execute_query(conn, expected_sql) if expected_sql else None
 
             # Add to sets based on execution results
             if generated_results is None:
@@ -182,6 +185,9 @@ def run_test_set():
                 empty_set.add(int(row['ID']))
             else:
                 success_count += 1
+
+            result_file.write("\nExpected SQL Results:\n")
+            result_file.write(f"{expected_results if expected_results is not None else 'Error executing expected SQL.'}\n")
 
             result_file.write("\nGenerated SQL Results:\n")
             result_file.write(f"{generated_results if generated_results is not None else 'Error executing generated SQL.'}\n")
