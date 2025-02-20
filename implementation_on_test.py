@@ -19,7 +19,6 @@ db_config = {
 def connect_to_db():
     try:
         conn = psycopg2.connect(**db_config)
-        conn.set_client_encoding('UTF8')  # Ensure UTF-8 encoding
         return conn
     except Exception as e:
         print(f"Error connecting to the database: {e}")
@@ -36,32 +35,25 @@ def load_schema_from_file(file_path):
 def load_training_data(file_path):
     try:
         df = pd.read_csv(file_path)
-        
-        # Ensure required columns are present
         if 'Natural Language Query' not in df.columns or 'SQL' not in df.columns or 'Training/test set' not in df.columns:
             print("Error: Required columns not found in the dataset.")
             return None
 
-        # Filter relevant columns and drop rows with any missing values
-        df = df[['ID', 'Natural Language Query', 'SQL', 'Greek', '2nd SQL', 'Training/test set']].dropna()
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
         return df
     except Exception as e:
         print(f"Error loading training data: {e}")
         return None
 
-def load_test_data(test_file_path):
+def load_test_data(file_path):
     try:
-        # Load the test data from the given file path
-        df_test = pd.read_csv(test_file_path)
-        
-        # Ensure required columns are present
-        if 'Natural Language Query' not in df_test.columns or 'SQL' not in df_test.columns:
-            print("Error: Required columns not found in the test dataset.")
+        df = pd.read_csv(file_path)
+        if 'Natural Language Query' not in df.columns or 'SQL' not in df.columns or 'Training/test set' not in df.columns:
+            print("Error: Required columns not found in the dataset.")
             return None
 
-        # Filter relevant columns and drop rows with any missing values
-        df_test = df_test[['ID', 'Natural Language Query']]
-        return df_test
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
+        return df
     except Exception as e:
         print(f"Error loading test data: {e}")
         return None
@@ -105,8 +97,9 @@ def process_user_query(question, schema_context):
         "model": "gpt-4o",
         "messages": schema_context + [{"role": "user", "content": question}]
     }
-
+    
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
+    
     if response.status_code == 200:
         try:
             message_content = response.json()['choices'][0]['message']['content']
@@ -121,9 +114,7 @@ def process_user_query(question, schema_context):
 
 def execute_query(conn, query):
     try:
-        df = pd.read_sql_query(query, conn)
-        df = df.applymap(lambda x: x.encode('utf-8').decode('utf-8') if isinstance(x, str) else x)
-        return df
+        return pd.read_sql_query(query, conn)
     except Exception as e:
         print(f"Error executing query: {e}")
         return None
@@ -138,18 +129,17 @@ def run_test_set():
         print("Failed to load schema.")
         return
 
+    # Load 100% of training data
     training_data = load_training_data('Training/all_queries_categorised_train.csv')
+    
+    # Load test data from a separate file
     test_data = load_test_data('Training/all_queries_categorised_test.csv')
 
-    if training_data is None or training_data.empty:
-        print("Error: Training data unavailable.")
+    if training_data is None or training_data.empty or test_data is None or test_data.empty:
+        print("Error: Training or test data unavailable.")
         return
-    
-    if test_data is None or test_data.empty:
-        print("Error: Testing data unavailable.")
-        return
-    
-    training_data_sample = "\n".join([f"Q: {row['Natural Language Query']}\nA: {row['SQL']}\nAlternative A: {row['2nd SQL']}" for _, row in training_data.iterrows()])
+
+    training_data_sample = "\n".join([f"Q: {row['Natural Language Query']}\nA: {row['SQL']}" for _, row in training_data.iterrows()])
     schema_str = generate_schema_string(schema)
     schema_context = [initialize_schema_context(schema_str, training_data_sample)]
 
@@ -161,15 +151,7 @@ def run_test_set():
     # Open a file to write results
     with open("query_results.txt", "w", encoding="utf-8") as result_file:
         result_file.write("Test Set Evaluation Results\n")
-        result_file.write("="*50 + "\n")
-        result_file.write(f"Total test queries executed: {total_count}\n")
-        result_file.write(f"Successful test queries: {success_count}\n")
-        result_file.write(f"None count: {len(none_set)}\n")
-        result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
-        result_file.write(f"Empty count: {len(empty_set)}\n")
-        result_file.write(f"Empty IDs: {', '.join(map(str, empty_set))}\n")
-        result_file.write("="*50 + "\n")
-
+        
         # Loop over test data to process each query
         for index, row in test_data.iterrows():
             total_count += 1
