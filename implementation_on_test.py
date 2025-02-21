@@ -133,28 +133,31 @@ def execution_accuracy(predicted_df, gold_df):
 
 def partial_execution_accuracy(predicted_df, gold_df):
     """
-    Checks if there is at least one common column between predicted_df and gold_df,
-    and whether they share at least one common row in those intersected columns.
+    Checks if there is at least one common column between predicted_df and gold_df.
+    - If common columns exist, checks if all the rows are common in the filtered dataframes.
+    - If no common columns exist, checks if all rows in predicted_df matches a row in gold_df completely.
     """
     if predicted_df is not None and gold_df is not None:
         try:
             # Find common columns
             common_columns = set(predicted_df.columns) & set(gold_df.columns)
 
-            # If no common columns exist, return False
-            if not common_columns:
-                return False
+            if common_columns:
+                # Filter both DataFrames to only include the common columns
+                filtered_predicted_df = predicted_df[list(common_columns)]
+                filtered_gold_df = gold_df[list(common_columns)]
 
-            # Filter both DataFrames to only include the common columns
-            filtered_predicted_df = predicted_df[list(common_columns)]
-            filtered_gold_df = gold_df[list(common_columns)]
+                # Convert rows in the filtered DataFrames to sets for comparison
+                predicted_rows = {tuple(row) for row in filtered_predicted_df.itertuples(index=False, name=None)}
+                gold_rows = {tuple(row) for row in filtered_gold_df.itertuples(index=False, name=None)}
 
-            # Convert rows in the filtered DataFrames to sets for comparison
-            predicted_rows = {tuple(row) for row in filtered_predicted_df.itertuples(index=False, name=None)}
-            gold_rows = {tuple(row) for row in filtered_gold_df.itertuples(index=False, name=None)}
+            else:
+                # No common columns, compare full rows without considering columns
+                predicted_rows = {tuple(row) for row in predicted_df.itertuples(index=False, name=None)}
+                gold_rows = {tuple(row) for row in gold_df.itertuples(index=False, name=None)}
 
             # Check if there is at least one row in common
-            return bool(predicted_rows & gold_rows)  # True if there's an intersection
+            return predicted_rows == gold_rows # True if there's an intersection
 
         except Exception as e:
             print(f"Error during partial execution accuracy check: {e}")
