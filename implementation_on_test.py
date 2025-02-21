@@ -87,12 +87,17 @@ def initialize_schema_context(schema_str, training_data_sample):
         )
     }
 
-def process_user_query(question, schema_context):
+def process_user_query(question, schema_context, error_message=None):
     api_key = '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'
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
+    
+    # Include previous error message if it exists
+    if error_message:
+        question = f"{error_message}\n{question}"
+
     data = {
         "model": "gpt-4o",
         "messages": schema_context + [{"role": "user", "content": question}]
@@ -114,18 +119,26 @@ def process_user_query(question, schema_context):
 
 def execute_query(conn, query):
     try:
-        return pd.read_sql_query(query, conn)
+        results = pd.read_sql_query(query, conn)
+        if results.empty:
+            return results, "SQL executed but returned an empty result. Please check your query strings."
+        return results, None
     except Exception as e:
         print(f"Error executing query: {e}")
-        return None
+        return None, str(e)
 
 def execution_accuracy(predicted_df, gold_df):
     """
-    Checks if two DataFrames are exactly equal.
+    Checks if the rows of two DataFrames are equal by comparing their sets of rows.
     """
     if predicted_df is not None and gold_df is not None:
         try:
-            return predicted_df.equals(gold_df)
+            # Convert DataFrames to sets of tuples representing rows
+            predicted_set = set(map(tuple, predicted_df.to_numpy()))
+            gold_set = set(map(tuple, gold_df.to_numpy()))
+            
+            # Check if the sets of rows are equal
+            return predicted_set == gold_set
         except Exception as e:
             print(f"Error comparing DataFrames: {e}")
             return False
@@ -235,21 +248,28 @@ def run_test_set():
             result_file.write(f"Natural Language Query: {nlq}\n")
             result_file.write(f"Expected SQL: {expected_sql}\n")
 
-            generated_sql = None
             retries = 0
+            max_retries = 1
+            generated_results = None
             error_message = None
-            while retries <= 1:
-                generated_sql = process_user_query(nlq, schema_context)
+
+            while retries <= max_retries:
+                # Process the user query with the current error message as context
+                generated_sql = process_user_query(nlq, schema_context, error_message)
+
                 if generated_sql is not None:
-                    generated_results = execute_query(conn, generated_sql)
-                    if generated_results is not None and not generated_results.empty:
-                        break
-                retries += 1
-                if retries > 1:
-                    generated_results = None  # If retries exceeded, set results to None
+                    generated_results, error_message = execute_query(conn, generated_sql)
+
+                    # If generated_results is None or empty, we'll retry
+                    if generated_results is None or generated_results.empty:
+                        retries += 1
+                    else:
+                        break  # Exit the loop if results are found
+
+            # generated_results will now hold either the valid DataFrame, an empty DataFrame, or None
 
             result_file.write(f"Generated SQL: {generated_sql}\n")
-            expected_results = execute_query(conn, expected_sql) if expected_sql else None
+            expected_results, _ = execute_query(conn, expected_sql) if expected_sql else (None, None)
 
             # Add to sets based on execution results
             if generated_results is None:
@@ -287,7 +307,7 @@ def run_test_set():
         result_file.write("SUCCESSFUL STATISTICS:\n")
         result_file.write(f"Total test queries executed: {total_count}\n")
         result_file.write(f"Non empty output rate: {success_count/total_count}\n")
-        result_file.write(f"Successful execution rate: {(success_count+len(empty_set))/total_count}\n")
+        result_file.write(f"Successful execution rate: {(success_count + len(empty_set)) / total_count}\n")
         result_file.write(f"Non empty test queries: {success_count}\n\n")
 
         # Detailed Execution Statistics
