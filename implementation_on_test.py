@@ -5,6 +5,7 @@ import psycopg2
 import pandas as pd
 import json
 import getpass
+import os
 
 def pwd():
     return getpass.getpass(prompt="Enter the database password: ")
@@ -88,7 +89,7 @@ def initialize_schema_context(schema_str, training_data_sample):
     }
 
 def process_user_query(question, schema_context, error_message=None):
-    api_key = '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'
+    api_key = os.getenv("OPENAI_API_KEY")
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
