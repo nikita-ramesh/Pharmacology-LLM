@@ -122,7 +122,15 @@ def execute_query(conn, query):
     try:
         results = pd.read_sql_query(query, conn)
         if results.empty:
-            return results, "SQL executed but returned an empty result. Please check your query strings."
+            return results, (
+                    f"SQL executed but returned an empty result.\n"
+                    f"Query: {query}\n\n"
+                    "Possible reasons:\n"
+                    "- The table or columns referenced may be empty.\n"
+                    "- Filtering conditions might be too strict.\n"
+                    "- Data may not exist for the given WHERE clause.\n"
+                    "- Joins might be eliminating rows due to unmatched conditions.\n\n"
+                )
         return results, None
     except Exception as e:
         print(f"Error executing query: {e}")
