@@ -294,7 +294,7 @@ def run_test_set():
 
             if execution_accuracy_bool:
                 exec_accurate_count += 1
-            if partial_execution_accuracy_bool:
+            if execution_accuracy_bool or partial_execution_accuracy_bool:
                 partial_exec_accurate_count += 1
             if partial_col_accuracy_bool:
                 partial_cols_accurate_count += 1
