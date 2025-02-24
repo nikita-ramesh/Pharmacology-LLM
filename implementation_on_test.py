@@ -289,12 +289,12 @@ def run_test_set():
                 success_count += 1
             
             execution_accuracy_bool = execution_accuracy(generated_results, expected_results)
-            partial_execution_accuracy_bool = partial_execution_accuracy(generated_results, expected_results)
+            partial_execution_accuracy_bool = execution_accuracy_bool or partial_execution_accuracy(generated_results, expected_results)
             partial_col_accuracy_bool = partial_col_accuracy(generated_results, expected_results)
 
             if execution_accuracy_bool:
                 exec_accurate_count += 1
-            if execution_accuracy_bool or partial_execution_accuracy_bool:
+            if partial_execution_accuracy_bool:
                 partial_exec_accurate_count += 1
             if partial_col_accuracy_bool:
                 partial_cols_accurate_count += 1
