@@ -53,7 +53,7 @@ def load_test_data(file_path):
             print("Error: Required columns not found in the dataset.")
             return None
 
-        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']].dropna()
+        df = df[['ID', 'Natural Language Query', 'SQL', 'Training/test set']]
         return df
     except Exception as e:
         print(f"Error loading test data: {e}")
