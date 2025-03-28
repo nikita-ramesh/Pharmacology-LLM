@@ -16,7 +16,7 @@ n_shot_levels = ["0-shot", "1-shot", "5-shot", "10-shot", "15-shot", "20-shot", 
 
 # Hypothetical NER performance values for each n-shot setting (as proportions)
 n_trials = 26  
-ner_results = np.array([53.85, 57.69, 80.77, 65.38, 76.92, 84.62, 84.62]) / 100  # Convert % to proportion
+ner_results = np.array([53.85, 57.69, 80.77, 65.38, 76.92, 84.62, 96]) / 100  # Convert % to proportion
 
 # Compute confidence intervals
 ci = [proportion_ci(n_trials, p) for p in ner_results]
