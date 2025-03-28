@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.stats import beta
 
-# TRY THIS EXPERIMENT WITHOUT RL.
-
 # Function to compute 95% confidence intervals using a Beta distribution
 def proportion_ci(n, p):
     a = n * p + 0.5
@@ -45,9 +43,9 @@ ax.grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.6)
 # Formatting
 ax.set_xticks(x)
 ax.set_xticklabels(n_shot_levels, fontsize=14)
-ax.set_yticks(np.arange(0, 110, 10))
-ax.set_ylim(0, 105)
-ax.set_yticklabels(np.arange(0, 110, 10), fontsize=15)
+ax.set_yticks(np.arange(0, 60, 5))  # Adjust ticks accordingly
+ax.set_ylim(0, 60)  # Limit y-axis to avoid going up to 100
+ax.set_yticklabels(np.arange(0, 60, 5), fontsize=15)
 
 # Labels and title
 ax.set_ylabel("PEX (%)", fontsize=15, labelpad=10)
