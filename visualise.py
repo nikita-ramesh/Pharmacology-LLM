@@ -47,6 +47,7 @@ ax.set_xticks(x)
 ax.set_xticklabels(conditions, fontsize=14)
 ax.set_yticks(np.arange(0, 110, 10))
 ax.set_ylim(0, 105)
+ax.set_yticklabels(np.arange(0, 110, 10), fontsize=15)
 
 # Labels and title
 ax.set_ylabel("NER (%)", fontsize=15, labelpad=10)
