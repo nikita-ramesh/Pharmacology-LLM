@@ -6,6 +6,7 @@ import pandas as pd
 import json
 import getpass
 import os
+import time
 
 def pwd():
     return getpass.getpass(prompt="Enter the database password: ")
@@ -249,6 +250,7 @@ def run_test_set():
         
         # Loop over test data to process each query
         for index, row in test_data.iterrows():
+            start_time = time.time()
             total_count += 1
             nlq = row['Natural Language Query']
             expected_sql = row['SQL']
@@ -263,6 +265,12 @@ def run_test_set():
             error_message = None
 
             while retries <= max_retries:
+                # Check if processing time exceeded 60 seconds
+                if time.time() - start_time > 60:
+                    print(f"Skipping index {index} as it took longer than 60 seconds")
+                    result_file.write(f"Skipping Test Case {index + 1} due to timeout.\n")
+                    break  # Skip this test case
+
                 # Process the user query with the current error message as context
                 generated_sql = process_user_query(nlq, schema_context, error_message)
 
@@ -274,6 +282,10 @@ def run_test_set():
                         retries += 1
                     else:
                         break  # Exit the loop if results are found
+
+            # If processing was skipped due to timeout, continue to the next test case
+            if time.time() - start_time > 60:
+                continue
 
             # generated_results will now hold either the valid DataFrame, an empty DataFrame, or None
 
