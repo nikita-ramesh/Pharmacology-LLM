@@ -67,7 +67,7 @@ ax.grid(axis='y', linestyle='--', alpha=0.7)
 
 ax.set_xticklabels(metrics, fontsize=14)
 
-save_path = "Visualise/other_comparison.png"
+save_path = "Visualise/comparison/other_comparison.png"
 os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
 # Show and save the plot

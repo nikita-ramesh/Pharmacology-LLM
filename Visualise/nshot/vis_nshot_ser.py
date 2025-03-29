@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.stats import beta
+import os
 
 # TRY THIS EXPERIMENT WITHOUT RL.
 
@@ -54,7 +55,10 @@ ax.set_ylabel("SER (%)", fontsize=15, labelpad=10)
 ax.set_xlabel("n-Shot Learning", fontsize=15, labelpad=10)
 ax.set_title("Effect of Increasing n-Shot on SER Performance", fontsize=16, pad=15)
 
+save_path = "Visualise/nshot/n_shot_ser_performance.png"
+os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
 # Show and save the plot
 plt.tight_layout()
-plt.savefig("n_shot_ser_performance.png", dpi=300)
+plt.savefig(save_path, dpi=300)
 plt.show()
