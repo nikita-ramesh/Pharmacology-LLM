@@ -248,6 +248,8 @@ def run_test_set():
     with open("query_results.txt", "w", encoding="utf-8") as result_file:
         result_file.write("Test Set Evaluation Results\n")
         
+        total_time = 0
+        
         # Loop over test data to process each query
         for index, row in test_data.iterrows():
             start_time = time.time()
@@ -283,8 +285,11 @@ def run_test_set():
                     else:
                         break  # Exit the loop if results are found
 
+            execution_time = time.time() - start_time
+            total_time += execution_time
+
             # If processing was skipped due to timeout, continue to the next test case
-            if time.time() - start_time > 60:
+            if execution_time - start_time > 60:
                 continue
 
             # generated_results will now hold either the valid DataFrame, an empty DataFrame, or None
@@ -321,6 +326,8 @@ def run_test_set():
             result_file.write(f"Partial Execution Accuracy: {partial_execution_accuracy_bool}\n")
             result_file.write(f"Partial Column Accuracy: {partial_col_accuracy_bool}\n")
 
+            result_file.write(f"Runtime: {execution_time}\n")
+
         # Final statistics
         result_file.write("\n" + "="*50 + "\n")
 
@@ -342,7 +349,9 @@ def run_test_set():
         result_file.write(f"None count: {len(none_set)}\n")
         result_file.write(f"None IDs: {', '.join(map(str, none_set))}\n")
         result_file.write(f"Empty count: {len(empty_set)}\n")
-        result_file.write(f"Empty IDs: {', '.join(map(str, empty_set))}\n")
+        result_file.write(f"Empty IDs: {', '.join(map(str, empty_set))}\n\n")
+
+        result_file.write(f"Average Runtime: {total_time/total_count}\n")
         result_file.write("="*50 + "\n")
 
     conn.close()
