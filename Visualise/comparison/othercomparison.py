@@ -18,7 +18,7 @@ metrics = ["NER", "SER", "PEX", "EX"]
 n_trials = 30  # Number of trials
 
 # Performance values (in percentages)
-without_schema = np.array([83.33, 100.00, 30, 10])  # Replace with real data
+without_schema = np.array([83.33, 100.00, 30, 10])  
 with_schema = np.array([90.00, 100.00, 43.33, 13.33])  
 
 # Compute confidence intervals
@@ -38,7 +38,7 @@ df = pd.DataFrame({
     "Upper CI": np.concatenate([ci_without[:, 1], ci_with[:, 1]])
 })
 
-# Set Seaborn style for beauty ✨
+# Set Seaborn style
 sns.set(style="whitegrid", palette="pastel")
 
 # Create figure
@@ -47,30 +47,34 @@ fig, ax = plt.subplots(figsize=(10, 6))
 # Barplot with error bars
 sns.barplot(
     data=df, x="Metric", y="Performance", hue="Comparison", capsize=0.15, errwidth=2, 
-    ci=None, dodge=True, edgecolor="black", ax=ax, palette=["#63ACBE", "#EE442F"]
+    ci=None, dodge=True, edgecolor="black", ax=ax, palette=["#EE442F", "#63ACBE"]
 )
 
-# Add error bars manually (since Seaborn does not support CI input directly)
+# Add error bars manually
 for i in range(len(metrics)):
-    ax.errorbar(i - 0.2, without_schema[i], yerr=[[errors_without[0][i]], [errors_without[1][i]]], fmt='none', color='black', capsize=5, linewidth=1.5)
-    ax.errorbar(i + 0.2, with_schema[i], yerr=[[errors_with[0][i]], [errors_with[1][i]]], fmt='none', color='black', capsize=5, linewidth=1.5)
+    ax.errorbar(i - 0.2, without_schema[i], yerr=[[errors_without[0][i]], [errors_without[1][i]]], 
+                fmt='none', color='black', capsize=5, linewidth=1.5)
+    ax.errorbar(i + 0.2, with_schema[i], yerr=[[errors_with[0][i]], [errors_with[1][i]]], 
+                fmt='none', color='black', capsize=5, linewidth=1.5)
 
 # Labels and title
-ax.set_ylabel("Performance (%)", fontsize=14)
-ax.set_xlabel("")
+ax.set_ylabel("Performance (%)", fontsize=16)
+ax.set_xlabel("", fontsize=16)
 ax.set_title("Comparison with Alternative Prompt Engineering Strategy", fontsize=16, pad=10)
 ax.set_ylim(0, 100)  
-ax.legend(fontsize=12, title="Strategy")
+ax.legend(fontsize=16, title="Strategy", title_fontsize=16)
 
 # Beautify the grid
 ax.grid(axis='y', linestyle='--', alpha=0.7)
 
-ax.set_xticklabels(metrics, fontsize=14)
+# Adjust x-tick labels
+ax.set_xticklabels(metrics, fontsize=16)
+ax.tick_params(axis='y', labelsize=16)  # Set y-tick font size
 
+# Save and show the plot
 save_path = "Visualise/comparison/other_comparison.png"
 os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
-# Show and save the plot
 plt.tight_layout()
 plt.savefig(save_path, dpi=300)
 plt.show()
