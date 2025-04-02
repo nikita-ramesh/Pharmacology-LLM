@@ -46,9 +46,9 @@ ax.grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.6)
 # Formatting
 ax.set_xticks(x)
 ax.set_xticklabels(n_shot_levels, fontsize=14)
-ax.set_yticks(np.arange(0, 110, 10))
-ax.set_ylim(0, 105)
-ax.set_yticklabels(np.arange(0, 110, 10), fontsize=15)
+ax.set_yticks(np.arange(0, 40, 10))
+ax.set_ylim(0, 40)
+ax.set_yticklabels(np.arange(0, 40, 10), fontsize=15)
 
 # Labels and title
 ax.set_ylabel("EX (%)", fontsize=15, labelpad=10)
