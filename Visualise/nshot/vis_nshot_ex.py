@@ -18,7 +18,7 @@ def proportion_ci(n, p):
 n_shot_levels = ["0-shot", "1-shot", "5-shot", "10-shot", "15-shot", "20-shot", "25-shot"]  
 
 n_trials = 26  
-ser_results = np.array([7.69, 3.85, 3.85, 11.54, 11.54, 11.54, 7.69]) / 100  # Convert % to proportion
+ser_results = np.array([7.69, 3.85, 3.85, 11.54, 11.54, 11.54, 15.38]) / 100  # Convert % to proportion
 
 # Compute confidence intervals
 ci = [proportion_ci(n_trials, p) for p in ser_results]
