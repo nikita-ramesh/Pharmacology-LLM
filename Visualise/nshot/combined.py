@@ -28,8 +28,14 @@ ci_pex = pd.DataFrame([proportion_ci(n_trials, p) for p in pex_results]) * 100
 pex_results *= 100
 errors_pex = np.abs(ci_pex[['p0_025', 'p0_975']].sub(pex_results, axis=0).T.values)
 
-# Set up figure with 2 subplots
-fig, axes = plt.subplots(2, 1, figsize=(10, 12), sharex=True)
+# EX Performance Data
+ex_results = np.array([7.69, 3.85, 3.85, 11.54, 11.54, 11.54, 15.38]) / 100  # Convert % to proportion
+ci_ex = pd.DataFrame([proportion_ci(n_trials, p) for p in ex_results]) * 100
+ex_results *= 100
+errors_ex = np.abs(ci_ex[['p0_025', 'p0_975']].sub(ex_results, axis=0).T.values)
+
+# Set up figure with 3 subplots
+fig, axes = plt.subplots(3, 1, figsize=(10, 18), sharex=True)
 
 # Common X positions for bars
 x = np.arange(len(n_shot_levels))
@@ -55,10 +61,20 @@ axes[1].set_yticks(np.arange(0, 60, 5))
 axes[1].set_ylim(0, 60)
 axes[1].tick_params(axis='y', labelsize=15)  # Increase font size for y-tick labels
 
+# Plot EX Performance
+axes[2].bar(x, ex_results, width=bar_width, color='#9467BD', edgecolor='black', alpha=0.85,
+            label="EX Performance", yerr=errors_ex, capsize=6, error_kw={'elinewidth': 2})
+axes[2].grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.6)
+axes[2].set_ylabel("EX (%)", fontsize=15, labelpad=10)
+axes[2].set_title("Effect of Increasing n-Shot on EX Performance", fontsize=16, pad=10)
+axes[2].set_yticks(np.arange(0, 40, 10))
+axes[2].set_ylim(0, 40)
+axes[2].tick_params(axis='y', labelsize=15)  # Increase font size for y-tick labels
+
 # Common x-axis formatting
-axes[1].set_xticks(x)
-axes[1].set_xticklabels(n_shot_levels, fontsize=14)
-axes[1].set_xlabel("n-Shot Learning", fontsize=15, labelpad=10)
+axes[2].set_xticks(x)
+axes[2].set_xticklabels(n_shot_levels, fontsize=14)
+axes[2].set_xlabel("n-Shot Learning", fontsize=15, labelpad=10)
 
 # Adjust layout and save the figure
 plt.tight_layout()
