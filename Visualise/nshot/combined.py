@@ -67,7 +67,7 @@ axes[2].bar(x, ex_results, width=bar_width, color='#9467BD', edgecolor='black', 
 axes[2].grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.6)
 axes[2].set_ylabel("EX (%)", fontsize=15, labelpad=10)
 axes[2].set_title("Effect of Increasing n-Shot on EX Performance", fontsize=16, pad=10)
-axes[2].set_yticks(np.arange(0, 40, 10))
+axes[2].set_yticks(np.arange(0, 50, 10))
 axes[2].set_ylim(0, 40)
 axes[2].tick_params(axis='y', labelsize=15)  # Increase font size for y-tick labels
 
