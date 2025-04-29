@@ -15,7 +15,7 @@ The prompt consists of four key elements:
 - **Database Schema** – A structured representation of the database sent to the LLM.  
 - **Many-shot Learning (51-shot)** – Examples from the custom **NLQ-SQL development dataset** to improve SQL generation accuracy.  
 - **Manual Refinement Rules** – Manually predefined rules to enhance query accuracy and reduce errors.  
-- **Reinforcement Learning for Error Handling** – Adjustments to mitigate incorrect SQL outputs.  
+- **Self-Correction for Error Handling** – Adjustments to mitigate invalid SQL outputs.  
 
 ---
 

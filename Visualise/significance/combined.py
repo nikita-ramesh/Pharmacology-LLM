@@ -23,7 +23,7 @@ experiments = {
         "without": np.array([61.54, 92.31, 3.85, 3.85]),
         "with": np.array([96.15, 100.00, 30.77, 15.38])
     },
-    "Reinforcement Learning": {
+    "Self-Correction": {
         "without": np.array([65.38, 96.15, 23.08, 11.54]),
         "with": np.array([96.15, 100.00, 30.77, 15.38])
     },
