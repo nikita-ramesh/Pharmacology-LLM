@@ -14,7 +14,7 @@ def proportion_ci(n, p):
 
 # Labels for different conditions
 conditions = ["Rules", "MSL", "Schema", 
-              "Schema + Rules \n+ MSL", "Schema + Rules \n+ MSL + RL"]
+              "Schema + Rules \n+ MSL", "Schema + Rules \n+ MSL + SC"]
 
 # Experiment results (converted to proportions)
 n_trials = 26  
